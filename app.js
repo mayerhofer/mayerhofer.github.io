@@ -95,7 +95,39 @@ class ResponseHelper {
 const endpoint = "http://localhost:3002/";
 const endpointCountries = "http://localhost:3004/countries";
 
+const atlasEndpoint = "https://data.mongodb-api.com/app/data-bfiif/endpoint/data/v1";
+
 class CountryAPI {
+  static async getOne() {
+    let response = new ResponseHelper(await fetch(endpointCountries, {method: 'GET'}));
+
+    if (response.hasOkStatus()) {
+      return await response.jsonToArray();
+    } else {
+      return [];
+    }
+  }
+  static async getAll() {
+    let response = new ResponseHelper(await fetch(endpointCountries, {method: 'GET'}));
+
+    if (response.hasOkStatus()) {
+      return await response.jsonToArray();
+    } else {
+      return [];
+    }
+  }
+  static async getByName(name) {
+    let response = new ResponseHelper(await fetch(endpointCountries + '/name/' + name, {method: 'GET'}));
+
+    if (response.hasOkStatus()) {
+      return await response.json();
+    } else {
+      return [];
+    }
+  }
+}
+
+class CountryAPI_bkp {
   static async getAll() {
     let response = new ResponseHelper(await fetch(endpointCountries, {method: 'GET'}));
 
