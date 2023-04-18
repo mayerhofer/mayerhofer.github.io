@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <!-- General Settings -->
+    <meta charset="utf-8">
+    <meta http-equiv="content-language" content="en-us">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="https://github.com/mayerhofer/" target="_blank" />
+
+    <!-- Meta Tags -->
+    <title>Money Manager | Mother Box</title>
+    <meta name="description" content="Personal Money Manager application that helps tracking of cash flows, investments, assets and debts.">
+
+    <!-- Static Assets -->
+    <link type="image/x-icon" rel="icon" href="favicon.ico">
+    <!-- <script type="text/javascript" charset="utf-8" src="public/app.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="app.css" />
+
+    <!-- v4 -->
+    <script src='https://unpkg.com/tesseract.js@4.0.1/dist/tesseract.min.js'></script>
+  </head>
+  <body class="index">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="m-menu">
+        <div class="m-menu__burger">
+          <span></span>
+        </div>
+        <input class="m-menu__toggle" type="checkbox">
+        <div class="m-menu__backdrop"></div>
+        <div class="m-menu__content">
+          <!-- Navigation -->
+          <nav>
+              <h2 class="nav-menu__header">Menu</h2>
+              <ul class="ul-menu__listing">
+                  <li><a class="loggedIn" href="javascript:void(0);" onclick="loadFinance();">Finance</a</li>
+                  <li><a class="loggedIn" href="javascript:void(0);" onclick="loadLiability();">Liability</a></li>
+                  <li><a class="loggedIn" href="javascript:void(0);" onclick="loadWishlist();">Wish List</a></li>
+                  <li><a class="loggedIn" href="javascript:void(0);" onclick="loadErrors();">Error Log</a></li>
+                  <li><a class="loggedIn" href="javascript:void(0);" onclick="loadTesseract();">Import Receipt</a></li>
+                  <li><a href="index.html">Money</a></li>
+              </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Wrapper -->
+    <div class="wrapper">
+
+      <!-- Page-Specific Content -->
+      <div class="content">
+
+        <div id="app"></div>
+        
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <div class="copyright">Copyright 2022 Mayerhofer IT | All Rights Reserved </div>
+      </div>
+    </div>
+    <script type="text/javascript" charset="utf-8" src="app.js" defer></script>
+  </body>
+</html>
