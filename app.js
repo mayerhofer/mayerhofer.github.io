@@ -99,7 +99,24 @@ const atlasEndpoint = "https://data.mongodb-api.com/app/data-bfiif/endpoint/data
 
 class CountryAPI {
   static async getOne() {
-    let response = new ResponseHelper(await fetch(endpointCountries, {method: 'GET'}));
+    const address = atlasEndpoint + "/action/findOne";
+    const response = await fetch(address, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        //"Authorization": "Bearer 
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify({
+        "dataSource": "Cluster0",
+        "database": "mbox",
+        "collection": "countries",
+	"filter": "{ name: 'Spain' }",
+      }), // body data type must match "Content-Type" header
+    });
+    let response = new ResponseHelper(response);
 
     if (response.hasOkStatus()) {
       return await response.jsonToArray();
