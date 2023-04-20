@@ -1167,12 +1167,9 @@ class FlagCombo extends RComponent {
       // Countries list in DB is huge but not necessary here in this form. Best to change source code to add countries when required.
       const uniqueCountries = ['Poland', 'Italy', 'Scotland', 'Brazil', 'Spain'];
       // Istead of getting all and then filtering, better to make multiple requests since we don't need many countries.
-      Promise.all(CountryAPI.get(['PL', 'IT', 'CH', 'BR', 'ES'])).then(data => {
+      CountryAPI.get(['PL', 'IT', 'CH', 'BR', 'ES']).then(data => {
         setTimeout(() => {
-          // Result returns one array with each object. Combine them in a single array removing undefined results.
-          let countries = data.flat().filter(item => item !== undefined);
-
-          field.setState({countries});
+          field.setState({countries: data});
         }, 1000);
       });
     }
