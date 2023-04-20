@@ -101,7 +101,7 @@ class CountryAPI {
   static cachedValues = {};
 	
   static async get(arrayCountryCodes) {
-    const toFetch = arrayCountryCodes.filter(x => ! Object.keys(cachedValues).includes(x));
+    const toFetch = arrayCountryCodes.filter(x => ! Object.keys(CountryAPI.cachedValues).includes(x));
     const result = await CountryAPI.fetchOnly(toFetch);
 	  
     result.forEach(r => cachedValues[r.isoAlpha2] = r);
@@ -112,16 +112,12 @@ class CountryAPI {
   static async fetchOnly(arrayCountryCodes) {
     const suffix = arrayCountryCodes.map((a, i) => "c" + i.toString() + "=" + a).join('&');
     const address = endpointCountries + "?" + suffix;
-    const response = await fetch(address, {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
+    const response = await fetch(address);
     let handled = new ResponseHelper(response);
 
-    if (handled.hasOkStatus()) {
-      return await handled.jsonToArray();
+    if (response.status === 200) {
+      let text = await response.json();
+      return JSON.parse(text).documents;
     } else {
       return [];
     }
