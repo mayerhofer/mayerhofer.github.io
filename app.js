@@ -93,51 +93,24 @@ class ResponseHelper {
 // Server - APIs - End Base/Util
 // Server - APIs - JSON API
 const endpoint = "http://localhost:3002/";
-const endpointCountries = "http://localhost:3004/countries";
+const endpointCountries = "https://h19t5zel1d.execute-api.us-east-2.amazonaws.com/default/countries";
 
 const atlasEndpoint = "https://data.mongodb-api.com/app/data-bfiif/endpoint/data/v1";
 
 class CountryAPI {
-  static async getOne() {
-    const address = atlasEndpoint + "/action/findOne";
+  static async get(arrayCountryCodes) {
+    const suffix = arrayCountryCodes.map((a, i) => "c" + i.toString() + "=" + a).join('&');
+    const address = endpointCountries + "?" + suffix;
     const response = await fetch(address, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      credentials: "same-origin", // include, *same-origin, omit
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json",
-        //"Authorization": "Bearer 
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify({
-        "dataSource": "Cluster0",
-        "database": "mbox",
-        "collection": "countries",
-	"filter": "{ name: 'Spain' }",
-      }), // body data type must match "Content-Type" header
+      }
     });
     let response = new ResponseHelper(response);
 
     if (response.hasOkStatus()) {
       return await response.jsonToArray();
-    } else {
-      return [];
-    }
-  }
-  static async getAll() {
-    let response = new ResponseHelper(await fetch(endpointCountries, {method: 'GET'}));
-
-    if (response.hasOkStatus()) {
-      return await response.jsonToArray();
-    } else {
-      return [];
-    }
-  }
-  static async getByName(name) {
-    let response = new ResponseHelper(await fetch(endpointCountries + '/name/' + name, {method: 'GET'}));
-
-    if (response.hasOkStatus()) {
-      return await response.json();
     } else {
       return [];
     }
@@ -1188,7 +1161,7 @@ class FlagCombo extends RComponent {
       // Countries list in DB is huge but not necessary here in this form. Best to change source code to add countries when required.
       const uniqueCountries = ['Poland', 'Italy', 'Scotland', 'Brazil', 'Spain'];
       // Istead of getting all and then filtering, better to make multiple requests since we don't need many countries.
-      Promise.all(uniqueCountries.map(c => CountryAPI.getByName(c))).then(data => {
+      Promise.all(CountryAPI.get(['PL', 'IT', 'CH', 'BR', 'ES'])).then(data => {
         setTimeout(() => {
           // Result returns one array with each object. Combine them in a single array removing undefined results.
           let countries = data.flat().filter(item => item !== undefined);
