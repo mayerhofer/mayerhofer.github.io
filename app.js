@@ -117,7 +117,7 @@ class CountryAPI {
 
     if (response.status === 200) {
       let text = await response.json();
-      return JSON.parse(text).documents;
+      return JSON.parse(text.result).documents;
     } else {
       return [];
     }
