@@ -98,7 +98,18 @@ const endpointCountries = "https://h19t5zel1d.execute-api.us-east-2.amazonaws.co
 const atlasEndpoint = "https://data.mongodb-api.com/app/data-bfiif/endpoint/data/v1";
 
 class CountryAPI {
+  static cachedValues = {};
+	
   static async get(arrayCountryCodes) {
+    const toFetch = arrayCountryCodes.filter(x => ! Object.keys(cachedValues).includes(x));
+    const result = await CountryAPI.fetchOnly(toFetch);
+	  
+    result.forEach(r => cachedValues[r.isoAlpha2] = r);
+	  
+    return Object.values(cachedValues).filter(x => arrayCountryCodes.includes(x.isoAlpha2));
+  }
+	  
+  static async fetchOnly(arrayCountryCodes) {
     const suffix = arrayCountryCodes.map((a, i) => "c" + i.toString() + "=" + a).join('&');
     const address = endpointCountries + "?" + suffix;
     const response = await fetch(address, {
