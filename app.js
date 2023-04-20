@@ -107,10 +107,10 @@ class CountryAPI {
         "Content-Type": "application/json",
       }
     });
-    let response = new ResponseHelper(response);
+    let handled = new ResponseHelper(response);
 
-    if (response.hasOkStatus()) {
-      return await response.jsonToArray();
+    if (handled.hasOkStatus()) {
+      return await handled.jsonToArray();
     } else {
       return [];
     }
