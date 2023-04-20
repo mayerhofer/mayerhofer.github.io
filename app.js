@@ -104,9 +104,9 @@ class CountryAPI {
     const toFetch = arrayCountryCodes.filter(x => ! Object.keys(CountryAPI.cachedValues).includes(x));
     const result = await CountryAPI.fetchOnly(toFetch);
 	  
-    result.forEach(r => cachedValues[r.isoAlpha2] = r);
+    result.forEach(r => CountryAPI.cachedValues[r.isoAlpha2] = r);
 	  
-    return Object.values(cachedValues).filter(x => arrayCountryCodes.includes(x.isoAlpha2));
+    return Object.values(CountryAPI.cachedValues).filter(x => arrayCountryCodes.includes(x.isoAlpha2));
   }
 	  
   static async fetchOnly(arrayCountryCodes) {
