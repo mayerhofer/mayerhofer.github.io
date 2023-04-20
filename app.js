@@ -113,7 +113,6 @@ class CountryAPI {
     const suffix = arrayCountryCodes.map((a, i) => "c" + i.toString() + "=" + a).join('&');
     const address = endpointCountries + "?" + suffix;
     const response = await fetch(address);
-    let handled = new ResponseHelper(response);
 
     if (response.status === 200) {
       let text = await response.json();
