@@ -131,6 +131,7 @@ class EntityAPI {
   async get() {
     const props = {
 	    method: 'GET',
+	    mode: 'no-cors',
 	    headers: {
 		    'Access-Control-Allow-Origin': 'https://mayerhofer.github.io',
 	    }
