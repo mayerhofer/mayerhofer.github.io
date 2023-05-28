@@ -129,14 +129,7 @@ class EntityAPI {
   }
 	
   async get() {
-    const props = {
-	    method: 'GET',
-	    mode: 'no-cors',
-	    headers: {
-		    'Access-Control-Allow-Origin': 'https://mayerhofer.github.io',
-	    }
-    };
-    let response = await fetch(endpointEntities + '?entity=' + this.route, props);
+    let response = await fetch(endpointEntities + '?entity=' + this.route);
 
     if (response.status === 200) {
       let text = await response.json();
