@@ -128,7 +128,7 @@ class EntityAPI {
     this.route = route;
   }
 	
-  static async getAll() {
+  async getAll() {
     let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'GET'}));
 
     if (response.hasOkStatus()) {
@@ -977,7 +977,7 @@ class GenericTable extends RComponent {
   }
 
   componentDidMount() {
-    const api = new RestAPI(this.props.entity);
+    const api = new EntityAPI(this.props.entity);
     const self = this;
     
     api.get().then(data => {
@@ -992,7 +992,7 @@ class GenericTable extends RComponent {
 
   handleDelete(element) {
     if (confirm('Delete?')) {
-      const api = new RestAPI(this.props.entity);
+      const api = new EntityAPI(this.props.entity);
       const tableSelf = this;
 
       api.delete(element).then(() => {
@@ -1383,7 +1383,7 @@ class FinanceForm extends RComponent {
 
     const saveLiabi = this.saveLiability.bind(this);
 
-    const cfApi = new RestAPI('cashflow');
+    const cfApi = new EntityAPI('cashflow');
     if (this.isEditMode) {
       cfApi.update(saveObj).then(() => {
 	      setTimeout(() => {
@@ -1402,7 +1402,7 @@ class FinanceForm extends RComponent {
     try {
       if (this.state.liability) {
         const lApi = 
-	        new RestAPI('liability');
+	        new EntityAPI('liability');
 
         lApi.get().then(liabilities => {
           const found = Array.from(liabilities).find(l => l.cashflowId === cfid);
@@ -1596,7 +1596,7 @@ class WishListForm extends RComponent {
 
     //log('info', {message: 'Saving cashflow', stackTrace: element.provider });
 
-    const api = new RestAPI('wish');
+    const api = new EntityAPI('wish');
     if (this.isEditMode) {
       api.update(saveObj);
     } else {
@@ -1779,7 +1779,7 @@ const loadFinance = function() {
 
   // Register root node
   const handleEdit = (data, element) => {
-    const optionApi = new RestAPI('option');
+    const optionApi = new EntityAPI('option');
     optionApi.get().then(options => {
       const labelOptions = options.filter(option => option.combo === 'labels').map(o => o.description);
       const bookOptions = options.filter(option => option.combo === 'books');
