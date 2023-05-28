@@ -94,8 +94,7 @@ class ResponseHelper {
 // Server - APIs - JSON API
 const endpoint = "http://localhost:3002/";
 const endpointCountries = "https://h19t5zel1d.execute-api.us-east-2.amazonaws.com/default/countries";
-
-const atlasEndpoint = "https://data.mongodb-api.com/app/data-bfiif/endpoint/data/v1";
+const endpointEntities = "https://xp6hmrx7r7.execute-api.us-east-2.amazonaws.com/default/operateEntity";
 
 class CountryAPI {
   static cachedValues = {};
@@ -123,9 +122,14 @@ class CountryAPI {
   }
 }
 
-class CountryAPI_bkp {
+class EntityAPI {
+	
+  constructor(route) {
+    this.route = route;
+  }
+	
   static async getAll() {
-    let response = new ResponseHelper(await fetch(endpointCountries, {method: 'GET'}));
+    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'GET'}));
 
     if (response.hasOkStatus()) {
       return await response.jsonToArray();
@@ -133,15 +137,7 @@ class CountryAPI_bkp {
       return [];
     }
   }
-  static async getByName(name) {
-    let response = new ResponseHelper(await fetch(endpointCountries + '/name/' + name, {method: 'GET'}));
-
-    if (response.hasOkStatus()) {
-      return await response.json();
-    } else {
-      return [];
-    }
-  }
+  
 }
 
 /**
