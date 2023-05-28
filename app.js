@@ -136,10 +136,11 @@ class EntityAPI {
 		    'Access-Control-Allow-Origin': 'https://mayerhofer.github.io',
 	    }
     };
-    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, props));
+    let response = await fetch(endpointEntities + '?entity=' + this.route, props);
 
-    if (response.hasOkStatus()) {
-      return await response.jsonToArray();
+    if (response.status === 200) {
+      let text = await response.json();
+      return JSON.parse(text.result).documents;
     } else {
       return [];
     }
