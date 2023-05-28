@@ -128,7 +128,7 @@ class EntityAPI {
     this.route = route;
   }
 	
-  async getAll() {
+  async get() {
     let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'GET'}));
 
     if (response.hasOkStatus()) {
