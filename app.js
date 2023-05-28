@@ -129,7 +129,51 @@ class EntityAPI {
   }
 	
   async get() {
-    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'GET'}));
+    const props = {
+	    method: 'GET',
+	    headers: {
+		    'Access-Control-Allow-Origin': 'https://mayerhofer.github.io',
+	    }
+    };
+    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, props));
+
+    if (response.hasOkStatus()) {
+      return await response.jsonToArray();
+    } else {
+      return [];
+    }
+  }
+	
+	
+  async insert(data) {
+    const props = {
+	    method: 'POST',
+	    headers: {
+		    'Access-Control-Allow-Origin': 'https://mayerhofer.github.io',
+	    },
+	    body: JSON.stringify(data)
+    };
+    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, props));
+
+    if (response.hasOkStatus()) {
+      return await response.jsonToArray();
+    } else {
+      return [];
+    }
+  }
+	
+  async update() {
+    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'PUT'}));
+
+    if (response.hasOkStatus()) {
+      return await response.jsonToArray();
+    } else {
+      return [];
+    }
+  }
+	
+  async delete() {
+    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'DELETE'}));
 
     if (response.hasOkStatus()) {
       return await response.jsonToArray();
