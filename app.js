@@ -93,8 +93,8 @@ class ResponseHelper {
 // Server - APIs - End Base/Util
 // Server - APIs - JSON API
 const endpoint = "http://localhost:3002/";
-const endpointCountries = "https://h19t5zel1d.execute-api.us-east-2.amazonaws.com/default/countries";
-const endpointEntities = "https://xp6hmrx7r7.execute-api.us-east-2.amazonaws.com/default/operateEntity";
+const endpointCountries = localStorage.getItem("countryUrl");
+const endpointEntities = localStorage.getItem("entityUrl");
 
 class CountryAPI {
   static cachedValues = {};
