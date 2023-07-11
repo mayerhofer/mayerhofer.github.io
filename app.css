@@ -237,8 +237,47 @@ a:active {
   z-index: 1000;
 }
 /* Page - End Modal */
-/* ***************************************************************** */
 
+/* ***************************************************************** */
+/** Blog listing style */
+
+.post {
+  padding: 5px 5px;
+  margin: 5px 10px;
+  border-radius: 15px;
+  box-shadow: 5px 5px 5px lightblue;
+  display: flex;
+  flex-direction: column;
+  line-height: 30px;
+}
+
+.post-title {
+  width: 100%;
+  font-weight: 600;
+}
+
+.post-details {
+  display: flex;
+  flex-direction: row;
+}
+
+.post-author {
+  width: 100%;
+  text-align: right;
+  font-size: 12px;
+}
+
+.post-date {
+  width: 50%;
+  text-align: right;
+}
+
+.post-text {
+  width: 100%;
+}
+/* Page - End Modal */
+
+/* ***************************************************************** */
 /** Menu listing style */
 nav {
   background-color: #3B3B58;
