@@ -469,6 +469,26 @@ class RComponent {
 
   //static icons
   static templates = {
+    blogContainer: `
+      <div class="page-body">
+        <article class="introduction">
+	  <p>Welcome to my blog, where I give daily updates about my projects, studies and leisure activities.</p>
+	</article>
+        <div class="post-container" id="postContainer">
+	  {field.children}
+	</div>
+    `,
+    blogPost: `
+      <article class="post">
+        <div class="post-details">
+          <p class="post-title">{field.title}</p>
+	  <p class="post-date">{field.date}</p>
+	</div>
+        <p class="post-author">{field.author}</p>
+	<p class="post-text">{field.text}</p>
+        <img src="{field.src}" alt="{field.alt}" />
+      </article>
+    `,
     labelField: `
       <li class="direction-option">
         <input type="radio" id="{field.alias}" name="label" value="{field.label}" alt="{field.label}" {field.checked} onchange="window.application.callHandler(this, '{field.id}')">
@@ -1310,6 +1330,20 @@ const labelImages = [
   },
 ];
 /////////////////////////////////////////////
+// Page - Components - BlogPage
+class BlogPage extends RComponent {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let posts = this.props.posts.map(post => this.fill('blogPost', post));
+	  
+    return this.fill('blogContainer', { children: posts });
+  }
+}
+
+/////////////////////////////////////////////
 // Page - Components - FinanceForm
 class FinanceForm extends RComponent {
   constructor(props) {
@@ -1813,6 +1847,13 @@ const commonFormatters = {
     return {tagName: 'simplediv', className: 'cashflowAmount' + (isIncome ? ' income' : ' expense'), content};
   },
 }
+
+const loadBlog = function() {
+  const postApi = new EntityAPI('post');
+  postApi.get().then(posts => {
+    RComponent.buildRoot({id: 'blog', posts}, p => new BlogPage(p));
+  });
+};
 
 const loadFinance = function() {
 
