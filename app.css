@@ -244,6 +244,8 @@ a:active {
 .page-body {
   width: 100%;
   height: 70vh;
+  color: white;
+  overflow-y: scroll;
 }
 
 .introduction {
