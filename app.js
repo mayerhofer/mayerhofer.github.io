@@ -470,7 +470,7 @@ class RComponent {
   //static icons
   static templates = {
     blogContainer: `
-      <div class="page-body">
+      <div class="page-body div--scrollable">
         <article class="introduction">
 	  <p>Welcome to my blog, where I give daily updates about my projects, studies and leisure activities.</p>
 	</article>
