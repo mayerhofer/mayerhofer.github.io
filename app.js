@@ -139,14 +139,13 @@ class EntityAPI {
     }
   }
 	
-	
   async insert(data) {
     const props = {
 	    method: 'POST',
 	    headers: {
-		    'Access-Control-Allow-Origin': 'https://mayerhofer.github.io',
+		    'Content-Type': 'application/json'
 	    },
-	    body: JSON.stringify(data)
+	    body: data
     };
     let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, props));
 
