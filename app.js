@@ -122,7 +122,7 @@ class CountryAPI {
   }
 }
 
-function operate(route, payload) {
+async function operate(route, payload) {
   let response = await fetch(endpointEntities + '?entity=' + route, payload);
 
   if (response.status === 200) {
@@ -148,19 +148,19 @@ class EntityAPI {
   }
 
   async get() {
-    return operate(this.route);
+    return await operate(this.route);
   }
 	
   async insert(data) {
-    return operate(this.route, buildPayload(data, 'POST'));
+    return await operate(this.route, buildPayload(data, 'POST'));
   }
 	
   async update(data) {
-    operate(this.route, buildPayload(data, 'PUT'));
+    return await operate(this.route, buildPayload(data, 'PUT'));
   }
 	
   async delete(data) {
-    operate(this.route, buildPayload(data, 'DELETE'));
+    return await operate(this.route, buildPayload(data, 'DELETE'));
   }
 }
 
