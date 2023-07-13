@@ -117,6 +117,8 @@ class CountryAPI {
       let text = await response.json();
       return JSON.parse(text.result).documents;
     } else {
+      let text = await response.json();
+      alert(text);
       return [];
     }
   }
