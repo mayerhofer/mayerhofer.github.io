@@ -248,22 +248,22 @@ class RestAPI {
 }
 
 const log = (type, data) => {
-  setTimeout(() => {
-    try {
-      const api = 
-        new RestAPI('errorLog');
-      const errObj = {
-        time: (new Date()).getTime(),
-        type,
-        ...data,
-      };
-      api.insert(errObj)
-	      .catch(ex => window
-	        .alert(ex.message));
-    } catch (ex) {
-      window.alert('Could not log: ' + ex.message);
-    }
-  }, 1000);
+//  setTimeout(() => {
+//    try {
+//      const api = 
+//        new RestAPI('errorLog');
+//      const errObj = {
+//        time: (new Date()).getTime(),
+//        type,
+//        ...data,
+//      };
+//      api.insert(errObj)
+//	      .catch(ex => window
+//	        .alert(ex.message));
+//    } catch (ex) {
+//      window.alert('Could not log: ' + ex.message);
+//    }
+//  }, 1000);
 }
 
 // Server - APIs - End JSON API
