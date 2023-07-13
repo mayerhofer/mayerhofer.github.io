@@ -122,62 +122,46 @@ class CountryAPI {
   }
 }
 
+function operate(route, payload) {
+  let response = await fetch(endpointEntities + '?entity=' + route, payload);
+
+  if (response.status === 200) {
+    let text = await response.json();
+    return JSON.parse(text.result).documents;
+  } else {
+    return [];
+  }
+}
+function buildPayload(data, method) {
+  return {
+    method: method,
+    body: data,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+}
+
 class EntityAPI {
-	
   constructor(route) {
     this.route = route;
   }
-	
-  async get() {
-    let response = await fetch(endpointEntities + '?entity=' + this.route);
 
-    if (response.status === 200) {
-      let text = await response.json();
-      return JSON.parse(text.result).documents;
-    } else {
-      return [];
-    }
+  async get() {
+    return operate(this.route);
   }
 	
   async insert(data) {
-    const props = {
-	    method: 'POST',
-	    headers: {
-		    'Content-Type': 'application/json'
-	    },
-	    body: data
-    };
-    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, props));
-
-    if (response.status === 200) {
-      let text = await response.json();
-      return JSON.parse(text.result).documents;
-    } else {
-      return [];
-    }
+    return operate(this.route, buildPayload(data, 'POST'));
   }
 	
-  async update() {
-    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'PUT'}));
-
-    if (response.status === 200) {
-      let text = await response.json();
-      return JSON.parse(text.result).documents;
-    } else {
-      return [];
-    }
+  async update(data) {
+    operate(this.route, buildPayload(data, 'PUT'));
   }
 	
-  async delete() {
-    let response = new ResponseHelper(await fetch(endpointEntities + '?entity=' + this.route, {method: 'DELETE'}));
-
-    if (response.hasOkStatus()) {
-      return await response.jsonToArray();
-    } else {
-      return [];
-    }
+  async delete(data) {
+    operate(this.route, buildPayload(data, 'DELETE'));
   }
-  
 }
 
 /**
