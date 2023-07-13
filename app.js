@@ -137,7 +137,7 @@ async function operate(route, payload) {
 function buildPayload(data, method) {
   return {
     method: method,
-    body: data,
+    body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json'
     }
