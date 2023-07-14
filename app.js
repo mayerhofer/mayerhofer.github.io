@@ -1331,6 +1331,98 @@ class BlogPage extends RComponent {
 }
 
 /////////////////////////////////////////////
+// Page - Components - LiabilityForm
+class LiabilityForm extends RComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      //date: props.element.date,
+      dueDate: props.element.dueIn,
+      liability: props.element.liability,
+      amount: props.element.amount,
+      payed: props.element.payed,
+      debtor: props.element.source,
+      validationState: {
+        debtor: {
+          validDef: {
+            required: true,
+            restricted: false,
+          }
+        }
+      }
+    };
+  }
+  
+  handleDueChange(e) {
+    this.setState({dueDate: e.value});
+  }
+  handleDebtorChange(e) {
+    this.setState({debtor: e.value});
+  }
+  handleAmountChange(e) {
+    this.setState({amount: e.value});
+  }
+  handlePayedChange(e) {
+    this.setState({payed: e.value});
+  }
+  handleDirectionChange(e) {
+    this.setState({liability: e.value !== 'income'});
+  }
+  handleSave() {
+    let dt = new Date();
+    const obj = {
+      dueIn: Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()),
+      source: this.state.debtor,
+      liability: this.state.liability,
+      amount: Number.parseFloat(this.state.amount),
+      cashflowId: -1,
+      elementId: -1,
+      payed: false,
+      updated: dt.getTime()
+    };
+    this.props.addLiability(obj);
+  }
+  render() {
+    const buildTb = props => this.buildRComponent(props, p => new TextField(p));
+    const buildProps = label => {
+      return {
+        id: this.id + label,
+        label,
+        value: this.state[label.toLowerCase()],
+        validDef: this.state.validationState[label.toLowerCase()].validDef,
+        update: this[`handle${label}Change`].bind(this),
+      };
+    };
+    const amountProps = {
+      id: this.id + 'Amount',
+      expenseChecked: this.state.direction ? '' : 'checked', 
+      incomeChecked: this.state.direction ? 'checked' : '',
+      currency: currencies[this.state.currency] ?? '?',
+      value: this.state.amount,
+      label: 'Amount',
+      currencyList,
+    };
+    const amount = this.fill('amountField', amountProps);
+    const debtor = buildTb(buildProps('Debtor'));
+    const buttonId = 'AddNewLiability';
+    const button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
+    const header = this.fill('simplediv', {className: 'table__header', content: button});
+    const content = `
+    <h1>Add Liability</h1><br />${header}<br />
+    ${debtor}<br />${amount}<br />
+    `;
+    
+    this.registerHandler(buttonId, this.handleSave.bind(this));
+
+    this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
+    this.registerHandler(this.id + 'Amount', this.handleAmountChange.bind(this));
+    this.registerHandler(this.id + 'AmountDir', this.handleDirectionChange.bind(this));
+    return this.fill('div', {id: this.id, className: 'liability', content});
+  }
+}
+
+/////////////////////////////////////////////
 // Page - Components - FinanceForm
 class FinanceForm extends RComponent {
   constructor(props) {
@@ -1482,13 +1574,13 @@ class FinanceForm extends RComponent {
           } else {
             // insert
             const obj = {
+              ...this.state.liability,
               date: newCashFlow.date,
               cashflowId: cfid,
               elementId: liabilities
                 .map(d => d.elementId)
                 .filter(id => id > 0)
                 .sort((a,b)=>a-b).pop() + 1,
-              ...this.state.liability,
             };
 
             log('info', {message: 'saving liability', stackTrace: `CF id: ${cfid.toString()}`});
@@ -1742,7 +1834,7 @@ class LiabilityModal extends RComponent {
     this.setState({amount: e.value});
   }
   handleDirectionChange(e) {
-    this.setState({liability: e.value === 'income'});
+    this.setState({liability: e.value !== 'income'});
   }
   handleSave() {
     let dt = new Date();
@@ -1912,9 +2004,13 @@ const loadErrors = function() {
 }
 
 const loadLiability = function() {
+  const handleEdit = (data, element) => {
+    RComponent.buildRoot({id: 'liabilityForm', data, element}, p => new LiabilityForm(p));
+  };
   RComponent.buildRoot({
     id: 'liabilityTable',
     entity: 'liability',
+    handleEdit,
     formatter: commonFormatters,
   }, p => new GenericTable(p));
 }
