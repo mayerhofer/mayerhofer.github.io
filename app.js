@@ -1807,7 +1807,7 @@ class LiabilityModal extends RComponent {
     super(props);
 
     this.state = {
-      liability: false,
+      liability: true,
       amount: 10,
       currency: 'EUR',
       debtor: 'Cris Carnaval',
