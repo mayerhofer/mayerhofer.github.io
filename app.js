@@ -139,6 +139,7 @@ async function operate(route, payload) {
       return [];
     }
   } else {
+    alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
     return [];
   }
 }
@@ -158,7 +159,12 @@ class EntityAPI {
   }
 
   async get() {
-    return await operate(this.route);
+    try {
+      return await operate(this.route);
+    } catch (ex) {
+      alert(ex.message);
+      return [];
+    }
   }
 	
   async insert(data) {
