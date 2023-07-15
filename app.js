@@ -1356,9 +1356,11 @@ class LogInForm extends RComponent {
   }
 
   handleCountryUrlUpdate(e) {
+     alert("country updated");
     this.setState({countryUrl: e.value});
   }
   handleEntityUrlUpdate(e) {
+    alert("entity update");
     this.setState({entityUrl: e.value});
   }
 
