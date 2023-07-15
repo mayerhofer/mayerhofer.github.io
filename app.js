@@ -1398,10 +1398,8 @@ class LiabilityForm extends RComponent {
       id: this.id + 'Amount',
       expenseChecked: this.state.direction ? '' : 'checked', 
       incomeChecked: this.state.direction ? 'checked' : '',
-      currency: currencies[this.state.currency] ?? '?',
       value: this.state.amount,
       label: 'Amount',
-      currencyList,
     };
     const amount = this.fill('amountField', amountProps);
     const debtor = buildTb(buildProps('Debtor'));
