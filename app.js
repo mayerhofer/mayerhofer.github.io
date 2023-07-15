@@ -93,8 +93,6 @@ class ResponseHelper {
 // Server - APIs - End Base/Util
 // Server - APIs - JSON API
 const endpoint = "http://localhost:3002/";
-const endpointCountries = localStorage.getItem("countryUrl");
-const endpointEntities = localStorage.getItem("entityUrl");
 
 class CountryAPI {
   static cachedValues = {};
@@ -110,7 +108,7 @@ class CountryAPI {
 	  
   static async fetchOnly(arrayCountryCodes) {
     const suffix = arrayCountryCodes.map((a, i) => "c" + i.toString() + "=" + a).join('&');
-    const address = endpointCountries + "?" + suffix;
+    const address = localStorage.getItem("countryUrl")  + "?" + suffix;
     const response = await fetch(address);
 
     if (response.status === 200) {
@@ -125,7 +123,7 @@ class CountryAPI {
 }
 
 async function operate(route, payload) {
-  let response = await fetch(endpointEntities + '?entity=' + route, payload);
+  let response = await fetch(localStorage.getItem("entityUrl") + '?entity=' + route, payload);
 
   if (response.status === 200) {
     try {
