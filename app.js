@@ -1362,7 +1362,9 @@ class LogInForm extends RComponent {
     this.setState({entityUrl: e.value});
   }
 
-  handleLogIn() {
+  handleLogIn(e) {
+    e.preventDefault();
+
     localStorage.setItem("countryUrl", this.state.countryUrl);
     localStorage.setItem("entityUrl", this.state.entityUrl);
   }
