@@ -456,6 +456,19 @@ class RComponent {
 
   //static icons
   static templates = {
+    LogInForm: `
+      <form class="div--scrollable" action="window.application.callHandler(this,\'{field.id}Submit\');">
+        <div class="field">
+          <label>Country</label>
+          <input type="text" onchange="window.application.callHandler(this,\'{field.id}CountryChange\');" />
+	</div>
+	<div class="field">
+          <label>Entity</label>
+          <input type="text" onchange="window.application.callHandler(this,\'{field.id}EntityChange\');" />
+	</div>
+        <input type="submit" value="Submit">
+      </form>
+    `,
     blogContainer: `
       <div class="page-body div--scrollable">
         <article class="introduction">
@@ -1331,6 +1344,39 @@ class BlogPage extends RComponent {
 }
 
 /////////////////////////////////////////////
+// Page - Components - LogInForm
+class LogInForm extends RComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      countryUrl: '',
+      entityUrl: ''
+    }
+  }
+
+  handleCountryUrlUpdate(e) {
+    this.setState({countryUrl: e.value});
+  }
+  handleEntityUrlUpdate(e) {
+    this.setState({entityUrl: e.value});
+  }
+
+  handleLogIn() {
+    localStorage.setItem("countryUrl", this.state.countryUrl);
+    localStorage.setItem("entityUrl", this.state.entityUrl);
+  }
+
+  render() {
+    this.registerHandler(this.id + 'CountryChange', this.handleCountryUrlUpdate.bind(this));
+    this.registerHandler(this.id + 'EntityChange', this.handleEntityUrlUpdate.bind(this));
+    this.registerHandler(this.id + 'Submit', this.handleLogIn.bind(this));
+	  
+    return this.fill('LogInForm', {id: this.id});
+  }
+}
+
+/////////////////////////////////////////////
 // Page - Components - LiabilityForm
 class LiabilityForm extends RComponent {
   constructor(props) {
@@ -2011,6 +2057,16 @@ const loadLiability = function() {
     handleEdit,
     formatter: commonFormatters,
   }, p => new GenericTable(p));
+}
+
+const login = function() {
+  // Register root node
+  const handleEdit = (data, element) => {
+    RComponent.buildRoot({id: 'wishListForm', data, element}, p => new WishListForm(p));
+  };
+  RComponent.buildRoot({
+    id: 'loginForm',
+  }, p=>new LogInForm(p));
 }
 
 const loadWishlist = function() {
