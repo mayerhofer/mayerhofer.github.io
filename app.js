@@ -128,8 +128,16 @@ async function operate(route, payload) {
   let response = await fetch(endpointEntities + '?entity=' + route, payload);
 
   if (response.status === 200) {
-    let text = await response.json();
-    return JSON.parse(text.result).documents;
+    try {
+      let text = await response.json();
+      let docs = JSON.parse(text.result).documents;
+
+      alert(JSON.stringify(docs).substring(0, 200));
+      return JSON.parse(text.result).documents;
+    } catch (ex) {
+      alert(ex.message);
+      return [];
+    }
   } else {
     return [];
   }
