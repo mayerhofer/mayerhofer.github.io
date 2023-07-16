@@ -108,7 +108,7 @@ class CountryAPI {
 	  
   static async fetchOnly(arrayCountryCodes) {
     const suffix = arrayCountryCodes.map((a, i) => "c" + i.toString() + "=" + a).join('&');
-    const address = localStorage.getItem("countryUrl")  + "?" + suffix;
+    const address = sessionStorage.getItem("countryUrl")  + "?" + suffix;
     const response = await fetch(address);
 
     if (response.status === 200) {
@@ -118,14 +118,14 @@ class CountryAPI {
       let text = await response.json();
       alert(text);
       alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
-      alert("Endpoint used: " + localStorage.getItem("entityUrl"));
+      alert("Endpoint used: " + sessionStorage.getItem("entityUrl"));
       return [];
     }
   }
 }
 
 async function operate(route, payload) {
-  let response = await fetch(localStorage.getItem("entityUrl") + '?entity=' + route, payload);
+  let response = await fetch(sessionStorage.getItem("entityUrl") + '?entity=' + route, payload);
 
   if (response.status === 200) {
     try {
@@ -140,7 +140,7 @@ async function operate(route, payload) {
     }
   } else {
     alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
-    alert("Endpoint used: " + localStorage.getItem("entityUrl"));
+    alert("Endpoint used: " + sessionStorage.getItem("entityUrl"));
     return [];
   }
 }
@@ -1371,21 +1371,21 @@ class LogInForm extends RComponent {
   }
 
   handleCountryUrlUpdate(e) {
-     alert("country updated");
+     alert("country updated: " + e.value);
     this.setState({countryUrl: e.value});
-    localStorage.setItem("countryUrl", e.value);
+    sessionStorage.setItem("countryUrl", e.value);
   }
   handleEntityUrlUpdate(e) {
-    alert("entity update");
+    alert("entity update: " + e.value);
     this.setState({entityUrl: e.value});
-    localStorage.setItem("entityUrl", e.value);
+    sessionStorage.setItem("entityUrl", e.value);
   }
 
   handleLogIn(e) {
     e.preventDefault();
 
-    localStorage.setItem("countryUrl", this.state.countryUrl);
-    localStorage.setItem("entityUrl", this.state.entityUrl);
+    sessionStorage.setItem("countryUrl", this.state.countryUrl);
+    sessionStorage.setItem("entityUrl", this.state.entityUrl);
   }
 
   render() {
