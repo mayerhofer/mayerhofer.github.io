@@ -117,6 +117,8 @@ class CountryAPI {
     } else {
       let text = await response.json();
       alert(text);
+      alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
+      alert("Endpoint used: " + localStorage.getItem("entityUrl"));
       return [];
     }
   }
@@ -138,6 +140,7 @@ async function operate(route, payload) {
     }
   } else {
     alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
+    alert("Endpoint used: " + localStorage.getItem("entityUrl"));
     return [];
   }
 }
