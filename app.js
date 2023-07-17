@@ -1372,8 +1372,13 @@ class LogInForm extends RComponent {
 
   handleCountryUrlUpdate(e) {
     try {
-      localStorage.setItem("countryUrl", e.value);
-      this.setState({countryUrl: e.value});
+      if (localStorage) {
+        localStorage.setItem("countryUrl", e.value);
+        this.setState({countryUrl: e.value});
+      } else {
+        alert(" no local storage ");
+        window.myStorage = Object.assign({}, {countryUrl: e.value}, window.myStorage);
+      }
       alert("country updated: " + e.value);
     } catch (ex) {
       alert(ex.message);
@@ -1381,8 +1386,14 @@ class LogInForm extends RComponent {
   }
   handleEntityUrlUpdate(e) {
     try {
-      localStorage.setItem("entityUrl", e.value);
-      this.setState({entityUrl: e.value});
+      if (localStorage) {
+        localStorage.setItem("entityUrl", e.value);
+        this.setState({entityUrl: e.value});
+        
+      } else {
+	alert(" no local storage ");
+        window.myStorage = Object.assign({}, {entityUrl: e.value}, window.myStorage);
+      }
       alert("entity update: " + e.value);
     } catch (ex) {
       alert(ex.message);
