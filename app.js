@@ -472,7 +472,7 @@ class RComponent {
   //static icons
   static templates = {
     LogInForm: `
-      <form class="div--scrollable" action="window.application.callHandler(this,\'{field.id}Submit\');">
+      <form id="{field.id}" class="div--scrollable" action="window.application.callHandler(this,\'{field.id}Submit\');">
         <div class="field">
           <label>Country</label>
           <input type="text" onchange="window.application.callHandler(this,\'{field.id}CountryChange\');" />
@@ -1368,6 +1368,10 @@ class LogInForm extends RComponent {
       countryUrl: '',
       entityUrl: ''
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
   }
 
   handleCountryUrlUpdate(e) {
