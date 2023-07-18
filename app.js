@@ -125,28 +125,29 @@ class CountryAPI {
 }
 
 async function operate(route, payload) {
-  let response = await fetch(localStorage.getItem("entityUrl") + '?entity=' + route, payload);
+  try {
+    let response = await fetch(localStorage.getItem("entityUrl") + '?entity=' + route, payload);
 
-  if (response.status === 200) {
-    try {
+    if (response.status === 200) {
       let text = await response.json();
       let docs = JSON.parse(text.result).documents;
 
       alert(JSON.stringify(docs).substring(0, 200));
       return JSON.parse(text.result).documents;
-    } catch (ex) {
-      alert(ex.message);
+    } else {
+      alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
+      alert("Endpoint used: " + localStorage.getItem("entityUrl"));
       return [];
     }
-  } else {
-    alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
-    alert("Endpoint used: " + localStorage.getItem("entityUrl"));
+  } catch (ex) {
+    alert(ex);
     return [];
   }
 }
 function buildPayload(data, method) {
   return {
     method: method,
+    origin: "https://mayerhofer.github.io",
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json'
