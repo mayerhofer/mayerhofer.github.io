@@ -147,9 +147,9 @@ async function operate(route, payload) {
 function buildPayload(data, method) {
   return {
     method: method,
-    origin: "https://mayerhofer.github.io",
     body: JSON.stringify(data),
     headers: {
+       origin: "https://mayerhofer.github.io",
       'Content-Type': 'application/json'
     }
   };
@@ -161,12 +161,7 @@ class EntityAPI {
   }
 
   async get() {
-    try {
-      return await operate(this.route);
-    } catch (ex) {
-      alert(ex.message);
-      return [];
-    }
+    return await operate(this.route);
   }
 	
   async insert(data) {
