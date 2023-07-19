@@ -189,28 +189,28 @@ a:active {
   box-sizing: border-box;
 }
 
-.header {
+.toast-header {
   background-color: #eee;
   padding: 5px;
 }
 
-.details {
+.toast-details {
   padding: 10px;
 }
 
-.accordion {
+.toast-accordion {
   background-color: #fff;
   border-top: 1px solid #ccc;
 }
 
-.accordion button {
+.toast-accordion button {
   background-color: #eee;
   padding: 5px;
   border: none;
   cursor: pointer;
 }
 
-.close {
+.toast-close {
   position: absolute;
   top: 0;
   right: 0;
