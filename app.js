@@ -130,10 +130,9 @@ async function operate(route, payload) {
 
     if (response.status === 200) {
       let text = await response.json();
-      let docs = JSON.parse(text.result).documents;
+      let result = JSON.parse(text.result);
 
-      alert(JSON.stringify(docs).substring(0, 200));
-      return JSON.parse(text.result).documents;
+      return result.documents ?? result;
     } else {
       alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
       alert("Endpoint used: " + localStorage.getItem("entityUrl"));
@@ -1614,7 +1613,6 @@ class FinanceForm extends RComponent {
     };
     const saveObj = this.isEditMode ? Object.assign({}, this.props.element, newCashFlow) : newCashFlow;
 
-    console.log('saving', newCashFlow);
     log('info', {message: 'Saving cashflow', stackTrace: newCashFlow.provider });
 
     const saveLiabi = this.saveLiability.bind(this);
@@ -1622,14 +1620,15 @@ class FinanceForm extends RComponent {
     const cfApi = new EntityAPI('cashflow');
     if (this.isEditMode) {
       cfApi.update(saveObj).then(() => {
-	      setTimeout(() => {
-	        saveLiabi(cfid, newCashFlow);
+        setTimeout(() => {
+          saveLiabi(cfid, newCashFlow);
         }, 1000);
+        alert('New cashflow saved successfully.');
       });
     } else {
       cfApi.insert(saveObj).then(() => {
-	      setTimeout(() => {
-	        saveLiabi(cfid, newCashFlow);
+        setTimeout(() => {
+          saveLiabi(cfid, newCashFlow);
         }, 1000);
       });
     }
@@ -1654,7 +1653,9 @@ class FinanceForm extends RComponent {
 
             log('info', {message: 'saving liability', stackTrace: `CF id: ${cfid.toString()}`});
 
-            lApi.update(obj);
+            lApi.update(obj).then(res => {
+              alert('New liability updated successfully.');
+	    });
           } else {
             // insert
             const obj = {
@@ -1669,7 +1670,9 @@ class FinanceForm extends RComponent {
 
             log('info', {message: 'saving liability', stackTrace: `CF id: ${cfid.toString()}`});
 
-            lApi.insert(obj);
+            lApi.insert(obj).then(res => {
+              alert('New liability saved successfully.');
+	    });
           }
         });
       }
