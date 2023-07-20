@@ -257,7 +257,21 @@ class RestAPI {
   }
 }
 
+function showToast(type, message) {
+  const toast = document.querySelector(".toast");
+  toast.classList.add(type);
+  toast.querySelector(".header h3").textContent = message;
+  toast.querySelector(".details p").textContent = message;
+  toast.style.display = "block";
+
+  const closeButton = toast.querySelector(".close");
+  closeButton.onclick = () => {
+    toast.style.display = "none";
+  };
+}
+
 const log = (type, data) => {
+  showToast(type, data);  
 //  setTimeout(() => {
 //    try {
 //      const api = 
