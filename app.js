@@ -493,6 +493,12 @@ class RComponent {
         <input type="submit" value="Submit">
       </form>
     `,
+    liabilityReport: `<div class="{field.className}" id="{field.id}">{field.content}</div>`,
+    liabRepRow: `<div class="row liabRep-row">
+	  <div class="liabRep-source">{field.k}</div>
+	  <div class="liabRep-cred">{field.credit}</div>
+	  <div class="liabRep-debt">{field.debit}</div>
+	</div>`,
     blogContainer: `
       <div class="page-body div--scrollable">
         <article class="introduction">
@@ -1041,6 +1047,37 @@ class Table extends RComponent {
 // Page - Components - End Table
 /////////////////////////////////////////////
 /////////////////////////////////////////////
+// Page - Business Components - Liability Report
+class LiabilityReport extends RComponent {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const report = this.props.data.reduce((a, b) => {
+      if (! a[b.debtor]) {
+	a[b.debtor] = b.direction ? [b.amount, 0] : [0, b.amount];
+      } else {
+	if (b.direction) {
+	  a[b.debtor][0] += b.amount;
+	} else {
+	  a[b.debtor][1] += b.amount;
+	}
+      }
+      return a;
+    }, {});
+    const keys = Object.keys(report);
+    const mapKey = k => this.fill('liabRepRow', { k, credit: report[k][0], debit: report[k][1] });
+    const fields = {
+      id: this.props.id,
+      className: 'liabilityReport',
+      content: keys.map(mapKey)
+    return this.fill('liabilityReport', { id: this.props.id, className: 'liabilityReport', content });
+  }
+}
+// Page - Components - End Liability Report 
+/////////////////////////////////////////////
+/////////////////////////////////////////////
 // Page - Business Components - Generic Data Table
 class GenericTable extends RComponent {
   // props: {
@@ -1122,6 +1159,7 @@ class GenericTable extends RComponent {
       content: this.state.data.slice(0, this.state.last).map(this.rowToHtml.bind(this)).join(''),
     });
     const label = this.fill('simplediv', {className: 'table__header-label', content: (new Date()).toISOString().substring(0, 10)});
+    const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data } : null;
     let button = '';
     if (typeof this.props.handleEdit === 'function') {
       const buttonId = 'AddNew' + this.props.entity;
@@ -1129,7 +1167,7 @@ class GenericTable extends RComponent {
 
       this.registerHandler(buttonId, () => this.handleEdit.bind(this)());
     }
-    const header = this.fill('simplediv', {className: 'table__header', content: label + button});
+    const header = this.fill('simplediv', {className: 'table__header', content: label + button + section});
 
     return this.fill('div', {id: this.id, className: 'table__wrapper', content: header + content});
   }
@@ -2108,11 +2146,15 @@ const loadLiability = function() {
   const handleEdit = (data, element) => {
     RComponent.buildRoot({id: 'liabilityForm', data, element}, p => new LiabilityForm(p));
   };
+  const repProps = {
+    id: 'liabilityReport'
+  };
   RComponent.buildRoot({
     id: 'liabilityTable',
     entity: 'liability',
     handleEdit,
     formatter: commonFormatters,
+    header: p => new LiabilityReport(Object.assign({}, p, repProps))
   }, p => new GenericTable(p));
 }
 

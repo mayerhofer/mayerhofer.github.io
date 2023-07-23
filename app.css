@@ -555,6 +555,10 @@ nav {
   justify-self: center;
 }
 
+.row {
+  display: inline;
+}
+
 /* ***************************************************************** */
 /* Forms - Input Type Text */
 .container {
