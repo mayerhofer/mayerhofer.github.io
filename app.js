@@ -1160,7 +1160,7 @@ class GenericTable extends RComponent {
       content: this.state.data.slice(0, this.state.last).map(this.rowToHtml.bind(this)).join(''),
     });
     const label = this.fill('simplediv', {className: 'table__header-label', content: (new Date()).toISOString().substring(0, 10)});
-    const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data } : null;
+    const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data }) : null;
     let button = '';
     if (typeof this.props.handleEdit === 'function') {
       const buttonId = 'AddNew' + this.props.entity;
