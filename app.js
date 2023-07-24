@@ -1072,7 +1072,8 @@ class LiabilityReport extends RComponent {
       id: this.props.id,
       className: 'liabilityReport',
       content: keys.map(mapKey)
-    return this.fill('liabilityReport', { id: this.props.id, className: 'liabilityReport', content });
+    };
+    return this.fill('liabilityReport', fields);
   }
 }
 // Page - Components - End Liability Report 
