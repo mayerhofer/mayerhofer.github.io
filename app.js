@@ -493,7 +493,9 @@ class RComponent {
         <input type="submit" value="Submit">
       </form>
     `,
-    liabilityReport: `<div class="{field.className}" id="{field.id}">{field.content}</div>`,
+    liabilityReport: `
+      <div class="{field.className}" id="{field.id}">{field.content}</div>
+    `,
     liabRepRow: `<div class="row liabRep-row">
 	  <div class="liabRep-source">{field.k}</div>
 	  <div class="liabRep-cred">{field.credit}</div>
@@ -1160,7 +1162,7 @@ class GenericTable extends RComponent {
       content: this.state.data.slice(0, this.state.last).map(this.rowToHtml.bind(this)).join(''),
     });
     const label = this.fill('simplediv', {className: 'table__header-label', content: (new Date()).toISOString().substring(0, 10)});
-    const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data }) : null;
+    const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data }) : '';
     let button = '';
     if (typeof this.props.handleEdit === 'function') {
       const buttonId = 'AddNew' + this.props.entity;
@@ -2155,7 +2157,7 @@ const loadLiability = function() {
     entity: 'liability',
     handleEdit,
     formatter: commonFormatters,
-    header: p => new LiabilityReport(Object.assign({}, p, repProps))
+    header: p => (new LiabilityReport(Object.assign({}, p, repProps))).render()
   }, p => new GenericTable(p));
 }
 
