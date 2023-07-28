@@ -1170,9 +1170,9 @@ class GenericTable extends RComponent {
 
       this.registerHandler(buttonId, () => this.handleEdit.bind(this)());
     }
-    const header = this.fill('simplediv', {className: 'table__header', content: label + button + section});
+    const header = this.fill('simplediv', {className: 'table__header', content: label + button});
 
-    return this.fill('div', {id: this.id, className: 'table__wrapper', content: header + content});
+    return this.fill('div', {id: this.id, className: 'table__wrapper', content: section + header + content });
   }
 }
 // Page - Business Components - End Generic Data Table
