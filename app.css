@@ -559,6 +559,38 @@ nav {
   display: inline;
 }
 
+.liabRep-row {
+  width: 100%;
+  border-bottom: 1px solid #BC7C9C;
+}
+
+.liabilityReport {
+  color: #BC7C9C;
+  text-align: center;
+}
+
+.liabRep-header {
+  font-weight: 600;
+}
+
+.liabRep-cel {
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+}
+
+.liabRep-source {
+  color: #BC7C9C;
+}
+
+.liabRep-cred {
+  color: blue;
+}
+
+.liabRep-debt {
+  color: red;
+}
+
 /* ***************************************************************** */
 /* Forms - Input Type Text */
 .container {
