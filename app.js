@@ -497,9 +497,9 @@ class RComponent {
       <div class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
     `,
     liabRepRow: `<div class="row liabRep-row">
-	  <div class="liabRep-source">{field.k}</div>
-	  <div class="liabRep-cred">{field.credit}</div>
-	  <div class="liabRep-debt">{field.debit}</div>
+	  <div class="liabRep-cel liabRep-source">{field.k}</div>
+	  <div class="liabRep-cel liabRep-cred">{field.credit}</div>
+	  <div class="liabRep-cel liabRep-debt">{field.debit}</div>
 	</div>`,
     blogContainer: `
       <div class="page-body div--scrollable">
