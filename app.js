@@ -1056,14 +1056,20 @@ class LiabilityReport extends RComponent {
   }
 
   render() {
+    // a = array of debtors. b = liability object.
     const report = this.props.data.reduce((a, b) => {
-      if (! a[b.debtor]) {
-	a[b.debtor] = b.direction ? [b.amount, 0] : [0, b.amount];
+      let row = a.find(obj => obj.debtor === b.debtor);
+      if (! row) {
+        a.push({
+	  debtor: b.debtor,
+	  cred: b.direction ? b.amount : 0,
+	  debt: b.direction ? 0 : b.amount
+	});
       } else {
 	if (b.direction) {
-	  a[b.debtor][0] += b.amount;
+	  row.cred += b.amount;
 	} else {
-	  a[b.debtor][1] += b.amount;
+	  row.debt += b.amount;
 	}
       }
       return a;
