@@ -1062,24 +1062,22 @@ class LiabilityReport extends RComponent {
       if (! row) {
         a.push({
 	  debtor: b.debtor,
-	  cred: b.direction ? b.amount : 0,
-	  debt: b.direction ? 0 : b.amount
+	  credit: b.direction ? b.amount : 0,
+	  debit: b.direction ? 0 : b.amount
 	});
       } else {
 	if (b.direction) {
-	  row.cred += b.amount;
+	  row.credit += b.amount;
 	} else {
-	  row.debt += b.amount;
+	  row.debit += b.amount;
 	}
       }
       return a;
     }, {});
-    const keys = Object.keys(report);
-    const mapKey = k => this.fill('liabRepRow', { k, credit: report[k][0], debit: report[k][1] });
     const fields = {
       id: this.props.id,
       className: 'liabilityReport',
-      content: keys.map(mapKey)
+      content: report.map(k => this.fill('liabRepRow', k))
     };
     return this.fill('liabilityReport', fields);
   }
