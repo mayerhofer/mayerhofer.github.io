@@ -494,7 +494,7 @@ class RComponent {
       </form>
     `,
     liabilityReport: `
-      <div class="{field.className}" id="{field.id}">{field.content}</div>
+      <div class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
     `,
     liabRepRow: `<div class="row liabRep-row">
 	  <div class="liabRep-source">{field.k}</div>
