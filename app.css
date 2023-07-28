@@ -556,7 +556,7 @@ nav {
 }
 
 .row {
-  display: inline;
+  display: inline-flex;
 }
 
 .liabRep-row {
