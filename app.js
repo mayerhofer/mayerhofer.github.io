@@ -257,21 +257,22 @@ class RestAPI {
   }
 }
 
-function showToast(type, message) {
+function showToast(type, header, text) {
   const toast = document.querySelector(".toast");
-  toast.classList.add(type);
-  toast.querySelector(".header h3").textContent = message;
-  toast.querySelector(".details p").textContent = message;
-  toast.style.display = "block";
+  toast.classList.add("toast-" + type);
+  toast.classList.remove("unshow");
+  toast.querySelector(".toast-header h3").textContent = header;
+  toast.querySelector(".toast-details p").textContent = text;
 
-  const closeButton = toast.querySelector(".close");
+  const closeButton = toast.querySelector(".toast-close");
   closeButton.onclick = () => {
-    toast.style.display = "none";
+    toast.classList.add("unshow");
   };
 }
 
 const log = (type, data) => {
-  showToast(type, data);  
+  showToast(type, data.message, data.stackTrace);
+
 //  setTimeout(() => {
 //    try {
 //      const api = 
