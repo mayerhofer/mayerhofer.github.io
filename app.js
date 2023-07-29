@@ -1066,10 +1066,10 @@ class LiabilityReport extends RComponent {
 	  debit: b.liability ? b.amount : 0
 	});
       } else {
-	if (b.direction) {
-	  row.credit += b.amount;
-	} else {
+	if (b.liability) {
 	  row.debit += b.amount;
+	} else {
+	  row.credit += b.amount;
 	}
       }
       return a;
