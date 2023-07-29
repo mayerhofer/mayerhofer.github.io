@@ -1073,7 +1073,7 @@ class LiabilityReport extends RComponent {
 	}
       }
       return a;
-    }, {});
+    }, []);
     const fields = {
       id: this.props.id,
       className: 'liabilityReport',
