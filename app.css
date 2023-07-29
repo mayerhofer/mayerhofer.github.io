@@ -179,23 +179,25 @@ a:active {
 
 .toast {
   position: fixed;
-  bottom: 0;
+  bottom: 8vh;
   right: 0;
   width: 100%;
-  height: 20%;
-  background-color: #fff;
+  height: 12vh;
+  background-color: #b38d97;
   border: 1px solid #ccc;
   padding: 10px;
   box-sizing: border-box;
 }
 
 .toast-header {
-  background-color: #eee;
+  background-color: #d5aca9;
+  color: #2E86AB;
   padding: 5px;
 }
 
 .toast-details {
   padding: 10px;
+  color: #2E86AB;
 }
 
 .toast-accordion {
@@ -220,6 +222,9 @@ a:active {
   cursor: pointer;
 }
 
+.toast-info {}
+
+.toast-error {}
 
 
 /* ***************************************************************** */
