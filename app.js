@@ -497,7 +497,7 @@ class RComponent {
       <div class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
     `,
     liabRepRow: `<div class="row liabRep-row">
-	  <div class="liabRep-cel liabRep-source">{field.k}</div>
+	  <div class="liabRep-cel liabRep-source">{field.debtor}</div>
 	  <div class="liabRep-cel liabRep-cred">{field.credit}</div>
 	  <div class="liabRep-cel liabRep-debt">{field.debit}</div>
 	</div>`,
