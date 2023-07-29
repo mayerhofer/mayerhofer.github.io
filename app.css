@@ -193,11 +193,13 @@ a:active {
   background-color: #d5aca9;
   color: #2E86AB;
   padding: 5px;
+  font-size: 16px;
 }
 
 .toast-details {
   padding: 10px;
   color: #2E86AB;
+  font-size: 16px;
 }
 
 .toast-accordion {
