@@ -609,6 +609,28 @@ class RComponent {
       </div>
     </div>
   </div>`,
+    amountLiability: `<div id="{field.id}" class="container">
+    <div class="textfield modalfield">
+      <label for="{field.id}Input" class="field-label hide">{field.label}</label>
+      <input id="{field.id}Input" class="amount-input" type="number" maxlength="30" min=0 step=0.01 value={field.value} placeholder="{field.label}" onchange="window.application.callHandler(this, '{field.id}')" />
+      <div class="direction-container">
+        <ul class="direction">
+          <li class="direction-option">
+            <input type="radio" id="{field.id}Income" name="{field.id}Direction" value="income" alt="Income" {field.incomeChecked} onchange="window.application.callHandler(this, '{field.id}Dir')">
+            <label for="{field.id}Income">
+              <img class="img-swap icon-small" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAADmElEQVR4nO2bS0hUURjHf41KYmgZBRE9QFqUPaQgohZRYJsgCCMzCtJVQdEm0iAMKloEQbSIiGhVUBG0iB6IC5WgZS1UKowIo4VZCL1MMm1xZnDOQWfuedxzRq8/ODhX7vnu//vu3O9+5zGQPNYB3cBHYG9gLd4pQTg/nm79YeX4p4UJ58eB3rBy/LIC+IkcgLqgijzzGNn552Hl+GUfsvO/gKqgijxSDnxCDkBLUEWeuYrsfA/ibZAINgB/mXB+DNgRVJFHUsBL5Lt/K6gizxxHdv4rsCioIo8sAYaQA3BkshPneBSlSyvQAJQa9C0HFmcddwE7EYGYFhxGvns2bQRY41e+HaWIkZqrAFzMdbHiODyw5CSwMuv4OyKB6TIKtAEXXIjyRSXwDfkO1gZV5JlryM4/DSvHL1XAHyacH0XM3iSGhyS4atuCqNMzzv8GlgVV5JkXyHf/fFg5fqlDdn4AqAiqyCMlwDvkABwNqsgzJ5Cdf4vn4szFxVZjlrBSwDnlf82I19+04QruavYuz9qt2Y786rJpY8BWv/LtmAu8wd3dD1b0mOaAZsSzn6EfuGdoqwe4b9jXGpMZoVWIBcbsmZo9wBMniqKxELiU1mLKEIZD5Tbkr+8jCxGm3MDNo6e9ONqgGPgBLLdyxYwO3ARgXOeiFcBnpfMpa1fMCBKA60rHbsItMakBiL3vZkSFlun0D9imeWGXOAtAKkKHIuBm+m+G24hlp2lPlDrgGLAx63gQOBPRfhmwCbPFDRBTZK8QEyS50Jk4rdQRMB/hcPbXbdIlpiku9B79pKS2PmCBYttbElR3VnQRvXiqdyhyf1wByJcDXgPD6c/DiMchatIpi3heFOY5tCWRLwd8QExY7gLaEQMgU54hXp1RWA/s1rB9WePcg4gdY7HTiPx1a3TY1+trcEaT+AAUI563VjTfjwp9wFnEEHMqTgOHItpbqnn9do1za7IPioEH2G8gqEU8U8dznFOdbnFgvIKcwt3uibici5XE5wA1AJ2ISi9q06FJw26Tpm0dzZ3ZHWe/AaEFhEYthSuJb09OtYZt3YRqNRx2NWLrUOyq5axNy1cKxzYanPEkPgBqDtBd4tL55UXBDodzPcf50MkBs8PhQiTxAVBzQA16Q0sdCnY4nE3chVBBDocHHYlQ7biyC/BFOTbZPj+l3QPpDzYVVQ+wVjFeBNxF/GLD1O4IcAd5WQ7EJupeS80DQP1/Q7c2KrewnUoAAAAASUVORK5CYII="/>
+            </label>
+          </li>
+          <li class="direction-option">
+            <input type="radio" id="{field.id}Expense" name="{field.id}Direction" value="expense" alt="Expense" {field.expenseChecked} onchange="window.application.callHandler(this, '{field.id}Dir')">
+            <label for="{field.id}Expense">
+              <img class="img-swap icon-small" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABGUlEQVRIie3UPUvDUBQG4Ad161AQXfwCQTo66yIiDoqO4tw/UcRd0NH/4OBmB0HE2UkQBAdxbV0cHBShqGAdjBSKtyRtLnTICweS3JDncLk5FCkyBNnCE9oDVhObWeBmDuhfNULINk7wgPfk5agZx3mgy2hZwGOCvKCGRUxgNNDMIAWW8Zw8uMPcP43lDu+ildycoRTYkdzh7+TiECMBNAr8gWoPMAR/4hhTmMFFVnglBdoN11HpWp/NCqdNG7dYDazPx4KrwmeghMtYcCgV3GdEgyMzbXbw2ge60S84hiOdX7GOct/tp8w0rhPwC3uxQVjXGa0NLMXEyljDqc7WXmFy0A9nORgt7Os9WnOD33CDA7+jsUiR4c4PF/oFIjYEfRAAAAAASUVORK5CYII="/>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>`,
     dateTextField: `<div id="{field.id}" class="container container-date">
     <div class="datefield">
       <label for="{field.id}Input" class="field-label">{field.label}</label>
@@ -1546,7 +1568,7 @@ class LiabilityForm extends RComponent {
       value: this.state.amount,
       label: 'Amount',
     };
-    const amount = this.fill('amountField', amountProps);
+    const amount = this.fill('amountLiability', amountProps);
     const debtor = buildTb(buildProps('Debtor'));
     const buttonId = 'AddNewLiability';
     const button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
@@ -1558,7 +1580,7 @@ class LiabilityForm extends RComponent {
     
     this.registerHandler(buttonId, this.handleSave.bind(this));
 
-    this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
+    //this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
     this.registerHandler(this.id + 'Amount', this.handleAmountChange.bind(this));
     this.registerHandler(this.id + 'AmountDir', this.handleDirectionChange.bind(this));
     return this.fill('div', {id: this.id, className: 'liability', content});
