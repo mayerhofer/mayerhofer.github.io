@@ -261,7 +261,7 @@ function showToast(type, header, text) {
   const toast = document.querySelector(".toast");
   toast.classList.add("toast-" + type);
   toast.classList.remove("unshow");
-  toast.querySelector(".toast-header h3").textContent = header;
+  toast.querySelector(".toast-header p").textContent = header;
   toast.querySelector(".toast-details p").textContent = text;
 
   const closeButton = toast.querySelector(".toast-close");
