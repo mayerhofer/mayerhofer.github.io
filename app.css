@@ -214,12 +214,16 @@ a:active {
   cursor: pointer;
 }
 
-.toast-close {
+.toast-button {
   position: absolute;
   top: 0;
   right: 0;
   background-color: #ccc;
   padding: 5px;
+}
+
+.toast-close {
+  background-color: #ccc;
   border: none;
   cursor: pointer;
   z-index: 100;
