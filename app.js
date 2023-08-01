@@ -1497,6 +1497,16 @@ class LogInForm extends RComponent {
   }
 }
 
+function buildSaveProps(component) {
+  return component.fill('imgButton', 
+    {
+      id: component.id + 'Save', 
+      disabled: '', 
+      className: 'financeSave', 
+      img: "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADt0lEQVRoge2YvWsUQRjGn9m7fBg/iJLEJo2NAbFRtPQfSCEpFOwshPSpYhMUq4CojQr+C4JRCyWNgqAgsVUkhSAYNGcgGtDkEnPvY7E7u7Ozs7O3J5tEuBfm9m5m7+b3zPsxswd0rWtd69pumsobOPNydZxUD0iMEgBArC4343FuNfH+wgigFBQAAgAJkhDzKgIRQihgdBUhRAQtEUjciImFLdQOHflJUTc+TgzfaUdAkDdgw4eEaQthjGbAkwQluoIgEfUjHgeTn6Z+JQahePvE48b1dgTU8wWk4R38EAknVUqFq48IDkjgjXb6/uvU999cORuCh6pAPQkBUera2JPv/YsTI1d9AvI9YMO7PCAShopefQ0tAjJsYngiu0g0vJJMrN8qcnpsrjHbkYAieAARtBlCOr6ZhJMkYZUvIAkpJoORCkwfn1ueKi+gAB5AnHy6UYuwhNArQIcdM/B6fgU1k8eQnwMWvBNAomlVci9jz6UTVkSyC2B7wAEfdR0uLaAIHgg9EMInChjNbMLrkpqZglFZjUPICQ9fGOQLKIAHwhW0XaXvTycoQWY9YFaqsKKVgy8UYMK7dLjCwtzQ4rKakwM6V2jc74T3aPDsA354qADL6y2M9CebuZmEjPMgaa8unzIqk8QeEApWmoxxbHifDzxl1IInEAQJrKr34OaHJr6tb2eOBa24pEqmUqXKrYbfIO59DhD07XPDd+IBGx4A+g/UsPGrBQoBpfDu9wAuvf0DcLtoHbRsADVHt0JvXx1BX28peK8AG54g6vUABweDdEix1wgde9L08SCvziddbvjOQ8iq7Slh0YcdgfdUQu9OvNfh/QL+A3ivgL0E79NRHEJ7GN4vYC/Be0QUl1EL/txQD2ZODmCkT8UPNOaJ0/fZPPfYfY2m4NanGhbWggw8PQoKd2J75f8dPtsvIhjqIaaObZeCB4pOo46wqQJevx/qsUPRjC23eZLYHfNVwacfatqD9wrIS9gq4ZPn4jR8Z2XUAR9Wm+rgRaQUvF9ATqmsFJ7l4L0C8up8lfA6hGx4epQU7sSZTapCeA3aLrxfgAseqBQ+bO3DFwjIwusfrQre/JMgBd9JFXLBo2L4JITS8D4/FJbRr4/m0Xj4NDmYVQhv5sGP+RdYe/bcKiZlBETKg9YmatubumtH4GHOW6DA99/oEoDRoxfPx/Ag0GgSw73VwK9sqXjyQ+Pj8aQkvpT2gBCT+ovmIswutrDclErg7y7ttzbQEF4UJ3Nd0LWuda1ru2p/ASsCdZ0lM904AAAAAElFTkSuQmCC"
+    });
+}
+
 /////////////////////////////////////////////
 // Page - Components - LiabilityForm
 class LiabilityForm extends RComponent {
@@ -1504,7 +1514,6 @@ class LiabilityForm extends RComponent {
     super(props);
 
     this.state = {
-      //date: props.element.date,
       dueDate: props.element.dueIn,
       liability: props.element.liability,
       amount: props.element.amount,
@@ -1538,18 +1547,32 @@ class LiabilityForm extends RComponent {
   }
   handleSave() {
     let dt = new Date();
-    const obj = {
-      dueIn: Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()),
-      source: this.state.debtor,
-      liability: this.state.liability,
-      amount: Number.parseFloat(this.state.amount),
-      cashflowId: -1,
-      elementId: -1,
-      payed: false,
-      updated: dt.getTime()
-    };
-    this.props.addLiability(obj);
+    const obj = Object.assign({}, this.props.element);
+
+    obj.dueIn = this.state.dueDate;
+    obj.liability = this.state.liability;
+    obj.amount = this.state.amount;
+    obj.payed = this.state.payed;
+    obj.source = this.state.debtor;
+    
+    saveLiability(obj);
   }
+  
+  saveLiability(updatedLiability) {
+    try {
+      if (updatedLiability && updatedLiability.cashflowId && updatedLiability._id) {
+        const lApi = new EntityAPI('liability');
+
+        log('info', {message: 'saving liability', stackTrace: `CF id: ${cfid.toString()}`});
+
+        lApi.update(obj);
+        log('info', {message: 'Liability object updated', stackTrace: `CF id: ${updatedLiability.cashflowId.toString()}`});
+      };
+    } catch (ex) {
+      log('error', ex);
+    }
+  }
+
   render() {
     const buildTb = props => this.buildRComponent(props, p => new TextField(p));
     const buildProps = label => {
@@ -1570,15 +1593,14 @@ class LiabilityForm extends RComponent {
     };
     const amount = this.fill('amountLiability', amountProps);
     const debtor = buildTb(buildProps('Debtor'));
-    const buttonId = 'AddNewLiability';
-    const button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
-    const header = this.fill('simplediv', {className: 'table__header', content: button});
+    let save = buildSaveProps(this);
+    const actionButtonProps = {id: this.id + 'ActionButtons', className: 'buttons', content: [save].join('')};
     const content = `
-    <h1>Add Liability</h1><br />${header}<br />
+    <h2>Update Liability</h2><br />${actionButtonProps}<br />
     ${debtor}<br />${amount}<br />
     `;
     
-    this.registerHandler(buttonId, this.handleSave.bind(this));
+    this.registerHandler(this.id + 'Save', this.handleSave.bind(this));
 
     //this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
     this.registerHandler(this.id + 'Amount', this.handleAmountChange.bind(this));
@@ -1833,7 +1855,7 @@ class FinanceForm extends RComponent {
     // Nao deletei abaixo, porque o codigo e da mesma imagem em tamanho 100x100
     //// // let liability = this.fill('imgButton', {id: this.id + 'Liability', disabled: strDisabled, className: 'financeSave', img: "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"});
     let liability = this.fill('liabilityButton', {id: this.id + 'Liability', content: liabilityView, className: 'financeSave', img: "iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAElUlEQVRoge2a329URRTHPxK6hECh8qCh8qOrsWIkBuiLiT6YmGiMP4o1QZTwDyC1UR80PBKC+mjUaOPvh2Il0Woi+GCM8UHrDxQToQUCiiIYMUbZKi1pl/XhnGE2lzN35+5ud1fiN5nc7cw5c8/3zjkzZ2YKYcwD+oEvgL+1jAJbgVyKXkvhKuA7oBQo3wKdTbMuEvPwJA4CvUC7lvXAuLZ9Q4uPzCOIoWPAYqN9MZ7Mww20KzO+RIzsTZG5T2VGG2JRlZhAjGxPkVmkMoWGWBSBOUZdKULvsnobUissImP6vC1Fz7UdqK859cVWZFTGsYO9AzisMlsaaFdm5JB1ogQcQgJ7kZY+PIl9QFuTbIxGJ56MVfYBS5tmXUbkkHXic2QmmwA+Q9yp5UfikkAeGAROADOE3cqVGZV9SXVbAnfgF8JqSgG4veFWJ5DHk3gX6CEuGcyp7AiezMpZsjEKg3gS1eI97ePFulhUJU6oEetq6KNH+/ipLhZVCRfYtewtcvgJoGlwAdsq/VQFK2n8FPg6Qvc54Gck92oJJL9k7Jfdr3JrMurNCqwR+U/ifyKthkuGyNxmG6BYgZza3AV0Acu0/hfgOPAB8D6yeAfRzFlrGZIixWTbRWA3QtREs4j0IefJJWASGAI2AN3AAi3dwAPALmBKZScInLk1g8ijwHmVH0JcqxJWAm/hR2cgKdBoIn1qyDThI9cR7d9Cv+oWSYxMtUSOkZ3Icrw7hUisQw7Ix5EDdQvufLpA2a3ASa28E7glYNDVwLWJulMqt75M72QFIq/h3SmJhcA7Ze8vAX8Bjwf6GlaZl13FjoSyReQ34I9E3X5DZ3sKiRXI7DSJHRPPax8vIPub64GntO5+Q74LmQBm0Om6DdiJfOFfA0SsOkekoLo7SV+X+gmPBsBp4HujfgQ5krLggt9006xE1hCHD1V+Q6B9Evua4grCu9eN2udeq3G2iLij1mSsOXyEzESPEb9b7dY+D1mN9SByI/AqMrNNal1B5RcGjMoDX6nMaeB1ZDGcH+ZBO969L0KtRDYB58p0nF4lIiD3LjcjE9AosmieAu5tNJFV+FRiCFiNXwsquZaF65A7mLPITXMSF1yr3mn8NsTwYWRkDiCjA/CDPq3AXQ08wcX7/8NIzMwHbjX0evR5rJ5EupBZZBp40mjfo08r4esAnsa+JTuvz3NGm+trj9FWtWu9rX+/aXWKpCcziOslj1bnICnJcWBtWf2VwCdIDCxJ6OS1r2n8/iWaiFU2A2/o7ynEb0N4ReV2GW03AEe0/Sjwoxr5J7LhSmK3yg6GXpaViCtngYdSSIAErDsw7zfa25CrvoPA7ypzuSE3oH2cIeXmLCuRMeBZ4JoKJBx68Wm8RQbS0/gBxEWLwD1pL5qtlT1pTFH1h0nZvpYhj3enIuGPcAFu6N2QdeCJ3KR1C/Dpf+xIJNGLXySnkARwI7IWua3uKuBBhKxbZM8Ad8e8wGWUMWWM2v4LohPZT8QcPkwjgR19m7xEybiv9Q/yRZ5BArCEfJ2PSZ+hsmA5korvRaZhd4s8jqwRWwhMsQ7/AvFI7LQ18IE+AAAAAElFTkSuQmCC"});
-    let save = this.fill('imgButton', {id: this.id + 'Save', disabled: '', className: 'financeSave', img: "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADt0lEQVRoge2YvWsUQRjGn9m7fBg/iJLEJo2NAbFRtPQfSCEpFOwshPSpYhMUq4CojQr+C4JRCyWNgqAgsVUkhSAYNGcgGtDkEnPvY7E7u7Ozs7O3J5tEuBfm9m5m7+b3zPsxswd0rWtd69pumsobOPNydZxUD0iMEgBArC4343FuNfH+wgigFBQAAgAJkhDzKgIRQihgdBUhRAQtEUjciImFLdQOHflJUTc+TgzfaUdAkDdgw4eEaQthjGbAkwQluoIgEfUjHgeTn6Z+JQahePvE48b1dgTU8wWk4R38EAknVUqFq48IDkjgjXb6/uvU999cORuCh6pAPQkBUera2JPv/YsTI1d9AvI9YMO7PCAShopefQ0tAjJsYngiu0g0vJJMrN8qcnpsrjHbkYAieAARtBlCOr6ZhJMkYZUvIAkpJoORCkwfn1ueKi+gAB5AnHy6UYuwhNArQIcdM/B6fgU1k8eQnwMWvBNAomlVci9jz6UTVkSyC2B7wAEfdR0uLaAIHgg9EMInChjNbMLrkpqZglFZjUPICQ9fGOQLKIAHwhW0XaXvTycoQWY9YFaqsKKVgy8UYMK7dLjCwtzQ4rKakwM6V2jc74T3aPDsA354qADL6y2M9CebuZmEjPMgaa8unzIqk8QeEApWmoxxbHifDzxl1IInEAQJrKr34OaHJr6tb2eOBa24pEqmUqXKrYbfIO59DhD07XPDd+IBGx4A+g/UsPGrBQoBpfDu9wAuvf0DcLtoHbRsADVHt0JvXx1BX28peK8AG54g6vUABweDdEix1wgde9L08SCvziddbvjOQ8iq7Slh0YcdgfdUQu9OvNfh/QL+A3ivgL0E79NRHEJ7GN4vYC/Be0QUl1EL/txQD2ZODmCkT8UPNOaJ0/fZPPfYfY2m4NanGhbWggw8PQoKd2J75f8dPtsvIhjqIaaObZeCB4pOo46wqQJevx/qsUPRjC23eZLYHfNVwacfatqD9wrIS9gq4ZPn4jR8Z2XUAR9Wm+rgRaQUvF9ATqmsFJ7l4L0C8up8lfA6hGx4epQU7sSZTapCeA3aLrxfgAseqBQ+bO3DFwjIwusfrQre/JMgBd9JFXLBo2L4JITS8D4/FJbRr4/m0Xj4NDmYVQhv5sGP+RdYe/bcKiZlBETKg9YmatubumtH4GHOW6DA99/oEoDRoxfPx/Ag0GgSw73VwK9sqXjyQ+Pj8aQkvpT2gBCT+ovmIswutrDclErg7y7ttzbQEF4UJ3Nd0LWuda1ru2p/ASsCdZ0lM904AAAAAElFTkSuQmCC"});
+    let save = buildSaveProps(this);
     let actionButtonProps = {id: this.id + 'ActionButtons', className: 'buttons', content: [liability, save].join('')};
     let actionButtons = this.fill('simplediv', actionButtonProps);
 
