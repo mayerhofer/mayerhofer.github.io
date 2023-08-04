@@ -1832,7 +1832,7 @@ class FinanceForm extends RComponent {
       content: labelImgArray.slice(0, 7).join('') + '</ul><ul class="direction">' + labelImgArray.slice(7).join(''),
     };
     
-    let date = this.fill('dateTextField', {id: this.id + 'Date', label: 'Date', value: this.state.date.toISOString()});
+    let date = this.fill('dateTextField', {id: this.id + 'Date', label: 'Date', value: this.state.date.toISOString().slice(0, 16)});
     let country = this.buildRComponent({id: this.id + 'Country', country: this.state.country, handleChange: this.handleCountryUpdate.bind(this)}, p => new FlagCombo(p));
     
     const providerProps = buildProps('Provider');
