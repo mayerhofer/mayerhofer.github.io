@@ -1704,7 +1704,7 @@ class FinanceForm extends RComponent {
     const dt = this.state.date;
     const cfid = this.state.nextElementId;
     const newCashFlow = {
-      date: Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()),
+      date: Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes()),
       currency: this.state.currency,
       location: this.state.country,
       direction: this.state.direction,
