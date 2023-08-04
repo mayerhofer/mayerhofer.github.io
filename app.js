@@ -634,7 +634,7 @@ class RComponent {
     dateTextField: `<div id="{field.id}" class="container container-date">
     <div class="datefield">
       <label for="{field.id}Input" class="field-label">{field.label}</label>
-      <input id="{field.id}Input" type="date" maxlength="30" value="{field.value}" onchange="window.application.callHandler(this, '{field.id}')" />
+      <input id="{field.id}Input" type="datetime-local" maxlength="30" value="{field.value}" onchange="window.application.callHandler(this, '{field.id}')" />
     </div>
   </div>`,
     flag: '<img id="{img.id}" class="{img.className}" title={img.title} onClick="window.application.callHandler(this,\'{img.id}\')" alt="{img.title}" src="data:image/png;base64,{img.imgBase64}" />',
@@ -1832,7 +1832,7 @@ class FinanceForm extends RComponent {
       content: labelImgArray.slice(0, 7).join('') + '</ul><ul class="direction">' + labelImgArray.slice(7).join(''),
     };
     
-    let date = this.fill('dateTextField', {id: this.id + 'Date', label: 'Date', value: this.state.date.toISOString().split('T')[0]});
+    let date = this.fill('dateTextField', {id: this.id + 'Date', label: 'Date', value: this.state.date.toISOString()});
     let country = this.buildRComponent({id: this.id + 'Country', country: this.state.country, handleChange: this.handleCountryUpdate.bind(this)}, p => new FlagCombo(p));
     
     const providerProps = buildProps('Provider');
