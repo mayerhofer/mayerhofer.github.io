@@ -106,7 +106,7 @@ window.appTemplates.components = {
   form: '<form id="{form.id}" class="{form.className}" onsubmit="window.application.callHandler(this,\'{form.id}\')">{form.fields}</form>',
   //textField: '<div id="{text.id}" class="{text.className}"><label for="{this.inputId}">{text.name}</label><input type="text" id="{this.inputId}" onchange="window.application.callHandler(this,\'{text.id}\')" /></div>',
   textField: `
-  <div id="{field.id}" class="container">
+  <div id="{field.id}" class="container text-container">
     <div class="textfield {field.invalidDiv}">
       <input id="{field.id}Input" required class="{field.invalid}" type="text" placeholder="{field.label}" onchange="window.application.callHandler(this,\'{field.id}Change\');" value="{field.value}" />
       <label for="{field.id}Input" class="field-label {field.invalid}">{field.label}</label>
@@ -133,7 +133,7 @@ window.appTemplates.components = {
   </div>
   <div id="{field.id}InputTooltip" class="tooltip {field.hideError}">{field.validationMessage}</div>
 </div>`,
-  amountField: `<div id="{field.id}" class="container">
+  amountField: `<div id="{field.id}" class="container amount-container">
   <div class="textfield modalfield">
     <div class="amount-currency-container">
       <div class="currency-dropdown">
@@ -145,23 +145,23 @@ window.appTemplates.components = {
     </div>
     <label for="{field.id}Input" class="field-label hide">{field.label}</label>
     <input id="{field.id}Input" class="amount-input" type="number" maxlength="30" min=0 step=0.01 value={field.value} placeholder="{field.label}" onchange="window.application.callHandler(this, '{field.id}')" />
-    <div class="direction-container">
-      <ul class="direction">
-        <li class="direction-option">
-          <input type="radio" id="{field.id}Income" name="{field.id}Direction" value="income" alt="Income" {field.incomeChecked} onchange="window.application.callHandler(this, '{field.id}Dir')">
-          <label for="{field.id}Income">
-            <img class="img-swap icon-small" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAADmElEQVR4nO2bS0hUURjHf41KYmgZBRE9QFqUPaQgohZRYJsgCCMzCtJVQdEm0iAMKloEQbSIiGhVUBG0iB6IC5WgZS1UKowIo4VZCL1MMm1xZnDOQWfuedxzRq8/ODhX7vnu//vu3O9+5zGQPNYB3cBHYG9gLd4pQTg/nm79YeX4p4UJ58eB3rBy/LIC+IkcgLqgijzzGNn552Hl+GUfsvO/gKqgijxSDnxCDkBLUEWeuYrsfA/ibZAINgB/mXB+DNgRVJFHUsBL5Lt/K6gizxxHdv4rsCioIo8sAYaQA3BkshPneBSlSyvQAJQa9C0HFmcddwE7EYGYFhxGvns2bQRY41e+HaWIkZqrAFzMdbHiODyw5CSwMuv4OyKB6TIKtAEXXIjyRSXwDfkO1gZV5JlryM4/DSvHL1XAHyacH0XM3iSGhyS4atuCqNMzzv8GlgVV5JkXyHf/fFg5fqlDdn4AqAiqyCMlwDvkABwNqsgzJ5Cdf4vn4szFxVZjlrBSwDnlf82I19+04QruavYuz9qt2Y786rJpY8BWv/LtmAu8wd3dD1b0mOaAZsSzn6EfuGdoqwe4b9jXGpMZoVWIBcbsmZo9wBMniqKxELiU1mLKEIZD5Tbkr+8jCxGm3MDNo6e9ONqgGPgBLLdyxYwO3ARgXOeiFcBnpfMpa1fMCBKA60rHbsItMakBiL3vZkSFlun0D9imeWGXOAtAKkKHIuBm+m+G24hlp2lPlDrgGLAx63gQOBPRfhmwCbPFDRBTZK8QEyS50Jk4rdQRMB/hcPbXbdIlpiku9B79pKS2PmCBYttbElR3VnQRvXiqdyhyf1wByJcDXgPD6c/DiMchatIpi3heFOY5tCWRLwd8QExY7gLaEQMgU54hXp1RWA/s1rB9WePcg4gdY7HTiPx1a3TY1+trcEaT+AAUI563VjTfjwp9wFnEEHMqTgOHItpbqnn9do1za7IPioEH2G8gqEU8U8dznFOdbnFgvIKcwt3uibici5XE5wA1AJ2ISi9q06FJw26Tpm0dzZ3ZHWe/AaEFhEYthSuJb09OtYZt3YRqNRx2NWLrUOyq5axNy1cKxzYanPEkPgBqDtBd4tL55UXBDodzPcf50MkBs8PhQiTxAVBzQA16Q0sdCnY4nE3chVBBDocHHYlQ7biyC/BFOTbZPj+l3QPpDzYVVQ+wVjFeBNxF/GLD1O4IcAd5WQ7EJupeS80DQP1/Q7c2KrewnUoAAAAASUVORK5CYII="/>
-          </label>
-        </li>
-        <li class="direction-option">
-          <input type="radio" id="{field.id}Expense" name="{field.id}Direction" value="expense" alt="Expense" {field.expenseChecked} onchange="window.application.callHandler(this, '{field.id}Dir')">
-          <label for="{field.id}Expense">
-            <img class="img-swap icon-small" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABGUlEQVRIie3UPUvDUBQG4Ad161AQXfwCQTo66yIiDoqO4tw/UcRd0NH/4OBmB0HE2UkQBAdxbV0cHBShqGAdjBSKtyRtLnTICweS3JDncLk5FCkyBNnCE9oDVhObWeBmDuhfNULINk7wgPfk5agZx3mgy2hZwGOCvKCGRUxgNNDMIAWW8Zw8uMPcP43lDu+ildycoRTYkdzh7+TiECMBNAr8gWoPMAR/4hhTmMFFVnglBdoN11HpWp/NCqdNG7dYDazPx4KrwmeghMtYcCgV3GdEgyMzbXbw2ge60S84hiOdX7GOct/tp8w0rhPwC3uxQVjXGa0NLMXEyljDqc7WXmFy0A9nORgt7Os9WnOD33CDA7+jsUiR4c4PF/oFIjYEfRAAAAAASUVORK5CYII="/>
-          </label>
-        </li>
-      </ul>
-    </div>
   </div>
+</div>
+<div class="direction-container">
+  <ul class="direction">
+    <li class="direction-option">
+      <input type="radio" id="{field.id}Income" name="{field.id}Direction" value="income" alt="Income" {field.incomeChecked} onchange="window.application.callHandler(this, '{field.id}Dir')">
+      <label for="{field.id}Income">
+        <img class="img-swap icon-small" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAADmElEQVR4nO2bS0hUURjHf41KYmgZBRE9QFqUPaQgohZRYJsgCCMzCtJVQdEm0iAMKloEQbSIiGhVUBG0iB6IC5WgZS1UKowIo4VZCL1MMm1xZnDOQWfuedxzRq8/ODhX7vnu//vu3O9+5zGQPNYB3cBHYG9gLd4pQTg/nm79YeX4p4UJ58eB3rBy/LIC+IkcgLqgijzzGNn552Hl+GUfsvO/gKqgijxSDnxCDkBLUEWeuYrsfA/ibZAINgB/mXB+DNgRVJFHUsBL5Lt/K6gizxxHdv4rsCioIo8sAYaQA3BkshPneBSlSyvQAJQa9C0HFmcddwE7EYGYFhxGvns2bQRY41e+HaWIkZqrAFzMdbHiODyw5CSwMuv4OyKB6TIKtAEXXIjyRSXwDfkO1gZV5JlryM4/DSvHL1XAHyacH0XM3iSGhyS4atuCqNMzzv8GlgVV5JkXyHf/fFg5fqlDdn4AqAiqyCMlwDvkABwNqsgzJ5Cdf4vn4szFxVZjlrBSwDnlf82I19+04QruavYuz9qt2Y786rJpY8BWv/LtmAu8wd3dD1b0mOaAZsSzn6EfuGdoqwe4b9jXGpMZoVWIBcbsmZo9wBMniqKxELiU1mLKEIZD5Tbkr+8jCxGm3MDNo6e9ONqgGPgBLLdyxYwO3ARgXOeiFcBnpfMpa1fMCBKA60rHbsItMakBiL3vZkSFlun0D9imeWGXOAtAKkKHIuBm+m+G24hlp2lPlDrgGLAx63gQOBPRfhmwCbPFDRBTZK8QEyS50Jk4rdQRMB/hcPbXbdIlpiku9B79pKS2PmCBYttbElR3VnQRvXiqdyhyf1wByJcDXgPD6c/DiMchatIpi3heFOY5tCWRLwd8QExY7gLaEQMgU54hXp1RWA/s1rB9WePcg4gdY7HTiPx1a3TY1+trcEaT+AAUI563VjTfjwp9wFnEEHMqTgOHItpbqnn9do1za7IPioEH2G8gqEU8U8dznFOdbnFgvIKcwt3uibici5XE5wA1AJ2ISi9q06FJw26Tpm0dzZ3ZHWe/AaEFhEYthSuJb09OtYZt3YRqNRx2NWLrUOyq5axNy1cKxzYanPEkPgBqDtBd4tL55UXBDodzPcf50MkBs8PhQiTxAVBzQA16Q0sdCnY4nE3chVBBDocHHYlQ7biyC/BFOTbZPj+l3QPpDzYVVQ+wVjFeBNxF/GLD1O4IcAd5WQ7EJupeS80DQP1/Q7c2KrewnUoAAAAASUVORK5CYII="/>
+      </label>
+    </li>
+    <li class="direction-option">
+      <input type="radio" id="{field.id}Expense" name="{field.id}Direction" value="expense" alt="Expense" {field.expenseChecked} onchange="window.application.callHandler(this, '{field.id}Dir')">
+      <label for="{field.id}Expense">
+        <img class="img-swap icon-small" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABGUlEQVRIie3UPUvDUBQG4Ad161AQXfwCQTo66yIiDoqO4tw/UcRd0NH/4OBmB0HE2UkQBAdxbV0cHBShqGAdjBSKtyRtLnTICweS3JDncLk5FCkyBNnCE9oDVhObWeBmDuhfNULINk7wgPfk5agZx3mgy2hZwGOCvKCGRUxgNNDMIAWW8Zw8uMPcP43lDu+ildycoRTYkdzh7+TiECMBNAr8gWoPMAR/4hhTmMFFVnglBdoN11HpWp/NCqdNG7dYDazPx4KrwmeghMtYcCgV3GdEgyMzbXbw2ge60S84hiOdX7GOct/tp8w0rhPwC3uxQVjXGa0NLMXEyljDqc7WXmFy0A9nORgt7Os9WnOD33CDA7+jsUiR4c4PF/oFIjYEfRAAAAAASUVORK5CYII="/>
+      </label>
+    </li>
+  </ul>
 </div>`,
   amountLiability: `<div id="{field.id}" class="container">
   <div class="textfield modalfield">
@@ -188,7 +188,7 @@ window.appTemplates.components = {
   dateTextField: `<div id="{field.id}" class="container container-date">
   <div class="datefield">
     <label for="{field.id}Input" class="field-label">{field.label}</label>
-    <input id="{field.id}Input" type="date" maxlength="30" value="{field.value}" onchange="window.application.callHandler(this, '{field.id}')" />
+    <input id="{field.id}Input" type="datetime-local" maxlength="30" value="{field.value}" onchange="window.application.callHandler(this, '{field.id}')" />
   </div>
 </div>`,
   flag: '<img id="{img.id}" class="{img.className}" title={img.title} onClick="window.application.callHandler(this,\'{img.id}\')" alt="{img.title}" src="data:image/png;base64,{img.imgBase64}" />',
@@ -263,9 +263,18 @@ class CountryAPI {
   }
 }
 
-async function operate(route, payload) {
+function assembleUrl(entity, filter) {
+  const base = localStorage.getItem("entityUrl");
+  let query = '?entity=' + entity;
+  if (filter) {
+    query += '&' + Object.keys(filter).map(k => k + '=' + filter[k]).join('&');
+  }
+
+  return base + query;
+}
+async function operate(route, payload, filter) {
   try {
-    let response = await fetch(localStorage.getItem("entityUrl") + '?entity=' + route, payload);
+    let response = await fetch(assembleUrl(route, filter), payload);
 
     if (response.status === 200) {
       let text = await response.json();
@@ -298,8 +307,8 @@ class EntityAPI {
     this.route = route;
   }
 
-  async get() {
-    return await operate(this.route);
+  async get(filter) {
+    return await operate(this.route, null, filter);
   }
 	
   async insert(data) {
@@ -481,7 +490,7 @@ const parseHtmlToElement = function(id, str) {
     keys.forEach(key => {
       if (key === 'class') {
         element.className = props[key].split('"')[1];
-      } else if (key != 'id') {
+      } else if (key && key != 'id') {
         element.setAttribute(key, props[key].split('"')[1]);
       }
     });
@@ -644,12 +653,16 @@ class RComponent {
     // Find current node to add future child/descendant component in Tree.
     const found = treeParent.findDescendant(props.id);
     if (found) {
-      // Check client rule for if should update
+      // Always update new props
+      const oldProps = found.value.props;
+      found.value.props = props;
+
+      // Check client rule for if should re-render
       if (typeof found.value.shouldComponentUpdate !== 'function' ||
           found.value.shouldComponentUpdate(props, found.value.state)) {
 
         // If rule exist or if there a real difference, re-render.
-        if (!RComponent.compare(found.value.props, props)) {
+        if (!RComponent.compare(oldProps, props)) {
           if (found.value.getDerivedState) {
             found.value.state = found.value.getDerivedState(props);
           }
@@ -746,7 +759,10 @@ class RComponent {
 
       if (htmlParent) {
         //tNode.releaseDescendants();
-        const newNode = parseHtmlToElement(this.id, this.render());
+        var node = TreeNode.getRegistered(this.id);
+        node.virtualDom = this.render();
+
+        const newNode = parseHtmlToElement(this.id, node.virtualDom);
         htmlParent.replaceChild(newNode, child);
       } else {
         throw `Parent html element not found for child (${this.id}).`;
@@ -1005,19 +1021,23 @@ class LiabilityReport extends RComponent {
       let row = a.find(obj => obj.debtor === b.source);
       if (! row) {
         a.push({
-	  debtor: b.source,
-	  credit: b.liability ? 0 : b.amount,
-	  debit: b.liability ? b.amount : 0
-	});
+          debtor: b.source,
+          credit: b.liability ? 0 : b.amount,
+          debit: b.liability ? b.amount : 0
+        });
       } else {
-	if (b.liability) {
-	  row.debit += b.amount;
-	} else {
-	  row.credit += b.amount;
-	}
+        if (b.liability) {
+          row.debit += b.amount;
+        } else {
+          row.credit += b.amount;
+        }
       }
       return a;
     }, []);
+    report.forEach(row => {
+      row.debit = Math.round(100 * row.debit) / 100;
+      row.credit = Math.round(100 * row.credit) / 100;
+    });
     const fields = {
       id: this.props.id,
       className: 'liabilityReport',
@@ -1042,7 +1062,9 @@ class GenericTable extends RComponent {
 
     this.state = {
       data: [],
-      last: 30,
+      start: 0,
+      end: 16,
+      increment: 16,
       formatter: props.formatter,
     };
   }
@@ -1051,7 +1073,7 @@ class GenericTable extends RComponent {
     const api = new EntityAPI(this.props.entity);
     const self = this;
     
-    api.get().then(data => {
+    api.get(this.props.filter).then(data => {
       // At the very least sort by date descending to present meaninful information right on top.
       // Should always have the most recent cashflows so next(elementId) can be passed to CREATE form.
       data.sort((a,b) => {
@@ -1075,6 +1097,12 @@ class GenericTable extends RComponent {
     if (typeof this.props.handleEdit === 'function') {
       this.props.handleEdit(this.state.data, element);
     }
+  }
+  handleBack() {
+    this.setState({start: this.state.start - 16, end: this.state.end - 16});
+  }
+  handleForw() {
+    this.setState({start: this.state.start + 16, end: this.state.end + 16});
   }
 
   buildCell(key, row, formatter) {
@@ -1107,18 +1135,24 @@ class GenericTable extends RComponent {
   render() {
     const content = this.fill('scrollDiv', {
       id: this.id + 'content', 
-      content: this.state.data.slice(0, this.state.last).map(this.rowToHtml.bind(this)).join(''),
+      content: this.state.data.slice(this.state.start, this.state.end).map(this.rowToHtml.bind(this)).join(''),
     });
     const label = this.fill('simplediv', {className: 'table__header-label', content: (new Date()).toISOString().substring(0, 10)});
+    const count = this.fill('simplediv', {className: 'table__header-label', content: this.state.data.length + ': ' + (this.state.start +1) + '-' + (this.state.end > this.state.data.length ? this.state.data.length : this.state.end)});
+    const backwards = this.fill('button', {id: this.id + 'Backwards', className: 'table__header-add' + (this.state.start === 0 ? ' disabled' : ''), content: '<span>&lt;</span>'});
+    const forwards = this.fill('button', {id: this.id + 'Forwards', className: 'table__header-add' + (this.state.start + 16 >= this.state.data.length ? ' disabled' : ''), content: '<span>&gt;</span>'});
     const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data }) : '';
     let button = '';
     if (typeof this.props.handleEdit === 'function') {
-      const buttonId = 'AddNew' + this.props.entity;
+      const buttonId = this.id +'AddNew' + this.props.entity;
       button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
 
       this.registerHandler(buttonId, () => this.handleEdit.bind(this)());
     }
-    const header = this.fill('simplediv', {className: 'table__header', content: label + button});
+    const header = this.fill('simplediv', {className: 'table__header', content: label + count + backwards + forwards + button});
+
+    this.registerHandler(this.id + 'Backwards', () => this.handleBack.bind(this)());
+    this.registerHandler(this.id + 'Forwards', () => this.handleForw.bind(this)());
 
     return this.fill('div', {id: this.id, className: 'table__wrapper', content: section + header + content });
   }
@@ -1232,8 +1266,6 @@ class FlagCombo extends RComponent {
 
     // Load flags only if not already loaded to avoid infinite loop
     if (!Array.isArray(field.state.countries) || field.state.countries.length <= 0) {
-      // Countries list in DB is huge but not necessary here in this form. Best to change source code to add countries when required.
-      const uniqueCountries = ['Poland', 'Italy', 'Scotland', 'Brazil', 'Spain'];
       // Istead of getting all and then filtering, better to make multiple requests since we don't need many countries.
       CountryAPI.get(['PL', 'IT', 'CH', 'BR', 'ES']).then(data => {
         setTimeout(() => {
@@ -1467,7 +1499,6 @@ class LiabilityForm extends RComponent {
     this.setState({liability: e.value !== 'income'});
   }
   handleSave() {
-    let dt = new Date();
     const obj = Object.assign({}, this.props.element);
 
     obj.dueIn = this.state.dueDate;
@@ -1476,7 +1507,7 @@ class LiabilityForm extends RComponent {
     obj.payed = this.state.payed;
     obj.source = this.state.debtor;
     
-    saveLiability(obj);
+    this.saveLiability(obj);
   }
   
   saveLiability(updatedLiability) {
@@ -1484,9 +1515,9 @@ class LiabilityForm extends RComponent {
       if (updatedLiability && updatedLiability.cashflowId && updatedLiability._id) {
         const lApi = new EntityAPI('liability');
 
-        log('info', {message: 'saving liability', stackTrace: `CF id: ${cfid.toString()}`});
+        log('info', {message: 'saving liability', stackTrace: `CF id: ${updatedLiability.cashflowId.toString()}`});
 
-        lApi.update(obj);
+        lApi.update(updatedLiability);
         log('info', {message: 'Liability object updated', stackTrace: `CF id: ${updatedLiability.cashflowId.toString()}`});
       };
     } catch (ex) {
@@ -1517,7 +1548,7 @@ class LiabilityForm extends RComponent {
     let save = buildSaveProps(this);
     const actionButtonProps = {id: this.id + 'ActionButtons', className: 'buttons', content: [save].join('')};
     const content = `
-    <h2>Update Liability</h2><br />${actionButtonProps}<br />
+    <h2>Update Liability</h2><br />${this.fill('simplediv', actionButtonProps)}<br />
     ${debtor}<br />${amount}<br />
     `;
     
@@ -1625,7 +1656,7 @@ class FinanceForm extends RComponent {
     const dt = this.state.date;
     const cfid = this.state.nextElementId;
     const newCashFlow = {
-      date: Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes()),
+      date: dt.getTime(),
       currency: this.state.currency,
       location: this.state.country,
       direction: this.state.direction,
@@ -1753,7 +1784,7 @@ class FinanceForm extends RComponent {
       content: labelImgArray.slice(0, 7).join('') + '</ul><ul class="direction">' + labelImgArray.slice(7).join(''),
     };
     
-    let date = this.fill('dateTextField', {id: this.id + 'Date', label: 'Date', value: this.state.date.toISOString().slice(0, 16)});
+    let date = this.fill('dateTextField', {id: this.id + 'Date', label: 'Date', value: this.state.date.toISOString().slice(0, 11) + this.state.date.toString().slice(16, 21)});
     let country = this.buildRComponent({id: this.id + 'Country', country: this.state.country, handleChange: this.handleCountryUpdate.bind(this)}, p => new FlagCombo(p));
     
     const providerProps = buildProps('Provider');
@@ -1770,7 +1801,7 @@ class FinanceForm extends RComponent {
     };
     let book = this.fill('bookField', bookProps);
 
-    const lProps = { id: this.id + 'LiabilityView', addLiability: this.handleAddLiability.bind(this) };
+    const lProps = { id: this.id + 'LiabilityView', addLiability: this.handleAddLiability.bind(this), amount: this.state.amount, currency: this.state.currency };
     const liabilityView = this.buildRComponent(lProps, p => new LiabilityModal(p));
 
     // Nao deletei abaixo, porque o codigo e da mesma imagem em tamanho 100x100
@@ -1920,8 +1951,8 @@ class LiabilityModal extends RComponent {
 
     this.state = {
       liability: true,
-      amount: 10,
-      currency: 'EUR',
+      amount: this.props.amount ? this.props.amount : 10,
+      currency: props.currency,
       debtor: 'Cris Carnaval',
       validationState: {
         debtor: {
@@ -1934,7 +1965,24 @@ class LiabilityModal extends RComponent {
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.currency !== nextState.currency;
+    return nextState.currency !== nextProps.currency
+      || nextState.amount !== nextProps.amount;
+  }
+  getDerivedState(props) {
+    return {
+      liability: true,
+      amount: props.amount ? props.amount : 10,
+      currency: props.currency,
+      debtor: 'Cris Carnaval',
+      validationState: {
+        debtor: {
+          validDef: {
+            required: true,
+            restricted: false,
+          }
+        }
+      }
+    };
   }
   handleDebtorChange(e) {
     this.setState({debtor: e.value});
@@ -1946,7 +1994,8 @@ class LiabilityModal extends RComponent {
     this.setState({amount: e.value});
   }
   handleDirectionChange(e) {
-    this.setState({liability: e.value !== 'income'});
+    let liability = e.value !== 'income';
+    this.setState({liability, amount: liability ? this.props.amount : (this.props.amount / 2) });
   }
   handleSave() {
     let dt = new Date();
@@ -2037,16 +2086,18 @@ const commonFormatters = {
     }
     return {tagName: 'simplediv', className: 'cashflowAmount' + (isIncome ? ' income' : ' expense'), content};
   },
-}
+};
 
-const loadBlog = function() {
+window.app = {};
+
+window.app.loadBlog = function() {
   const postApi = new EntityAPI('post');
   postApi.get().then(posts => {
     RComponent.buildRoot({id: 'blog', posts}, p => new BlogPage(p));
   });
 };
 
-const loadFinance = function() {
+window.app.loadFinance = function() {
 
   // Register root node
   const handleEdit = (data, element) => {
@@ -2061,6 +2112,10 @@ const loadFinance = function() {
   const props = {
     id: 'cfMainTable',
     entity: 'cashflow',
+    filter: {
+      year: (new Date()).getFullYear(),
+      month: (new Date()).getMonth(),
+    },
     handleEdit,
     formatter: {
       ...commonFormatters,
@@ -2080,7 +2135,7 @@ const loadFinance = function() {
   RComponent.buildRoot(props, p=>new GenericTable(p));
 }
 
-const loadErrors = function() {
+window.app.loadErrors = function() {
   // Register root node
   RComponent.buildRoot({
     id: 'logMainTable',
@@ -2115,7 +2170,7 @@ const loadErrors = function() {
   }, p=>new GenericTable(p));
 }
 
-const loadLiability = function() {
+window.app.loadLiability = function() {
   const handleEdit = (data, element) => {
     RComponent.buildRoot({id: 'liabilityForm', data, element}, p => new LiabilityForm(p));
   };
@@ -2131,7 +2186,7 @@ const loadLiability = function() {
   }, p => new GenericTable(p));
 }
 
-const login = function() {
+window.app.login = function() {
   // Register root node
   const handleEdit = (data, element) => {
     RComponent.buildRoot({id: 'wishListForm', data, element}, p => new WishListForm(p));
@@ -2141,7 +2196,7 @@ const login = function() {
   }, p=>new LogInForm(p));
 }
 
-const loadWishlist = function() {
+window.app.loadWishlist = function() {
   // Register root node
   const handleEdit = (data, element) => {
     RComponent.buildRoot({id: 'wishListForm', data, element}, p => new WishListForm(p));
@@ -2159,7 +2214,7 @@ const loadWishlist = function() {
   }, p=>new GenericTable(p));
 }
 
-const loadTesseract = function() {
+window.app.loadTesseract = function() {
   RComponent.buildRoot({
     id: 'tesseractForm',
     entity: 'tesseract',

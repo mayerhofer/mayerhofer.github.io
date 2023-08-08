@@ -1,0 +1,24 @@
+{
+  "name": "mayerhofer.github.io",
+  "version": "1.0.0",
+  "description": "Personal assistance web application.",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mayerhofer/mayerhofer.github.io.git"
+  },
+  "author": "Ricardo Mayerhofer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mayerhofer/mayerhofer.github.io/issues"
+  },
+  "homepage": "https://github.com/mayerhofer/mayerhofer.github.io#readme",
+  "devDependencies": {
+    "parcel": "^2.9.3"
+  }
+}
