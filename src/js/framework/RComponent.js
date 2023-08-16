@@ -159,11 +159,6 @@ class TreeNode {
 export class RComponent {
   constructor(props) {
     this.props = props;
-
-    // TODO: Either add method to all Components or find a better solution
-    if (typeof this.getDerivedState === 'function') {
-      this.getDerivedState(props);
-    }
   }
 
   static compare(prevState, nextState) {
@@ -213,21 +208,24 @@ export class RComponent {
     if (found) {
       // Always update new props
       const oldProps = found.value.props;
-      found.value.props = props;
 
-      // Check client rule for if should re-render
-      if (typeof found.value.shouldComponentUpdate !== 'function' ||
+      // If rule exist or if there a real difference, re-render.
+      if (!RComponent.compare(oldProps, props)) {
+        if (found.value.getDerivedState) {
+          found.value.state = found.value.getDerivedState(props);
+        }
+
+        // Check client rule for if should re-render
+        if (typeof found.value.shouldComponentUpdate !== 'function' ||
           found.value.shouldComponentUpdate(props, found.value.state)) {
 
-        // If rule exist or if there a real difference, re-render.
-        if (!RComponent.compare(oldProps, props)) {
-          if (found.value.getDerivedState) {
-            found.value.state = found.value.getDerivedState(props);
-          }
-          
+          found.value.props = props;
           found.virtualDom = found.value.render();
+        } else {
+          found.value.props = props;
         }
       }
+
       // return previously rendered from Tree.
       return found.virtualDom;
     } else {

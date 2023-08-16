@@ -26,11 +26,12 @@ export default class LiabilityModal extends RComponent {
       || nextState.amount !== nextProps.amount;
   }
   getDerivedState(props) {
+    const shouldUpdateAmount = props.amount > 0 && this.props.amount !== props.amount;
     return {
-      liability: true,
-      amount: props.amount ? props.amount : 10,
+      liability: this.state.liability,
+      amount: shouldUpdateAmount ? (this.state.liability ? props.amount : props.amount / 2) : this.state.amount,
       currency: props.currency,
-      debtor: 'Cris Carnaval',
+      debtor: this.state.debtor,
       validationState: {
         debtor: {
           validDef: {

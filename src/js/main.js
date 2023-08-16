@@ -1,46 +1,14 @@
 // Main JS file
 import { application, RComponent } from "./framework/RComponent";
-import { images64, currencies } from "./templates";
+import { images64 } from "./templates";
 import EntityAPI from "./servers/entity";
 
 // components
 import FinanceForm from "./busCompts/financeForm";
+import LiabilityForm from "./busCompts/liabilityForm";
+import Toast from "./components/toast.js";
 
 window.application = application;
-
-function showToast(type, header, text) {
-  const toast = document.querySelector(".toast");
-  toast.classList.add("toast-" + type);
-  toast.classList.remove("unshow");
-  toast.querySelector(".toast-header p").textContent = header;
-  toast.querySelector(".toast-details p").textContent = text;
-
-  const closeButton = toast.querySelector(".toast-close");
-  closeButton.onclick = () => {
-    toast.classList.add("unshow");
-  };
-}
-
-const log = (type, data) => {
-  showToast(type, data.message, data.stackTrace);
-
-//  setTimeout(() => {
-//    try {
-//      const api = 
-//        new RestAPI('errorLog');
-//      const errObj = {
-//        time: (new Date()).getTime(),
-//        type,
-//        ...data,
-//      };
-//      api.insert(errObj)
-//	      .catch(ex => window
-//	        .alert(ex.message));
-//    } catch (ex) {
-//      window.alert('Could not log: ' + ex.message);
-//    }
-//  }, 1000);
-}
 
 // ///////////////////////////////////////////
 // Page - Business Components - Liability Report
@@ -132,6 +100,11 @@ class GenericTable extends RComponent {
       this.props.handleEdit(this.state.data, element);
     }
   }
+  handleSelect(element) {
+    if (typeof this.props.handleSelect === 'function') {
+      this.props.handleSelect(this.state.data, element);
+    }
+  }
   handleBack() {
     this.setState({start: this.state.start - 16, end: this.state.end - 16});
   }
@@ -154,10 +127,12 @@ class GenericTable extends RComponent {
       const editImg = this.fill('image', {img: images64['edit']});
       const editBtn = this.fill('button', {id: this.id + 'EditBtn' + row.elementId, className: 'act-btn', content: editImg});
       const delBtn = this.fill('button', {id: this.id + 'DelBtn' + row.elementId, className: 'act-btn', content: this.fill('image', {img: images64['delete']})});
+      const selBtn = this.fill('button', {id: this.id + 'SelBtn' + row.elementId, className: 'act-btn', content: this.fill('image', {img: images64['select']})});
 
       this.registerHandler(this.id + 'EditBtn' + row.elementId, () => this.handleEdit.bind(this)(row));
+      this.registerHandler(this.id + 'SelBtn' + row.elementId, () => this.handleSelect.bind(this)(row));
 
-      buttons = editBtn + delBtn;
+      buttons = selBtn + editBtn + delBtn;
     }
     const actionButtons = this.fill('simplediv', {className: 'actions-wrapper', content: buttons});
 
@@ -292,107 +267,6 @@ class LogInForm extends RComponent {
     this.registerHandler(this.id + 'Submit', this.handleLogIn.bind(this));
 	  
     return this.fill('LogInForm', {id: this.id});
-  }
-}
-
-/////////////////////////////////////////////
-// Page - Components - LiabilityForm
-class LiabilityForm extends RComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      dueDate: props.element.dueIn,
-      liability: props.element.liability,
-      amount: props.element.amount,
-      payed: props.element.payed,
-      debtor: props.element.source,
-      validationState: {
-        debtor: {
-          validDef: {
-            required: true,
-            restricted: false,
-          }
-        }
-      }
-    };
-  }
-  
-  handleDueChange(e) {
-    this.setState({dueDate: e.value});
-  }
-  handleDebtorChange(e) {
-    this.setState({debtor: e.value});
-  }
-  handleAmountChange(e) {
-    this.setState({amount: Number.parseFloat(e.value)});
-  }
-  handlePayedChange(e) {
-    this.setState({payed: e.value});
-  }
-  handleDirectionChange(e) {
-    this.setState({liability: e.value !== 'income'});
-  }
-  handleSave() {
-    const obj = Object.assign({}, this.props.element);
-
-    obj.dueIn = this.state.dueDate;
-    obj.liability = this.state.liability;
-    obj.amount = this.state.amount;
-    obj.payed = this.state.payed;
-    obj.source = this.state.debtor;
-    
-    this.saveLiability(obj);
-  }
-  
-  saveLiability(updatedLiability) {
-    try {
-      if (updatedLiability && updatedLiability.cashflowId && updatedLiability._id) {
-        const lApi = new EntityAPI('liability');
-
-        log('info', {message: 'saving liability', stackTrace: `CF id: ${updatedLiability.cashflowId.toString()}`});
-
-        lApi.update(updatedLiability);
-        log('info', {message: 'Liability object updated', stackTrace: `CF id: ${updatedLiability.cashflowId.toString()}`});
-      };
-    } catch (ex) {
-      log('error', ex);
-    }
-  }
-
-  render() {
-    const buildTb = props => this.buildRComponent(props, p => new TextField(p));
-    const buildProps = label => {
-      return {
-        id: this.id + label,
-        label,
-        value: this.state[label.toLowerCase()],
-        validDef: this.state.validationState[label.toLowerCase()].validDef,
-        update: this[`handle${label}Change`].bind(this),
-      };
-    };
-    const amountProps = {
-      id: this.id + 'Amount',
-      expenseChecked: this.state.direction ? '' : 'checked', 
-      incomeChecked: this.state.direction ? 'checked' : '',
-      value: this.state.amount,
-      label: 'Amount',
-    };
-    const amount = this.fill('amountLiability', amountProps);
-    const debtor = buildTb(buildProps('Debtor'));
-    let save = buildSaveProps(this);
-    const actionButtonProps = {id: this.id + 'ActionButtons', className: 'buttons', content: [save].join('')};
-    const content = `
-    <h2>Update Liability</h2><br />${this.fill('simplediv', actionButtonProps)}<br />
-    ${debtor}<br />${amount}<br />
-    `;
-    
-    this.registerHandler(this.id + 'Save', this.handleSave.bind(this));
-
-    //this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
-    this.registerHandler(this.id + 'Amount', this.handleAmountChange.bind(this));
-    this.registerHandler(this.id + 'AmountDir', this.handleDirectionChange.bind(this));
-    return this.fill('div', {id: this.id, className: 'liability', content});
   }
 }
 
@@ -625,16 +499,46 @@ window.app.loadLiability = function() {
   const handleEdit = (data, element) => {
     RComponent.buildRoot({id: 'liabilityForm', data, element}, p => new LiabilityForm(p));
   };
+  const handleSelect = (data, element) => {
+    const api = new EntityAPI('liability');
+    element.payed = true;
+    element.updated = (new Date()).getTime();
+
+    api.update(element).then(res => {
+      (new Toast({id: 'Toast' + element.elementId, type: 'info', header: 'Payed liability', text: `CF id: ${element.cashflowId}, amount: ${element.amount}`})).render();
+    });
+  }
   const repProps = {
     id: 'liabilityReport'
   };
-  RComponent.buildRoot({
-    id: 'liabilityTable',
-    entity: 'liability',
-    handleEdit,
-    formatter: commonFormatters,
-    header: p => (new LiabilityReport(Object.assign({}, p, repProps))).render()
-  }, p => new GenericTable(p));
+  const cfApi = new EntityAPI('cashflow');
+  cfApi.get({
+    year: (new Date()).getFullYear(),
+    month: (new Date()).getMonth(),
+  }).then(res => {
+    RComponent.buildRoot({
+      id: 'liabilityTable',
+      entity: 'liability',
+      handleSelect,
+      handleEdit,
+      formatter: {
+        ...commonFormatters,
+        provider: (row) => {
+          //console.log(res)
+          const found = res.find(cf => cf.elementId === row.cashflowId);
+          const str = found ? found.provider : '';
+          let content = '';
+          if (typeof str === 'string') {
+            content = str.length > 17 ? str.substring(0, 15) + '...' : str;
+          } else {
+            content = 'error: invalid provider';
+          }
+          return {tagName: 'simplediv', className: 'cashflowProvider', content};
+        },
+      },
+      header: p => (new LiabilityReport(Object.assign({}, p, repProps))).render()
+    }, p => new GenericTable(p));
+  });
 }
 
 window.app.login = function() {

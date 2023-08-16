@@ -4,6 +4,15 @@ export default class TextField extends RComponent {
   // props = {label: 'Provider', value: provider.value, validDef: {restricted: false, required: true, options: []}}
   constructor(props) {
     super(props);
+    
+    this.state = {
+      hideError: ' hide',
+      invalidDiv: '',
+      invalid: '',
+      validationMessage: '',
+      placeholder: props.label,
+      value: props.value,
+    };
   }
   getDerivedState(props) {
     this.state = {

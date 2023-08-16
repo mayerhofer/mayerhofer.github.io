@@ -18,7 +18,7 @@ export default class FlagCombo extends RComponent {
     // Load flags only if not already loaded to avoid infinite loop
     if (!Array.isArray(field.state.countries) || field.state.countries.length <= 0) {
       // Istead of getting all and then filtering, better to make multiple requests since we don't need many countries.
-      CountryAPI.get(['PL', 'IT', 'CH', 'BR', 'ES']).then(data => {
+      CountryAPI.get(['PL', 'IT', 'CH', 'BR', 'ES', 'DE', 'FR', 'AD']).then(data => {
         setTimeout(() => {
           field.setState({countries: data});
         }, 1000);
