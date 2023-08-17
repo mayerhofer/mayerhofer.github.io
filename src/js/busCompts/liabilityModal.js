@@ -22,8 +22,8 @@ export default class LiabilityModal extends RComponent {
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.currency !== nextProps.currency
-      || nextState.amount !== nextProps.amount;
+    return this.state.currency !== nextProps.currency
+      || this.state.amount !== nextState.amount;
   }
   getDerivedState(props) {
     const shouldUpdateAmount = props.amount > 0 && this.props.amount !== props.amount;
@@ -94,8 +94,8 @@ export default class LiabilityModal extends RComponent {
       .join('');
     const amountProps = {
       id: this.id + 'Amount',
-      expenseChecked: this.state.direction ? '' : 'checked', 
-      incomeChecked: this.state.direction ? 'checked' : '',
+      expenseChecked: this.state.liability ? 'checked' : '', 
+      incomeChecked: this.state.liability ? '' : 'checked',
       currency: currencies[this.state.currency] ?? '?',
       value: this.state.amount,
       label: 'Amount',

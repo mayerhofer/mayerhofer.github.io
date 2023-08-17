@@ -208,20 +208,25 @@ export class RComponent {
     if (found) {
       // Always update new props
       const oldProps = found.value.props;
+      let newState;
 
       // If rule exist or if there a real difference, re-render.
       if (!RComponent.compare(oldProps, props)) {
         if (found.value.getDerivedState) {
-          found.value.state = found.value.getDerivedState(props);
+          newState = found.value.getDerivedState(props);
+        } else {
+          newState = found.value.state;
         }
 
         // Check client rule for if should re-render
         if (typeof found.value.shouldComponentUpdate !== 'function' ||
-          found.value.shouldComponentUpdate(props, found.value.state)) {
+          found.value.shouldComponentUpdate(props, newState)) {
 
+          found.value.state = newState;
           found.value.props = props;
           found.virtualDom = found.value.render();
         } else {
+          found.value.state = newState;
           found.value.props = props;
         }
       }
