@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Personal assistance web application.",
   "browserslist": "> 0.5%, last 2 versions, not dead",
-  "main": "src/index.js",
+  "main": "src\\index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel src/index.html",
-    "build": "parcel build --dist-dir public"
+    "build": "parcel build src\\index.js --dist-dir public"
   },
   "repository": {
     "type": "git",
