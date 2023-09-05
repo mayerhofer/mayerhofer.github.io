@@ -186,8 +186,6 @@ export default class FinanceForm extends RComponent {
     };
     const saveObj = this.isEditMode ? Object.assign({}, this.props.element, newCashFlow) : newCashFlow;
 
-    //this.log('info', 'Saving cashflow', newCashFlow.provider);
-
     const saveLiabi = this.saveLiability.bind(this);
 
     const cfApi = new EntityAPI('cashflow');
@@ -233,28 +231,27 @@ export default class FinanceForm extends RComponent {
               _id: found._id,
             });
 
-            //this.log('info', 'saving liability', `CF id: ${cfid.toString()}`);
-
             lApi.update(obj).then(res => {
               this.log('info', 'Liability updated successfully.', `CF id: ${cfid.toString()}`);
 	          });
           } else {
-            // insert
-            const obj = {
-              ...this.state.liability,
-              date: newCashFlow.date,
-              cashflowId: cfid,
-              elementId: liabilities
-                .map(d => d.elementId)
-                .filter(id => id > 0)
-                .sort((a,b)=>a-b).pop() + 1,
-            };
-
-            //this.log('info', 'saving liability', `CF id: ${cfid.toString()}`);
-
-            lApi.insert(obj).then(res => {
-              this.log('info', 'New liability saved successfully.', `CF id: ${cfid.toString()}`);
-	          });
+            lApi.get({"type": "maxId"}).then(res => {
+              const nextElementId = res[0].maxId + 1;
+              // insert
+              const obj = {
+                ...this.state.liability,
+                date: newCashFlow.date,
+                cashflowId: cfid,
+                elementId: nextElementId
+              };
+              if (typeof obj.elementId === 'number' && obj.elementId > 0) {
+                lApi.insert(obj).then(res => {
+                  this.log('info', 'New liability saved successfully.', `CF id: ${cfid.toString()}`);
+                });
+              } else {
+                this.log('error', 'Missing element Id.', `CF id: ${cfid.toString()}`);
+              }
+            });
           }
         });
       }

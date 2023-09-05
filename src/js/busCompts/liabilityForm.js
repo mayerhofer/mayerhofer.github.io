@@ -64,7 +64,7 @@ export default class LiabilityForm extends RComponent {
   
   saveLiability(updatedLiability) {
     try {
-      if (updatedLiability && updatedLiability.cashflowId && updatedLiability._id) {
+      if (updatedLiability && updatedLiability.cashflowId && updatedLiability._id && updatedLiability.elementId) {
         const lApi = new EntityAPI('liability');
 
         this.log('info', 'saving liability', `CF id: ${updatedLiability.cashflowId.toString()}`);

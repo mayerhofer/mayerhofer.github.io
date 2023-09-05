@@ -78,9 +78,11 @@ class GenericTable extends RComponent {
     api.get(this.props.filter).then(data => {
       // At the very least sort by date descending to present meaninful information right on top.
       // Should always have the most recent cashflows so next(elementId) can be passed to CREATE form.
-      data.sort((a,b) => {
-        return ((new Date(b.date)).getTime() - (new Date(a.date)).getTime())
-      });
+      if (Array.isArray(data) && data.length > 0 && typeof data[0].date === 'number') {
+        data.sort((a,b) => {
+          return ((new Date(b.date)).getTime() - (new Date(a.date)).getTime())
+        });
+      }
       self.setState({data});
     });
   }
@@ -91,6 +93,15 @@ class GenericTable extends RComponent {
       const tableSelf = this;
 
       api.delete(element).then(() => {
+        if (tableSelf.props.entity === 'cashflow') {
+          const lApi = new EntityAPI('liability');
+          lApi.get().then(res => {
+            const found = res.find(l => l.cashflowId === element.elementId);
+            if (found) {
+              lApi.delete(found);
+            }
+          });
+        }
         tableSelf.setState({...tableSelf.state, data: tableSelf.state.data.filter(ele => ele !== element)});
       });
     }
@@ -102,7 +113,7 @@ class GenericTable extends RComponent {
   }
   handleSelect(element) {
     if (typeof this.props.handleSelect === 'function') {
-      this.props.handleSelect(this.state.data, element);
+      this.props.handleSelect(element, this.handleRemoveRow.bind(this));
     }
   }
   handleBack() {
@@ -110,6 +121,10 @@ class GenericTable extends RComponent {
   }
   handleForw() {
     this.setState({start: this.state.start + 16, end: this.state.end + 16});
+  }
+
+  handleRemoveRow(elementId) {
+    this.setState({...this.state, data: this.state.data.filter(ele => ele.elementId !== elementId)});
   }
 
   buildCell(key, row, formatter) {
@@ -499,12 +514,17 @@ window.app.loadLiability = function() {
   const handleEdit = (data, element) => {
     RComponent.buildRoot({id: 'liabilityForm', data, element}, p => new LiabilityForm(p));
   };
-  const handleSelect = (data, element) => {
+  const handleSelect = (element, removeHandler) => {
+    if (typeof element !== 'object')
+      return;
+    if (typeof removeHandler !== 'function')
+      return;
     const api = new EntityAPI('liability');
     element.payed = true;
     element.updated = (new Date()).getTime();
 
     api.update(element).then(res => {
+      removeHandler(element.elementId);
       (new Toast({id: 'Toast' + element.elementId, type: 'info', header: 'Payed liability', text: `CF id: ${element.cashflowId}, amount: ${element.amount}`})).render();
     });
   }
@@ -539,6 +559,20 @@ window.app.loadLiability = function() {
       header: p => (new LiabilityReport(Object.assign({}, p, repProps))).render()
     }, p => new GenericTable(p));
   });
+}
+
+window.app.loadFinanceReport = function() {
+  RComponent.buildRoot({
+    id: 'finReport',
+    entity: 'report',
+    formatter: {
+      category: row => { return { tagName: 'simplediv', className: 'cashflowProvider', content: row.category }; },
+      sum1: row => { return { tagName: 'simplediv', className: 'cashflowAmount', content: row.sum1 }; },
+      sum2: row => { return { tagName: 'simplediv', className: 'cashflowAmount', content: row.sum2 }; },
+      sum3: row => { return { tagName: 'simplediv', className: 'cashflowAmount', content: row.sum3 }; },
+
+    }
+  }, p => new GenericTable(p));
 }
 
 window.app.login = function() {
