@@ -2302,7 +2302,8 @@ class FlagCombo extends (0, _rcomponent.RComponent) {
             "ES",
             "DE",
             "FR",
-            "AD"
+            "AD",
+            "PT"
         ]).then((data)=>{
             setTimeout(()=>{
                 field.setState({
