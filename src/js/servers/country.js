@@ -16,8 +16,8 @@ class CountryAPI {
     const response = await fetch(address);
 
     if (response.status === 200) {
-      let text = await response.json();
-      return JSON.parse(text.result).documents;
+      let body = await response.json();
+      return body.documents;
     } else {
       let text = await response.json();
       alert(text);
