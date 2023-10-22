@@ -1841,10 +1841,9 @@ function assembleUrl(entity, filter) {
 async function operate(route, payload, filter) {
     try {
         let response = await fetch(assembleUrl(route, filter), payload);
-        if (response.status === 200) {
-            let text = await response.json();
-            let result = JSON.parse(text.result);
-            return result.documents ?? result;
+        if (response.status >= 200 && response.status <= 202) {
+            let body = await response.json();
+            return body.documents ?? result;
         } else {
             alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
             alert("Endpoint used: " + localStorage.getItem("entityUrl"));
@@ -2363,8 +2362,8 @@ class CountryAPI {
         const address = localStorage.getItem("countryUrl") + "?" + suffix;
         const response = await fetch(address);
         if (response.status === 200) {
-            let text = await response.json();
-            return JSON.parse(text.result).documents;
+            let body = await response.json();
+            return body.documents;
         } else {
             let text = await response.json();
             alert(text);
