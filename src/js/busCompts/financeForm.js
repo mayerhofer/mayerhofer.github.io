@@ -170,6 +170,7 @@ export default class FinanceForm extends RComponent {
   }
 
   handleSave() {
+    const component = this;
     const dt = this.state.date;
     const cfid = this.state.nextElementId;
     const newCashFlow = {
@@ -192,6 +193,7 @@ export default class FinanceForm extends RComponent {
     if (this.isEditMode) {
       cfApi.update(saveObj)
         .then(() => {
+          component.props.update(saveObj);
           this.log('info', 'CF updated', newCashFlow.provider);
           setTimeout(() => {
             saveLiabi(cfid, newCashFlow);
@@ -202,7 +204,9 @@ export default class FinanceForm extends RComponent {
         });
     } else {
       cfApi.insert(saveObj)
-        .then(() => {
+        .then(response => {
+          saveObj._id = response.insertedId;
+          component.props.insert(saveObj);
           this.log('info', 'New CF saved', newCashFlow.provider);
           setTimeout(() => {
             saveLiabi(cfid, newCashFlow);
