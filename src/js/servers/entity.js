@@ -11,10 +11,10 @@ async function operate(route, payload, filter) {
   try {
     let response = await fetch(assembleUrl(route, filter), payload);
 
-    if (response.status === 200) {
+    if (response.status >= 200 && response.status <= 202) {
       let body = await response.json();
 
-      return body.documents ?? result;
+      return body.documents ?? body;
     } else {
       alert("Response not 200: " + response.status + ". Error: " + JSON.stringify(response.body));
       alert("Endpoint used: " + localStorage.getItem("entityUrl"));
