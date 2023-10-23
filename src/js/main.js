@@ -180,7 +180,7 @@ class GenericTable extends RComponent {
       const handleUpdate = this.handleUpdateOne.bind(this);
       const content = this.fill('scrollDiv', {
         id: this.id + 'content', 
-        content: this.buildRComponent({id: this.props.idEditCompoment, handleInsert, handleUpdtate, handleClose: this.handleClose.bind(this), data, element}, this.props.buildEditComponent)
+        content: this.buildRComponent({id: this.props.idEditCompoment, handleInsert, handleUpdtate, handleClose: this.handleClose.bind(this), data, element: this.state.editing}, this.props.buildEditComponent)
       });
 
       return this.fill('div', {id: this.id, className: 'table__wrapper', content: content });
