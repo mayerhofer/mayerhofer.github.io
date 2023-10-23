@@ -65,8 +65,10 @@ class GenericTable extends RComponent {
     this.state = {
       data: [],
       start: 0,
-      end: 16,
-      increment: 16,
+      end: 15,
+      editing: null,
+      increment: 15,
+      showEdit: false,
       formatter: props.formatter,
     };
   }
@@ -107,9 +109,7 @@ class GenericTable extends RComponent {
     }
   }
   handleEdit(element) {
-    if (typeof this.props.handleEdit === 'function') {
-      this.props.handleEdit(this.state.data, element);
-    }
+    this.setState({showEdit: true, editing: element});
   }
   handleSelect(element) {
     if (typeof this.props.handleSelect === 'function') {
@@ -117,10 +117,28 @@ class GenericTable extends RComponent {
     }
   }
   handleBack() {
-    this.setState({start: this.state.start - 16, end: this.state.end - 16});
+    const inc = this.state.increment;
+    this.setState({start: this.state.start - inc, end: this.state.end - inc});
   }
   handleForw() {
-    this.setState({start: this.state.start + 16, end: this.state.end + 16});
+    const inc = this.state.increment;
+    this.setState({start: this.state.start + inc, end: this.state.end + inc});
+  }
+  handleInsertOne(one) {
+    const cfs = this.state.data;
+    cfs.put(one);
+    this.setState({data: cfs});
+  }
+  handleUpdateOne(one) {
+    const cfs = this.state.data;
+    const found = cfs.find(o => o._id === one._id);
+    if (found) {
+      cfs[cfs.indexOf(found)] = Object.assign({}, one);
+      this.setState({data: cfs});
+    }
+  }
+  handleClose() {
+    this.setState({showEdit: false, editing: null});
   }
 
   handleRemoveRow(elementId) {
@@ -157,6 +175,16 @@ class GenericTable extends RComponent {
   }
 
   render() {
+    if (this.showEdit) {
+      const handleInsert = this.handleInsertOne.bind(this);
+      const handleUpdate = this.handleUpdateOne.bind(this);
+      const content = this.fill('scrollDiv', {
+        id: this.id + 'content', 
+        content: this.buildRComponent({id: this.props.idEditCompoment, handleInsert, handleUpdtate, handleClose: this.handleClose.bind(this), data, element}, this.props.buildEditComponent)
+      });
+
+      return this.fill('div', {id: this.id, className: 'table__wrapper', content: content });
+    } else {
     const content = this.fill('scrollDiv', {
       id: this.id + 'content', 
       content: this.state.data.slice(this.state.start, this.state.end).map(this.rowToHtml.bind(this)).join(''),
@@ -167,7 +195,7 @@ class GenericTable extends RComponent {
     const forwards = this.fill('button', {id: this.id + 'Forwards', className: 'table__header-add' + (this.state.start + 16 >= this.state.data.length ? ' disabled' : ''), content: '<span>&gt;</span>'});
     const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data }) : '';
     let button = '';
-    if (typeof this.props.handleEdit === 'function') {
+    if (typeof this.props.buildEditComponent === 'function') {
       const buttonId = this.id +'AddNew' + this.props.entity;
       button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
 
@@ -179,6 +207,7 @@ class GenericTable extends RComponent {
     this.registerHandler(this.id + 'Forwards', () => this.handleForw.bind(this)());
 
     return this.fill('div', {id: this.id, className: 'table__wrapper', content: section + header + content });
+  }
   }
 }
 // Page - Business Components - End Generic Data Table
@@ -438,17 +467,7 @@ window.app.loadBlog = function() {
 };
 
 window.app.loadFinance = function() {
-
   // Register root node
-  const handleEdit = (data, element) => {
-    const optionApi = new EntityAPI('option');
-    optionApi.get().then(options => {
-      const labelOptions = options.filter(option => option.combo === 'labels').map(o => o.description);
-      const bookOptions = options.filter(option => option.combo === 'books');
-
-      RComponent.buildRoot({id: 'fincForm', labelOptions, bookOptions, data, element}, p => new FinanceForm(p));
-    });
-  };
   const props = {
     id: 'cfMainTable',
     entity: 'cashflow',
@@ -456,7 +475,8 @@ window.app.loadFinance = function() {
       year: (new Date()).getFullYear(),
       month: (new Date()).getMonth(),
     },
-    handleEdit,
+    idEditComponent: 'fincForm',
+    buildEditComponent: p => new FinanceForm(p),
     formatter: {
       ...commonFormatters,
       provider: (row) => {
@@ -511,9 +531,6 @@ window.app.loadErrors = function() {
 }
 
 window.app.loadLiability = function() {
-  const handleEdit = (data, element) => {
-    RComponent.buildRoot({id: 'liabilityForm', data, element}, p => new LiabilityForm(p));
-  };
   const handleSelect = (element, removeHandler) => {
     if (typeof element !== 'object')
       return;
@@ -540,7 +557,8 @@ window.app.loadLiability = function() {
       id: 'liabilityTable',
       entity: 'liability',
       handleSelect,
-      handleEdit,
+      idEditComponent: 'liabilityForm',
+      buildEditComponent: p => new Liability form(p),
       formatter: {
         ...commonFormatters,
         provider: (row) => {
