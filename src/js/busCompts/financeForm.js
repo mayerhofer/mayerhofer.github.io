@@ -94,6 +94,8 @@ export default class FinanceForm extends RComponent {
     }
 
     this.state = {
+      labelOptions: [],
+      bookOptions: [],
       amount: this.isEditMode ? props.element.amount : 10,
       nextElementId: this.isEditMode ? this.props.element.elementId :
         this.props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1,
@@ -122,18 +124,45 @@ export default class FinanceForm extends RComponent {
           validDef: {
             required: true,
             restricted: true,
-            options: props.labelOptions,
+            options: [],
           },
         },
         book: {
           validDef: {
             required: true,
             restricted: true,
-            options: props.bookOptions.filter(o => o.currency === (this.props.currency ?? 'EUR')).map(o => o.description),
+            options: [],
           },
         },
       },
     };
+  }
+
+  componentDidMount() {
+    const self = this;
+    const optionApi = new EntityAPI('option');
+    optionApi.get()
+    .then(options => {
+      const labelOptions = options.filter(option => option.combo === 'labels').map(o => o.description);
+      const bookOptions = options.filter(option => option.combo === 'books');
+
+      const labels = {
+        validDef: {
+          required: true,
+          restricted: true,
+          options: labelOptions,
+        }
+      };
+      const book = {
+        validDef: {
+            required: true,
+            restricted: true,
+            options: bookOptions.filter(o => o.currency === (this.props.currency ?? 'EUR')).map(o => o.description),
+      };
+      self.setState({
+        validationState: Object.assign({}, this.state.validationState, {labels, book})
+      }); 
+    });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
