@@ -199,7 +199,10 @@ export default class FinanceForm extends RComponent {
     this.setState({amount: e.value});
   }
 
-  handleBack() {}
+  handleBack() {
+    this.props.handleClose();
+  }
+
   handleSave() {
     const component = this;
     const dt = this.state.date;
