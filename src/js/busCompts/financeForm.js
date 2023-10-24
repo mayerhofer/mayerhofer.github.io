@@ -161,7 +161,9 @@ export default class FinanceForm extends RComponent {
       };
       self.setState({
         validationState: Object.assign({}, this.state.validationState, {labels, book})
-      }); 
+      });
+      self.setState({labelOptions});
+      self.setState({bookOptions});
     });
   }
 
