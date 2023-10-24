@@ -2,6 +2,8 @@ import { RComponent } from "../framework/RComponent";
 
 export default class BackButton extends RComponent {
   render() {
+    this.registerHandler(this.id, this.props.handler);
+
     return this.fill('imgButton',
     {
       id: this.id,
