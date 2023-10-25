@@ -81,6 +81,23 @@ const labelImages = [
   },
 ];
 
+const buildNewState = (isEdit, props) => {
+  const cf = props.element;
+  return {
+    amount: isEdit ? cf.amount : 10,
+    nextElementId: isEdit ? cf.elementId :
+      props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1,
+    country: isEdit ? cf.location : 'Spain',
+    currency: isEdit ? cf.currency : 'EUR',
+    date: isEdit ? new Date(cf.date) : new Date(),
+    direction: isEdit ? cf.direction : false,
+    description: isEdit ? cf.description : '',
+    provider: isEdit ? cf.provider : '',
+    labels: isEdit ? cf.labels : [''],
+    book: isEdit ? cf.book : 'M EUR'
+  };
+}
+
 export default class FinanceForm extends RComponent {
   constructor(props) {
     super(props);
@@ -96,17 +113,6 @@ export default class FinanceForm extends RComponent {
     this.state = {
       labelOptions: [],
       bookOptions: [],
-      amount: this.isEditMode ? props.element.amount : 10,
-      nextElementId: this.isEditMode ? this.props.element.elementId :
-        this.props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1,
-      country: this.isEditMode ? props.element.location : 'Spain',
-      currency: this.isEditMode ? props.element.currency : 'EUR',
-      date: this.isEditMode ? new Date(props.element.date) : new Date(),
-      direction: this.isEditMode ? props.element.direction : false,
-      description: this.isEditMode ? props.element.description : '',
-      provider: this.isEditMode ? props.element.provider : '',
-      labels: this.isEditMode ? props.element.labels : [''],
-      book: this.isEditMode ? props.element.book : 'M EUR',
       validationState: {
         provider: {
           validDef: {
@@ -135,6 +141,10 @@ export default class FinanceForm extends RComponent {
           },
         },
       },
+      ... buildNewState(
+        this.isEditMode,
+        props
+      ),
     };
   }
 
@@ -160,11 +170,19 @@ export default class FinanceForm extends RComponent {
             options: bookOptions.filter(o => o.currency === (this.props.currency ?? 'EUR')).map(o => o.description),
       };
       self.setState({
+        labelOptions,
+        bookOptions,
         validationState: Object.assign({}, this.state.validationState, {labels, book})
       });
-      self.setState({labelOptions});
-      self.setState({bookOptions});
     });
+  }
+
+  cleanState() {
+    const base = buildNewState(
+      this.isEditMode,
+      this.props
+    );
+    this.setState(base);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
