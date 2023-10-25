@@ -261,6 +261,7 @@ export default class FinanceForm extends RComponent {
         .then(response => {
           saveObj._id = response.insertedId;
           component.props.insert(saveObj);
+          this.cleanState();
           this.log('info', 'New CF saved', newCashFlow.provider);
           setTimeout(() => {
             saveLiabi(cfid, newCashFlow);
