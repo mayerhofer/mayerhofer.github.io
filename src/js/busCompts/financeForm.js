@@ -422,6 +422,8 @@ export default class FinanceForm extends RComponent {
     this.registerHandler(this.id + 'Book', this.handleBookChange.bind(this));
     this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
 
+    providerProps.autoOptions = [...new Set(this.props.data.map(cf => cf.provider))];
+
     let containerProps = {
       id: this.id, 
       className: 'page', 
