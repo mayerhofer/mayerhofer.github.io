@@ -156,7 +156,7 @@ class GenericTable extends RComponent {
     const fields = Object.keys(formatter).map(key => this.buildCell(key, row, formatter));
 
     let buttons = '';
-    if (typeof this.props.handleEdit === 'function') {
+    if (typeof this.props.buildEditComponent === 'function') {
       const editImg = this.fill('image', {img: images64['edit']});
       const editBtn = this.fill('button', {id: this.id + 'EditBtn' + row.elementId, className: 'act-btn', content: editImg});
       const delBtn = this.fill('button', {id: this.id + 'DelBtn' + row.elementId, className: 'act-btn', content: this.fill('image', {img: images64['delete']})});
