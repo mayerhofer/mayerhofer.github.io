@@ -49,9 +49,17 @@ export default class TextField extends RComponent {
   }
   render() {
     const prefix = this.id;
+    const textValue = this.state.value;
+    const autoOptions = this.props.autoOptions ?
+      this.props.autoOptions.map(item => `<option${item == textValue ? " selected" : ""}>${item}</option$>`) :
+      null;
+    const dataList = autoOptions ? 
+      this.fill('dataList', {id: prefix + 'DataList', options: autoOptions.join('')}) : '';
     const fieldProps = {
       id: prefix,
       label: this.props.label,
+      listId: prefix + 'DataList',
+      dataList,
       ...this.state,
     };
 
