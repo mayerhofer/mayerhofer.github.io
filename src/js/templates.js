@@ -91,6 +91,7 @@ export const components = {
   scrollDiv: '<div id="{div.id}" class="div--scrollable" onscroll="window.application.callHandler(this,\'{div.id}\')">{div.content}</div>',
   button: '<button id="{button.id}" type="button" class="{button.className}" onClick="window.application.callHandler(this,\'{button.id}\')">{button.content}</button>',
   simplebutton: '<button type="button" class="{button.className}" onClick="window.application.callHandler(this,\'{button.id}\')">{button.content}</button>',
+  dataList: '<datalist id="{dl.id}" class="comboBox">{dl.options}</datalist>',
   comboBox: '<div id={cb.id}><input class="{cb.className}" type="text" list="{cb.comboId}"{cb.value} onchange="window.application.callHandler(this,\'{cb.comboId}\')"><datalist id="{cb.comboId}" class="comboBox">{cb.options}</datalist></div>',
   tablePagination: '<div id="{pagination.id}" class="pagination"><span>Rows per page:&nbsp;</span>{pagination.cbRowsPerPage}{pagination.carrosel}</div>',
   container: '<div id="{container.id}" class="{container.className}">{container.content}</div>',
@@ -102,8 +103,9 @@ export const components = {
   textField: `
   <div id="{field.id}" class="container text-container">
     <div class="textfield {field.invalidDiv}">
-      <input id="{field.id}Input" required class="{field.invalid}" type="text" placeholder="{field.label}" onchange="window.application.callHandler(this,\'{field.id}Change\');" value="{field.value}" />
+      <input id="{field.id}Input" list="{field.listId}" required class="{field.invalid}" type="text" placeholder="{field.label}" onchange="window.application.callHandler(this,\'{field.id}Change\');" value="{field.value}" />
       <label for="{field.id}Input" class="field-label {field.invalid}">{field.label}</label>
+      {field.dataList}
       <div class="containerIcon">
         <div id="{field.id}InputErrorIcon" class="invalidIcon {field.hideError}" onmouseover="displayInvalidTooltip">!</div>
       </div>
