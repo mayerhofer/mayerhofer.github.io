@@ -6,48 +6,11 @@ import EntityAPI from "./servers/entity";
 // components
 import FinanceForm from "./busCompts/financeForm";
 import LiabilityForm from "./busCompts/liabilityForm";
+import LiabilityReport from "./busCompts/liabilityReport";
 import Toast from "./components/toast.js";
 
 window.application = application;
 
-// ///////////////////////////////////////////
-// Page - Business Components - Liability Report
-class LiabilityReport extends RComponent {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    // a = array of debtors. b = liability object.
-    const report = this.props.data.reduce((a, b) => {
-      let row = a.find(obj => obj.debtor === b.source);
-      if (! row) {
-        a.push({
-          debtor: b.source,
-          credit: b.liability ? 0 : b.amount,
-          debit: b.liability ? b.amount : 0
-        });
-      } else {
-        if (b.liability) {
-          row.debit += b.amount;
-        } else {
-          row.credit += b.amount;
-        }
-      }
-      return a;
-    }, []);
-    report.forEach(row => {
-      row.debit = Math.round(100 * row.debit) / 100;
-      row.credit = Math.round(100 * row.credit) / 100;
-    });
-    const fields = {
-      id: this.props.id,
-      className: 'liabilityReport',
-      content: report.map(k => this.fill('liabRepRow', k))
-    };
-    return this.fill('liabilityReport', fields);
-  }
-}
 // Page - Components - End Liability Report 
 /////////////////////////////////////////////
 /////////////////////////////////////////////
@@ -126,7 +89,7 @@ class GenericTable extends RComponent {
   }
   handleInsertOne(one) {
     const cfs = this.state.data;
-    cfs.put(one);
+    cfs.unshift(one);
     this.setState({data: cfs});
   }
   handleUpdateOne(one) {
@@ -193,7 +156,7 @@ class GenericTable extends RComponent {
     const count = this.fill('simplediv', {className: 'table__header-label', content: this.state.data.length + ': ' + (this.state.start +1) + '-' + (this.state.end > this.state.data.length ? this.state.data.length : this.state.end)});
     const backwards = this.fill('button', {id: this.id + 'Backwards', className: 'table__header-add' + (this.state.start === 0 ? ' disabled' : ''), content: '<span>&lt;</span>'});
     const forwards = this.fill('button', {id: this.id + 'Forwards', className: 'table__header-add' + (this.state.start + 16 >= this.state.data.length ? ' disabled' : ''), content: '<span>&gt;</span>'});
-    const section = this.state.data && typeof this.props.header === 'function' ? this.props.header({ data: this.state.data }) : '';
+    const section = this.state.data && typeof this.props.header === 'function' ? this.buildRComponent({ id: this.id + "Header", data: this.state.data }, this.props.header) : '';
     let button = '';
     if (typeof this.props.buildEditComponent === 'function') {
       const buttonId = this.id +'AddNew' + this.props.entity;
@@ -574,7 +537,7 @@ window.app.loadLiability = function() {
           return {tagName: 'simplediv', className: 'cashflowProvider', content};
         },
       },
-      header: p => (new LiabilityReport(Object.assign({}, p, repProps))).render()
+      header: p => new LiabilityReport(Object.assign({}, p, repProps))
     }, p => new GenericTable(p));
   });
 }

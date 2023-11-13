@@ -62,6 +62,7 @@ export default class LiabilityModal extends RComponent {
       source: this.state.debtor,
       liability: this.state.liability,
       amount: Number.parseFloat(this.state.amount),
+      currency: this.state.currency,
       cashflowId: -1,
       elementId: -1,
       payed: false,

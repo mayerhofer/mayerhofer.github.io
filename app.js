@@ -586,40 +586,11 @@
   var _financeFormDefault = parcelHelpers.interopDefault(_financeForm);
   var _liabilityForm = require("./busCompts/liabilityForm");
   var _liabilityFormDefault = parcelHelpers.interopDefault(_liabilityForm);
+  var _liabilityReport = require("./busCompts/liabilityReport");
+  var _liabilityReportDefault = parcelHelpers.interopDefault(_liabilityReport);
   var _toastJs = require("./components/toast.js");
   var _toastJsDefault = parcelHelpers.interopDefault(_toastJs);
   window.application = (0, _rcomponent.application);
-  // ///////////////////////////////////////////
-  // Page - Business Components - Liability Report
-  class LiabilityReport extends (0, _rcomponent.RComponent) {
-      constructor(props){
-          super(props);
-      }
-      render() {
-          // a = array of debtors. b = liability object.
-          const report = this.props.data.reduce((a, b)=>{
-              let row = a.find((obj)=>obj.debtor === b.source);
-              if (!row) a.push({
-                  debtor: b.source,
-                  credit: b.liability ? 0 : b.amount,
-                  debit: b.liability ? b.amount : 0
-              });
-              else if (b.liability) row.debit += b.amount;
-              else row.credit += b.amount;
-              return a;
-          }, []);
-          report.forEach((row)=>{
-              row.debit = Math.round(100 * row.debit) / 100;
-              row.credit = Math.round(100 * row.credit) / 100;
-          });
-          const fields = {
-              id: this.props.id,
-              className: "liabilityReport",
-              content: report.map((k)=>this.fill("liabRepRow", k))
-          };
-          return this.fill("liabilityReport", fields);
-      }
-  }
   // Page - Components - End Liability Report 
   /////////////////////////////////////////////
   /////////////////////////////////////////////
@@ -701,7 +672,7 @@
       }
       handleInsertOne(one) {
           const cfs = this.state.data;
-          cfs.put(one);
+          cfs.unshift(one);
           this.setState({
               data: cfs
           });
@@ -736,7 +707,7 @@
           const formatter = this.state.formatter;
           const fields = Object.keys(formatter).map((key)=>this.buildCell(key, row, formatter));
           let buttons = "";
-          if (typeof this.props.handleEdit === "function") {
+          if (typeof this.props.buildEditComponent === "function") {
               const editImg = this.fill("image", {
                   img: (0, _templates.images64)["edit"]
               });
@@ -816,9 +787,10 @@
                   className: "table__header-add" + (this.state.start + 16 >= this.state.data.length ? " disabled" : ""),
                   content: "<span>&gt;</span>"
               });
-              const section = this.state.data && typeof this.props.header === "function" ? this.props.header({
+              const section = this.state.data && typeof this.props.header === "function" ? this.buildRComponent({
+                  id: this.id + "Header",
                   data: this.state.data
-              }) : "";
+              }, this.props.header) : "";
               let button = "";
               if (typeof this.props.buildEditComponent === "function") {
                   const buttonId = this.id + "AddNew" + this.props.entity;
@@ -1234,7 +1206,7 @@
                       };
                   }
               },
-              header: (p)=>new LiabilityReport(Object.assign({}, p, repProps)).render()
+              header: (p)=>new (0, _liabilityReportDefault.default)(Object.assign({}, p, repProps))
           }, (p)=>new GenericTable(p));
       });
   };
@@ -1332,7 +1304,7 @@
       return false;
   };
   
-  },{"./framework/RComponent":"iu3rT","./templates":"18mfC","./servers/entity":"kW8fe","./busCompts/financeForm":"390bl","./busCompts/liabilityForm":"aAgzo","./components/toast.js":"clg1H","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iu3rT":[function(require,module,exports) {
+  },{"./framework/RComponent":"iu3rT","./templates":"18mfC","./servers/entity":"kW8fe","./busCompts/financeForm":"390bl","./busCompts/liabilityForm":"aAgzo","./components/toast.js":"clg1H","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./busCompts/liabilityReport":"bi7Wn"}],"iu3rT":[function(require,module,exports) {
   var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
   parcelHelpers.defineInteropFlag(exports);
   parcelHelpers.export(exports, "application", ()=>application);
@@ -1650,12 +1622,13 @@
       </form>
     `,
       liabilityReport: `
-      <div class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
+      <div id="{field.id}" class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
     `,
       liabRepRow: `<div class="row liabRep-row">
     <div class="liabRep-cel liabRep-source">{field.debtor}</div>
     <div class="liabRep-cel liabRep-cred">{field.credit}</div>
     <div class="liabRep-cel liabRep-debt">{field.debit}</div>
+    <div class="liabRep-cel liabRep-source">{field.currency}</div>
   </div>`,
       blogContainer: `
       <div class="page-body div--scrollable">
@@ -2168,22 +2141,22 @@
           const saveLiabi = this.saveLiability.bind(this);
           const cfApi = new (0, _entityDefault.default)("cashflow");
           if (this.isEditMode) cfApi.update(saveObj).then(()=>{
-              component.props.handleUpdate(saveObj);
               this.log("info", "CF updated", newCashFlow.provider);
               setTimeout(()=>{
                   saveLiabi(cfid, newCashFlow);
               }, 1000);
+              component.props.handleUpdate(saveObj);
           }).catch((ex)=>{
               this.log("error", ex.message, ex.stackTrace);
           });
           else cfApi.insert(saveObj).then((response)=>{
               saveObj._id = response.insertedId;
-              component.props.handleInsert(saveObj);
-              this.cleanState();
               this.log("info", "New CF saved", newCashFlow.provider);
               setTimeout(()=>{
                   saveLiabi(cfid, newCashFlow);
               }, 1000);
+              component.props.handleInsert(saveObj);
+              this.cleanState();
           }).catch((ex)=>{
               this.log("error", ex.message, ex.stackTrace);
           });
@@ -2605,6 +2578,7 @@
               source: this.state.debtor,
               liability: this.state.liability,
               amount: Number.parseFloat(this.state.amount),
+              currency: this.state.currency,
               cashflowId: -1,
               elementId: -1,
               payed: false,
@@ -2861,7 +2835,66 @@
   }
   exports.default = LiabilityForm;
   
-  },{"../framework/RComponent":"iu3rT","../components/textField":"hj91c","./saveButton":"8tKCQ","../servers/entity":"kW8fe","../components/toast":"clg1H","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["46McK","1SICI"], "1SICI", "parcelRequirece5e")
+  },{"../framework/RComponent":"iu3rT","../components/textField":"hj91c","./saveButton":"8tKCQ","../servers/entity":"kW8fe","../components/toast":"clg1H","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bi7Wn":[function(require,module,exports) {
+  var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+  parcelHelpers.defineInteropFlag(exports);
+  var _rcomponent = require("../framework/RComponent");
+  var _entity = require("../servers/entity");
+  var _entityDefault = parcelHelpers.interopDefault(_entity);
+  class LiabilityReport extends (0, _rcomponent.RComponent) {
+      constructor(props){
+          super(props);
+          this.state = {
+              cashflows: []
+          };
+      }
+      componentDidMount() {
+          const cfApi = new (0, _entityDefault.default)("cashflow");
+          const self = this;
+          const filter = {
+              year: new Date().getFullYear(),
+              month: new Date().getMonth()
+          };
+          cfApi.get(filter).then((data)=>{
+              const result = data.filter((cf)=>self.props.data.find((l)=>l.cashflowId === cf.elementId));
+              self.setState({
+                  cashflows: result
+              });
+          });
+      }
+      getCf(liability) {
+          return this.state.cashflows.find((cf)=>cf.elementId === liability.cashflowId);
+      }
+      render() {
+          // a = array of debtors. b = liability object.
+          const self = this;
+          const report = this.props.data.reduce((a, b)=>{
+              let row = a.find((obj)=>obj.debtor === b.source && obj.currency === self.getCf(b)?.currency);
+              if (!row) a.push({
+                  debtor: b.source,
+                  credit: b.liability ? 0 : b.amount,
+                  debit: b.liability ? b.amount : 0,
+                  currency: self.getCf(b)?.currency
+              });
+              else if (b.liability) row.debit += b.amount;
+              else row.credit += b.amount;
+              return a;
+          }, []);
+          report.forEach((row)=>{
+              row.debit = Math.round(100 * row.debit) / 100;
+              row.credit = Math.round(100 * row.credit) / 100;
+          });
+          const fields = {
+              id: this.id,
+              className: "liabilityReport",
+              content: report.map((k)=>this.fill("liabRepRow", k))
+          };
+          return this.fill("liabilityReport", fields);
+      }
+  }
+  exports.default = LiabilityReport;
+  
+  },{"../framework/RComponent":"iu3rT","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../servers/entity":"kW8fe"}]},["46McK","1SICI"], "1SICI", "parcelRequirece5e")
   
   //# sourceMappingURL=index.18dbc454.js.map
   

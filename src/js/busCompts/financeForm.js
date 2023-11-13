@@ -257,11 +257,11 @@ export default class FinanceForm extends RComponent {
     if (this.isEditMode) {
       cfApi.update(saveObj)
         .then(() => {
-          component.props.handleUpdate(saveObj);
           this.log('info', 'CF updated', newCashFlow.provider);
           setTimeout(() => {
             saveLiabi(cfid, newCashFlow);
           }, 1000);
+          component.props.handleUpdate(saveObj);
         })
         .catch(ex => {
           this.log('error', ex.message, ex.stackTrace);
@@ -270,12 +270,12 @@ export default class FinanceForm extends RComponent {
       cfApi.insert(saveObj)
         .then(response => {
           saveObj._id = response.insertedId;
-          component.props.handleInsert(saveObj);
-          this.cleanState();
           this.log('info', 'New CF saved', newCashFlow.provider);
           setTimeout(() => {
             saveLiabi(cfid, newCashFlow);
           }, 1000);
+          component.props.handleInsert(saveObj);
+          this.cleanState();
         })
         .catch(ex => {
           this.log('error', ex.message, ex.stackTrace);

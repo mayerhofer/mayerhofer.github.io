@@ -42,12 +42,13 @@ export const components = {
     </form>
   `,
   liabilityReport: `
-    <div class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
+    <div id="{field.id}" class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
   `,
   liabRepRow: `<div class="row liabRep-row">
   <div class="liabRep-cel liabRep-source">{field.debtor}</div>
   <div class="liabRep-cel liabRep-cred">{field.credit}</div>
   <div class="liabRep-cel liabRep-debt">{field.debit}</div>
+  <div class="liabRep-cel liabRep-source">{field.currency}</div>
 </div>`,
   blogContainer: `
     <div class="page-body div--scrollable">
