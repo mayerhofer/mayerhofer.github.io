@@ -196,7 +196,7 @@ export const components = {
     </div>
   </div>`,
   imgButton: `
-  <button id={btn.id} class="{btn.className}" onclick="window.application.callHandler(this, '{btn.id}')" {btn.disabled}>
+  <button id={btn.id} {btn.disabled} class="{btn.className}" onclick="window.application.callHandler(this, '{btn.id}')" {btn.disabled}>
     <img src="data:image/png;base64,{btn.img}"/>
   </button>`,
   liabilityButton: `
