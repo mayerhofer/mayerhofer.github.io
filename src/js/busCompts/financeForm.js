@@ -190,7 +190,6 @@ export default class FinanceForm extends RComponent {
     return (
       this.state.provider.trim().length > 0
    && this.state.description.trim().length > 0
-   && this.state.amount.trim().length > 0
    && !Number.isNaN(this.state.amount)
    && this.state.labels.length > 0);
   }
@@ -200,7 +199,11 @@ export default class FinanceForm extends RComponent {
       this.state.date !== nextState.date ||
       this.state.amount !== nextState.amount ||
       this.state.direction !== nextState.direction ||
-      this.state.book !== nextState.book;
+      this.state.book !== nextState.book ||
+      this.state.description !== nextState.description ||
+      this.state.provider !== nextState.provider ||
+      (this.state.labels.length !== nextProps.labels.length ||
+        (! this.state.labels.every(i => nextState.labels.includes(i)) ));
   }
 
   handleCountryUpdate(country) {
