@@ -148,29 +148,30 @@ class GenericTable extends RComponent {
 
       return this.fill('div', {id: this.id, className: 'table__wrapper', content: content });
     } else {
-    const content = this.fill('scrollDiv', {
-      id: this.id + 'content', 
-      content: this.state.data.slice(this.state.start, this.state.end).map(this.rowToHtml.bind(this)).join(''),
-    });
-    const label = this.fill('simplediv', {className: 'table__header-label', content: (new Date()).toISOString().substring(0, 10)});
-    const count = this.fill('simplediv', {className: 'table__header-label', content: this.state.data.length + ': ' + (this.state.start +1) + '-' + (this.state.end > this.state.data.length ? this.state.data.length : this.state.end)});
-    const backwards = this.fill('button', {id: this.id + 'Backwards', className: 'table__header-add' + (this.state.start === 0 ? ' disabled' : ''), content: '<span>&lt;</span>'});
-    const forwards = this.fill('button', {id: this.id + 'Forwards', className: 'table__header-add' + (this.state.start + 16 >= this.state.data.length ? ' disabled' : ''), content: '<span>&gt;</span>'});
-    const section = this.state.data && typeof this.props.header === 'function' ? this.buildRComponent({ id: this.id + "Header", data: this.state.data }, this.props.header) : '';
-    let button = '';
-    if (typeof this.props.buildEditComponent === 'function') {
-      const buttonId = this.id +'AddNew' + this.props.entity;
-      button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
+      const content = this.fill('div', {
+        id: this.id + 'content',
+        className: 'table__wrapper',
+        content: this.state.data.slice(this.state.start, this.state.end).map(this.rowToHtml.bind(this)).join(''),
+      });
+      const label = this.fill('simplediv', {className: 'table__header-label', content: (new Date()).toISOString().substring(0, 10)});
+      const count = this.fill('simplediv', {className: 'table__header-label', content: this.state.data.length + ': ' + (this.state.start +1) + '-' + (this.state.end > this.state.data.length ? this.state.data.length : this.state.end)});
+      const backwards = this.fill('button', {id: this.id + 'Backwards', className: 'table__header-add' + (this.state.start === 0 ? ' disabled' : ''), content: '<span>&lt;</span>'});
+      const forwards = this.fill('button', {id: this.id + 'Forwards', className: 'table__header-add' + (this.state.start + 16 >= this.state.data.length ? ' disabled' : ''), content: '<span>&gt;</span>'});
+      const section = this.state.data && typeof this.props.header === 'function' ? this.buildRComponent({ id: this.id + "Header", data: this.state.data }, this.props.header) : '';
+      let button = '';
+      if (typeof this.props.buildEditComponent === 'function') {
+        const buttonId = this.id +'AddNew' + this.props.entity;
+        button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
 
-      this.registerHandler(buttonId, () => this.handleEdit.bind(this)());
+        this.registerHandler(buttonId, () => this.handleEdit.bind(this)());
+      }
+      const header = this.fill('simplediv', {className: 'table__header', content: label + count + backwards + forwards + button});
+
+      this.registerHandler(this.id + 'Backwards', () => this.handleBack.bind(this)());
+      this.registerHandler(this.id + 'Forwards', () => this.handleForw.bind(this)());
+
+      return this.fill('div', {id: this.id, className: 'div--scrollable', content: section + header + content });
     }
-    const header = this.fill('simplediv', {className: 'table__header', content: label + count + backwards + forwards + button});
-
-    this.registerHandler(this.id + 'Backwards', () => this.handleBack.bind(this)());
-    this.registerHandler(this.id + 'Forwards', () => this.handleForw.bind(this)());
-
-    return this.fill('div', {id: this.id, className: 'table__wrapper', content: section + header + content });
-  }
   }
 }
 // Page - Business Components - End Generic Data Table

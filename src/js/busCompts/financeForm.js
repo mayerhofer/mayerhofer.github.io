@@ -94,7 +94,8 @@ const buildNewState = (isEdit, props) => {
     description: isEdit ? cf.description : '',
     provider: isEdit ? cf.provider : '',
     labels: isEdit ? cf.labels : [''],
-    book: isEdit ? cf.book : 'M EUR'
+    book: isEdit ? cf.book : 'M EUR',
+    liability: undefined
   };
 }
 
@@ -202,8 +203,8 @@ export default class FinanceForm extends RComponent {
       this.state.book !== nextState.book ||
       this.state.description !== nextState.description ||
       this.state.provider !== nextState.provider ||
-      (this.state.labels.length !== nextProps.labels.length ||
-        (! this.state.labels.every(i => nextState.labels.includes(i)) ));
+      (Array.isArray(nextProps.labels) && (this.state.labels.length !== nextProps.labels.length ||
+        (! this.state.labels.every(i => nextState.labels.includes(i)) )));
   }
 
   handleCountryUpdate(country) {
@@ -262,9 +263,11 @@ export default class FinanceForm extends RComponent {
         .then(() => {
           this.log('info', 'CF updated', newCashFlow.provider);
           setTimeout(() => {
-            saveLiabi(cfid, newCashFlow);
+            saveLiabi(cfid, newCashFlow, () => {
+              component.props.handleUpdate(saveObj);
+              component.cleanState();
+            });
           }, 1000);
-          component.props.handleUpdate(saveObj);
         })
         .catch(ex => {
           this.log('error', ex.message, ex.stackTrace);
@@ -275,17 +278,18 @@ export default class FinanceForm extends RComponent {
           saveObj._id = response.insertedId;
           this.log('info', 'New CF saved', newCashFlow.provider);
           setTimeout(() => {
-            saveLiabi(cfid, newCashFlow);
+            saveLiabi(cfid, newCashFlow, () => {
+              component.props.handleInsert(saveObj);
+              component.cleanState();
+            });
           }, 1000);
-          component.props.handleInsert(saveObj);
-          this.cleanState();
         })
         .catch(ex => {
           this.log('error', ex.message, ex.stackTrace);
         });
     }
   }
-  saveLiability(cfid, newCashFlow) {
+  saveLiability(cfid, newCashFlow, callback) {
     try {
       if (this.state.liability) {
         const lApi = 
@@ -305,6 +309,7 @@ export default class FinanceForm extends RComponent {
 
             lApi.update(obj).then(res => {
               this.log('info', 'Liability updated successfully.', `CF id: ${cfid.toString()}`);
+              callback();
 	          });
           } else {
             lApi.get({"type": "maxId"}).then(res => {
@@ -319,6 +324,7 @@ export default class FinanceForm extends RComponent {
               if (typeof obj.elementId === 'number' && obj.elementId > 0) {
                 lApi.insert(obj).then(res => {
                   this.log('info', 'New liability saved successfully.', `CF id: ${cfid.toString()}`);
+                  callback();
                 });
               } else {
                 this.log('error', 'Missing element Id.', `CF id: ${cfid.toString()}`);
@@ -326,6 +332,8 @@ export default class FinanceForm extends RComponent {
             });
           }
         });
+      } else {
+        callback();
       }
     } catch (ex) {
       this.log('error', ex.message, ex.stackTrace);

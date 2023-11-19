@@ -480,6 +480,7 @@ nav {
   display: flex;
   text-align: center;
   width: 100%;
+  font-size: 22px;
 }
 .table__header-label {
   align-items: center;
@@ -585,6 +586,9 @@ nav {
 .liabilityReport {
   color: #BC7C9C;
   text-align: center;
+  display: inline-block;
+  font-size: 22px;
+  width: 100%;
 }
 
 .liabRep-header {

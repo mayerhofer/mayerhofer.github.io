@@ -765,8 +765,9 @@
                   content: content
               });
           } else {
-              const content = this.fill("scrollDiv", {
+              const content = this.fill("div", {
                   id: this.id + "content",
+                  className: "table__wrapper",
                   content: this.state.data.slice(this.state.start, this.state.end).map(this.rowToHtml.bind(this)).join("")
               });
               const label = this.fill("simplediv", {
@@ -809,7 +810,7 @@
               this.registerHandler(this.id + "Forwards", ()=>this.handleForw.bind(this)());
               return this.fill("div", {
                   id: this.id,
-                  className: "table__wrapper",
+                  className: "div--scrollable",
                   content: section + header + content
               });
           }
@@ -1671,6 +1672,7 @@
       scrollDiv: '<div id="{div.id}" class="div--scrollable" onscroll="window.application.callHandler(this,\'{div.id}\')">{div.content}</div>',
       button: '<button id="{button.id}" type="button" class="{button.className}" onClick="window.application.callHandler(this,\'{button.id}\')">{button.content}</button>',
       simplebutton: '<button type="button" class="{button.className}" onClick="window.application.callHandler(this,\'{button.id}\')">{button.content}</button>',
+      dataList: '<datalist id="{dl.id}" class="comboBox">{dl.options}</datalist>',
       comboBox: '<div id={cb.id}><input class="{cb.className}" type="text" list="{cb.comboId}"{cb.value} onchange="window.application.callHandler(this,\'{cb.comboId}\')"><datalist id="{cb.comboId}" class="comboBox">{cb.options}</datalist></div>',
       tablePagination: '<div id="{pagination.id}" class="pagination"><span>Rows per page:&nbsp;</span>{pagination.cbRowsPerPage}{pagination.carrosel}</div>',
       container: '<div id="{container.id}" class="{container.className}">{container.content}</div>',
@@ -1682,8 +1684,9 @@
       textField: `
     <div id="{field.id}" class="container text-container">
       <div class="textfield {field.invalidDiv}">
-        <input id="{field.id}Input" required class="{field.invalid}" type="text" placeholder="{field.label}" onchange="window.application.callHandler(this,\'{field.id}Change\');" value="{field.value}" />
+        <input id="{field.id}Input" list="{field.listId}" required class="{field.invalid}" type="text" placeholder="{field.label}" onchange="window.application.callHandler(this,\'{field.id}Change\');" value="{field.value}" />
         <label for="{field.id}Input" class="field-label {field.invalid}">{field.label}</label>
+        {field.dataList}
         <div class="containerIcon">
           <div id="{field.id}InputErrorIcon" class="invalidIcon {field.hideError}" onmouseover="displayInvalidTooltip">!</div>
         </div>
@@ -1774,7 +1777,7 @@
       </div>
     </div>`,
       imgButton: `
-    <button id={btn.id} class="{btn.className}" onclick="window.application.callHandler(this, '{btn.id}')" {btn.disabled}>
+    <button id={btn.id} {btn.disabled} class="{btn.className}" onclick="window.application.callHandler(this, '{btn.id}')" {btn.disabled}>
       <img src="data:image/png;base64,{btn.img}"/>
     </button>`,
       liabilityButton: `
@@ -1994,7 +1997,8 @@
           labels: isEdit ? cf.labels : [
               ""
           ],
-          book: isEdit ? cf.book : "M EUR"
+          book: isEdit ? cf.book : "M EUR",
+          liability: undefined
       };
   };
   class FinanceForm extends (0, _rcomponent.RComponent) {
@@ -2072,10 +2076,10 @@
           this.setState(base);
       }
       isValidToSave() {
-          return;
+          return this.state.provider.trim().length > 0 && this.state.description.trim().length > 0 && !Number.isNaN(this.state.amount) && this.state.labels.length > 0;
       }
       shouldComponentUpdate(nextProps, nextState) {
-          return this.state.currency !== nextState.currency || this.state.date !== nextState.date || this.state.amount !== nextState.amount || this.state.direction !== nextState.direction || this.state.book !== nextState.book;
+          return this.state.currency !== nextState.currency || this.state.date !== nextState.date || this.state.amount !== nextState.amount || this.state.direction !== nextState.direction || this.state.book !== nextState.book || this.state.description !== nextState.description || this.state.provider !== nextState.provider || Array.isArray(nextProps.labels) && (this.state.labels.length !== nextProps.labels.length || !this.state.labels.every((i)=>nextState.labels.includes(i)));
       }
       handleCountryUpdate(country) {
           this.setState({
@@ -2143,9 +2147,11 @@
           if (this.isEditMode) cfApi.update(saveObj).then(()=>{
               this.log("info", "CF updated", newCashFlow.provider);
               setTimeout(()=>{
-                  saveLiabi(cfid, newCashFlow);
+                  saveLiabi(cfid, newCashFlow, ()=>{
+                      component.props.handleUpdate(saveObj);
+                      component.cleanState();
+                  });
               }, 1000);
-              component.props.handleUpdate(saveObj);
           }).catch((ex)=>{
               this.log("error", ex.message, ex.stackTrace);
           });
@@ -2153,15 +2159,16 @@
               saveObj._id = response.insertedId;
               this.log("info", "New CF saved", newCashFlow.provider);
               setTimeout(()=>{
-                  saveLiabi(cfid, newCashFlow);
+                  saveLiabi(cfid, newCashFlow, ()=>{
+                      component.props.handleInsert(saveObj);
+                      component.cleanState();
+                  });
               }, 1000);
-              component.props.handleInsert(saveObj);
-              this.cleanState();
           }).catch((ex)=>{
               this.log("error", ex.message, ex.stackTrace);
           });
       }
-      saveLiability(cfid, newCashFlow) {
+      saveLiability(cfid, newCashFlow, callback) {
           try {
               if (this.state.liability) {
                   const lApi = new (0, _entityDefault.default)("liability");
@@ -2177,6 +2184,7 @@
                           });
                           lApi.update(obj).then((res)=>{
                               this.log("info", "Liability updated successfully.", `CF id: ${cfid.toString()}`);
+                              callback();
                           });
                       } else lApi.get({
                           "type": "maxId"
@@ -2191,11 +2199,12 @@
                           };
                           if (typeof obj.elementId === "number" && obj.elementId > 0) lApi.insert(obj).then((res)=>{
                               this.log("info", "New liability saved successfully.", `CF id: ${cfid.toString()}`);
+                              callback();
                           });
                           else this.log("error", "Missing element Id.", `CF id: ${cfid.toString()}`);
                       });
                   });
-              }
+              } else callback();
           } catch (ex) {
               this.log("error", ex.message, ex.stackTrace);
           }
@@ -2298,7 +2307,7 @@
           });
           let save = this.buildRComponent({
               id: this.id + "Save",
-              disabled: this.isValidToSave(),
+              disabled: !this.isValidToSave(),
               handler: this.handleSave.bind(this)
           }, (p)=>new (0, _saveButtonDefault.default)(p));
           let back = this.buildRComponent({
@@ -2321,6 +2330,9 @@
           this.registerHandler(this.id + "Amount", this.handleUpdateAmount.bind(this));
           this.registerHandler(this.id + "Book", this.handleBookChange.bind(this));
           this.registerHandler(this.id + "Currency", this.handleCurrencyUpdate.bind(this));
+          providerProps.autoOptions = [
+              ...new Set(this.props.data.map((cf)=>cf.provider))
+          ];
           let containerProps = {
               id: this.id,
               className: "page",
@@ -2391,9 +2403,17 @@
       }
       render() {
           const prefix = this.id;
+          const textValue = this.state.value;
+          const autoOptions = this.props.autoOptions ? this.props.autoOptions.map((item)=>`<option${item == textValue ? " selected" : ""}>${item}</option$>`) : null;
+          const dataList = autoOptions ? this.fill("dataList", {
+              id: prefix + "DataList",
+              options: autoOptions.join("")
+          }) : "";
           const fieldProps = {
               id: prefix,
               label: this.props.label,
+              listId: prefix + "DataList",
+              dataList,
               ...this.state
           };
           this.registerHandler(prefix + "Change", this.handleUpdate.bind(this));
@@ -2653,7 +2673,7 @@
           this.registerHandler(this.id, this.props.handler);
           return this.fill("imgButton", {
               id: this.id,
-              disabled: this.props.disabled ? "true" : "",
+              disabled: this.props.disabled ? "disabled" : "",
               className: "financeSave",
               img: "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADt0lEQVRoge2YvWsUQRjGn9m7fBg/iJLEJo2NAbFRtPQfSCEpFOwshPSpYhMUq4CojQr+C4JRCyWNgqAgsVUkhSAYNGcgGtDkEnPvY7E7u7Ozs7O3J5tEuBfm9m5m7+b3zPsxswd0rWtd69pumsobOPNydZxUD0iMEgBArC4343FuNfH+wgigFBQAAgAJkhDzKgIRQihgdBUhRAQtEUjciImFLdQOHflJUTc+TgzfaUdAkDdgw4eEaQthjGbAkwQluoIgEfUjHgeTn6Z+JQahePvE48b1dgTU8wWk4R38EAknVUqFq48IDkjgjXb6/uvU999cORuCh6pAPQkBUera2JPv/YsTI1d9AvI9YMO7PCAShopefQ0tAjJsYngiu0g0vJJMrN8qcnpsrjHbkYAieAARtBlCOr6ZhJMkYZUvIAkpJoORCkwfn1ueKi+gAB5AnHy6UYuwhNArQIcdM/B6fgU1k8eQnwMWvBNAomlVci9jz6UTVkSyC2B7wAEfdR0uLaAIHgg9EMInChjNbMLrkpqZglFZjUPICQ9fGOQLKIAHwhW0XaXvTycoQWY9YFaqsKKVgy8UYMK7dLjCwtzQ4rKakwM6V2jc74T3aPDsA354qADL6y2M9CebuZmEjPMgaa8unzIqk8QeEApWmoxxbHifDzxl1IInEAQJrKr34OaHJr6tb2eOBa24pEqmUqXKrYbfIO59DhD07XPDd+IBGx4A+g/UsPGrBQoBpfDu9wAuvf0DcLtoHbRsADVHt0JvXx1BX28peK8AG54g6vUABweDdEix1wgde9L08SCvziddbvjOQ8iq7Slh0YcdgfdUQu9OvNfh/QL+A3ivgL0E79NRHEJ7GN4vYC/Be0QUl1EL/txQD2ZODmCkT8UPNOaJ0/fZPPfYfY2m4NanGhbWggw8PQoKd2J75f8dPtsvIhjqIaaObZeCB4pOo46wqQJevx/qsUPRjC23eZLYHfNVwacfatqD9wrIS9gq4ZPn4jR8Z2XUAR9Wm+rgRaQUvF9ATqmsFJ7l4L0C8up8lfA6hGx4epQU7sSZTapCeA3aLrxfgAseqBQ+bO3DFwjIwusfrQre/JMgBd9JFXLBo2L4JITS8D4/FJbRr4/m0Xj4NDmYVQhv5sGP+RdYe/bcKiZlBETKg9YmatubumtH4GHOW6DA99/oEoDRoxfPx/Ag0GgSw73VwK9sqXjyQ+Pj8aQkvpT2gBCT+ovmIswutrDclErg7y7ttzbQEF4UJ3Nd0LWuda1ru2p/ASsCdZ0lM904AAAAAElFTkSuQmCC"
           });
@@ -2894,7 +2914,7 @@
   }
   exports.default = LiabilityReport;
   
-  },{"../framework/RComponent":"iu3rT","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../servers/entity":"kW8fe"}]},["46McK","1SICI"], "1SICI", "parcelRequirece5e")
+  },{"../framework/RComponent":"iu3rT","../servers/entity":"kW8fe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["46McK","1SICI"], "1SICI", "parcelRequirece5e")
   
   //# sourceMappingURL=index.18dbc454.js.map
   

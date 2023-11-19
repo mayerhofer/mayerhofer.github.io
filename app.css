@@ -442,6 +442,7 @@ nav {
 .table__header {
   text-align: center;
   width: 100%;
+  font-size: 22px;
   display: flex;
 }
 
@@ -551,6 +552,9 @@ nav {
 .liabilityReport {
   color: #bc7c9c;
   text-align: center;
+  width: 100%;
+  font-size: 22px;
+  display: inline-block;
 }
 
 .liabRep-header {
