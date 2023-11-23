@@ -30,7 +30,7 @@ const labelImages = [
     img: images64['dinner'],
   },
   {
-    label: 'Grosseries',
+    label: 'Groceries',
     alias: 'market',
     img: images64['market'],
   },

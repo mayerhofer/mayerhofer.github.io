@@ -1933,7 +1933,7 @@
           img: (0, _templates.images64)["dinner"]
       },
       {
-          label: "Grosseries",
+          label: "Groceries",
           alias: "market",
           img: (0, _templates.images64)["market"]
       },
