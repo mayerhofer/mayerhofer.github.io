@@ -103,15 +103,12 @@ export default class FinanceForm extends RComponent {
   constructor(props) {
     super(props);
 
-    if (typeof (this.props.element) === 'object') {
-      this.isEditMode = true;
-    } else if (Array.isArray(this.props.data)) {
-      this.isEditMode = false;
-    } else {
+    if (! Array.isArray(this.props.data)) {
       throw 'Missing prop cashflow array or cashflow element';
     }
 
     this.state = {
+      isEditMode: typeof (this.props.element) === 'object',
       labelOptions: [],
       bookOptions: [],
       validationState: {
@@ -143,10 +140,47 @@ export default class FinanceForm extends RComponent {
         },
       },
       ... buildNewState(
-        this.isEditMode,
+        typeof (this.props.element) === 'object',
         props
       ),
     };
+  }
+
+  getDerivedState(props) {
+    const newState = Object.assign({}, this.state);
+
+    if (! Array.isArray(this.props.data)) {
+      throw 'Missing prop cashflow array or cashflow element';
+    }
+
+    if (props.element) {
+      newState.isEditMode = true;
+      newState.amount = props.element.amount;
+      newState.nextElementId = props.element.elementId;
+      newState.country = props.element.location;
+      newState.currency = props.element.currency;
+      newState.date = new Date(props.element.date);
+      newState.direction = props.element.direction;
+      newState.description = props.element.description;
+      newState.provider = props.element.provider;
+      newState.labels = props.element.labels;
+      newState.book = props.element.book;
+      newState.liability = undefined;
+    } else {
+      newState.isEditMode = false;
+      newState.amount = 10;
+      newState.nextElementId = props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1;
+      newState.country = 'Spain';
+      newState.currency = 'EUR';
+      newState.date = new Date();
+      newState.direction = false;
+      newState.description = '';
+      newState.provider = '';
+      newState.labels = [''];
+      newState.book = 'M EUR';
+      newState.liability = undefined;
+    }
+    return newState;
   }
 
   componentDidMount() {
@@ -180,11 +214,8 @@ export default class FinanceForm extends RComponent {
   }
 
   cleanState() {
-    const base = buildNewState(
-      this.isEditMode,
-      this.props
-    );
-    this.setState(base);
+    const newProps = Object.assign({}, this.props, {element: undefined});
+    this.setState(this.getDerivedState(newProps));
   }
 
   isValidToSave() {
@@ -196,7 +227,8 @@ export default class FinanceForm extends RComponent {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.currency !== nextState.currency ||
+    return this.props.element !== nextProps.element ||
+      this.state.currency !== nextState.currency ||
       this.state.date !== nextState.date ||
       this.state.amount !== nextState.amount ||
       this.state.direction !== nextState.direction ||
@@ -234,6 +266,7 @@ export default class FinanceForm extends RComponent {
   }
 
   handleBack() {
+    this.cleanState();
     this.props.handleClose();
   }
 
@@ -253,12 +286,12 @@ export default class FinanceForm extends RComponent {
       amount: Number.parseFloat(this.state.amount),
       elementId: cfid,
     };
-    const saveObj = this.isEditMode ? Object.assign({}, this.props.element, newCashFlow) : newCashFlow;
+    const saveObj = this.state.isEditMode ? Object.assign({}, this.props.element, newCashFlow) : newCashFlow;
 
     const saveLiabi = this.saveLiability.bind(this);
 
     const cfApi = new EntityAPI('cashflow');
-    if (this.isEditMode) {
+    if (this.state.isEditMode) {
       cfApi.update(saveObj)
         .then(() => {
           this.log('info', 'CF updated', newCashFlow.provider);
