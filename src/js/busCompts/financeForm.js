@@ -4,100 +4,54 @@ import FlagCombo from "./flagCombo";
 import LiabilityModal from "./liabilityModal";
 import SaveButton from "./saveButton";
 import BackButton from "./backButton";
-import { images64, currencies } from "../templates";
+import { labelImages, currencies } from "../templates";
 import Toast from "../components/toast";
 import EntityAPI from "../servers/entity";
 
-const labelImages = [
-  {
-    label: 'Work',
-    alias: 'work',
-    img: images64['work'],
-  },
-  {
-    label: 'Health',
-    alias: 'health',
-    img: images64['health'],
-  },
-  {
-    label: 'Investments',
-    alias: 'investment',
-    img: images64['investment'],
-  },
-  {
-    label: 'Dinner',
-    alias: 'dinner',
-    img: images64['dinner'],
-  },
-  {
-    label: 'Groceries',
-    alias: 'market',
-    img: images64['market'],
-  },
-  {
-    label: 'Transport',
-    alias: 'transport',
-    img: images64['transport'],
-  },
-  {
-    label: 'Leisure',
-    alias: 'leisure',
-    img: images64['leisure'],
-  },
-  {
-    label: 'Service',
-    alias: 'service',
-    img: images64['service'],
-  },
-  {
-    label: 'House',
-    alias: 'house',
-    img: images64['house'],
-  },
-  {
-    label: 'Tourism',
-    alias: 'tourism',
-    img: images64['tourism'],
-  },
-  {
-    label: 'Sweets',
-    alias: 'sweet',
-    img: images64['sweet'],
-  },
-  {
-    label: 'Gift',
-    alias: 'gift',
-    img: images64['gift'],
-  },
-  {
-    label: 'Education',
-    alias: 'study',
-    img: images64['study'],
-  },
-  {
-    label: 'Tax',
-    alias: 'tax',
-    img: images64['tax'],
-  },
-];
-
-const buildNewState = (isEdit, props) => {
+const buildNewState = (props) => {
   const cf = props.element;
-  return {
-    amount: isEdit ? cf.amount : 10,
-    nextElementId: isEdit ? cf.elementId :
-      props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1,
-    country: isEdit ? cf.location : 'Spain',
-    currency: isEdit ? cf.currency : 'EUR',
-    date: isEdit ? new Date(cf.date) : new Date(),
-    direction: isEdit ? cf.direction : false,
-    description: isEdit ? cf.description : '',
-    provider: isEdit ? cf.provider : '',
-    labels: isEdit ? cf.labels : [''],
-    book: isEdit ? cf.book : 'M EUR',
-    liability: undefined
-  };
+  const isEdit = typeof (props.element) === 'object';
+
+  if (isEdit) {
+    return {
+      isEditMode: true,
+      amount: cf.amount,
+      nextElementId: cf.elementId,
+      country: cf.location,
+      currency: cf.currency,
+      date: new Date(cf.date),
+      direction: cf.direction,
+      description: cf.description,
+      provider: cf.provider,
+      labels: cf.labels,
+      book: cf.book,
+      liability: undefined
+    };
+  } else {
+    return {
+      isEditMode: false,
+      amount: 10,
+      nextElementId: props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1,
+      country: 'Spain',
+      currency: 'EUR',
+      date: new Date(),
+      direction: false,
+      description: '',
+      provider: '',
+      labels: [''],
+      book: 'M EUR',
+      liability: undefined
+    };
+  }
 }
+
+const validDefinitionObject = {
+  validDef: {
+    required: true,
+    restricted: false,
+    options: []
+  },
+};
 
 export default class FinanceForm extends RComponent {
   constructor(props) {
@@ -112,75 +66,21 @@ export default class FinanceForm extends RComponent {
       labelOptions: [],
       bookOptions: [],
       validationState: {
-        provider: {
-          validDef: {
-            required: true,
-            restricted: false,
-          },
-        },
-        description: {
-          validDef: {
-            required: true,
-            restricted: false,
-          },
-        },
-        labels: {
-          validDef: {
-            required: true,
-            restricted: true,
-            options: [],
-          },
-        },
-        book: {
-          validDef: {
-            required: true,
-            restricted: true,
-            options: [],
-          },
-        },
+        provider: structuredClone(validDefinitionObject),
+        description: structuredClone(validDefinitionObject),
+        labels: structuredClone(validDefinitionObject),
+        book: structuredClone(validDefinitionObject)
       },
-      ... buildNewState(
-        typeof (this.props.element) === 'object',
-        props
-      ),
+      ... buildNewState(props),
     };
   }
 
   getDerivedState(props) {
-    const newState = Object.assign({}, this.state);
-
     if (! Array.isArray(this.props.data)) {
       throw 'Missing prop cashflow array or cashflow element';
     }
 
-    if (props.element) {
-      newState.isEditMode = true;
-      newState.amount = props.element.amount;
-      newState.nextElementId = props.element.elementId;
-      newState.country = props.element.location;
-      newState.currency = props.element.currency;
-      newState.date = new Date(props.element.date);
-      newState.direction = props.element.direction;
-      newState.description = props.element.description;
-      newState.provider = props.element.provider;
-      newState.labels = props.element.labels;
-      newState.book = props.element.book;
-      newState.liability = undefined;
-    } else {
-      newState.isEditMode = false;
-      newState.amount = 10;
-      newState.nextElementId = props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1;
-      newState.country = 'Spain';
-      newState.currency = 'EUR';
-      newState.date = new Date();
-      newState.direction = false;
-      newState.description = '';
-      newState.provider = '';
-      newState.labels = [''];
-      newState.book = 'M EUR';
-      newState.liability = undefined;
-    }
-    return newState;
+    return Object.assign({}, this.state, buildNewState(props));
   }
 
   componentDidMount() {
@@ -190,21 +90,14 @@ export default class FinanceForm extends RComponent {
     .then(options => {
       const labelOptions = options.filter(option => option.combo === 'labels').map(o => o.description);
       const bookOptions = options.filter(option => option.combo === 'books');
+      const labels = structuredClone(validDefinitionObject);
+      const book = structuredClone(validDefinitionObject);
 
-      const labels = {
-        validDef: {
-          required: true,
-          restricted: true,
-          options: labelOptions,
-        }
-      };
-      const book = {
-        validDef: {
-            required: true,
-            restricted: true,
-            options: bookOptions.filter(o => o.currency === (this.props.currency ?? 'EUR')).map(o => o.description),
-        }
-      };
+      book.validDef.restricted = labels.validDef.restricted = true;
+      labels.validDef.options = labelOptions;
+      book.validDef.options = bookOptions
+        .filter(o => o.currency === (this.props.currency ?? 'EUR')).map(o => o.description);
+
       self.setState({
         labelOptions,
         bookOptions,
@@ -270,106 +163,60 @@ export default class FinanceForm extends RComponent {
     this.props.handleClose();
   }
 
-  handleSave() {
-    const component = this;
-    const dt = this.state.date;
-    const cfid = this.state.nextElementId;
-    const newCashFlow = {
-      date: dt.getTime(),
-      currency: this.state.currency,
-      location: this.state.country,
-      direction: this.state.direction,
-      provider: this.state.provider,
-      description: this.state.description,
-      labels: this.state.labels,
-      book: this.state.book,
-      amount: Number.parseFloat(this.state.amount),
-      elementId: cfid,
-    };
-    const saveObj = this.state.isEditMode ? Object.assign({}, this.props.element, newCashFlow) : newCashFlow;
-
-    const saveLiabi = this.saveLiability.bind(this);
-
-    const cfApi = new EntityAPI('cashflow');
-    if (this.state.isEditMode) {
-      cfApi.update(saveObj)
-        .then(() => {
-          this.log('info', 'CF updated', newCashFlow.provider);
-          setTimeout(() => {
-            saveLiabi(cfid, newCashFlow, () => {
-              component.props.handleUpdate(saveObj);
-              component.cleanState();
-            });
-          }, 1000);
-        })
-        .catch(ex => {
-          this.log('error', ex.message, ex.stackTrace);
-        });
-    } else {
-      cfApi.insert(saveObj)
-        .then(response => {
-          saveObj._id = response.insertedId;
-          this.log('info', 'New CF saved', newCashFlow.provider);
-          setTimeout(() => {
-            saveLiabi(cfid, newCashFlow, () => {
-              component.props.handleInsert(saveObj);
-              component.cleanState();
-            });
-          }, 1000);
-        })
-        .catch(ex => {
-          this.log('error', ex.message, ex.stackTrace);
-        });
-    }
-  }
-  saveLiability(cfid, newCashFlow, callback) {
+  async handleSave() {
     try {
-      if (this.state.liability) {
-        const lApi = 
-	        new EntityAPI('liability');
-
-        lApi.get().then(liabilities => {
-          const found = Array.from(liabilities).find(l => l.cashflowId === cfid);
-
-          if (found) {
-            //update
-            const obj = Object.assign({}, found, {
-              date: newCashFlow.date,
-              cashflowId: cfid,
-              elementId: found.elementId,
-              _id: found._id,
-            });
-
-            lApi.update(obj).then(res => {
-              this.log('info', 'Liability updated successfully.', `CF id: ${cfid.toString()}`);
-              callback();
-	          });
-          } else {
-            lApi.get({"type": "maxId"}).then(res => {
-              const nextElementId = res[0].maxId + 1;
-              // insert
-              const obj = {
-                ...this.state.liability,
-                date: newCashFlow.date,
-                cashflowId: cfid,
-                elementId: nextElementId
-              };
-              if (typeof obj.elementId === 'number' && obj.elementId > 0) {
-                lApi.insert(obj).then(res => {
-                  this.log('info', 'New liability saved successfully.', `CF id: ${cfid.toString()}`);
-                  callback();
-                });
-              } else {
-                this.log('error', 'Missing element Id.', `CF id: ${cfid.toString()}`);
-              }
-            });
-          }
-        });
-      } else {
-        callback();
-      }
+      const dt = this.state.date;
+      const cfid = this.state.nextElementId;
+      const newCashFlow = {
+        date: dt.getTime(),
+        currency: this.state.currency,
+        location: this.state.country,
+        direction: this.state.direction,
+        provider: this.state.provider,
+        description: this.state.description,
+        labels: this.state.labels,
+        book: this.state.book,
+        amount: Number.parseFloat(this.state.amount),
+        elementId: cfid,
+      };
+      const saveObj = this.state.isEditMode ? Object.assign({}, this.props.element, newCashFlow) : newCashFlow;
+      const cfApi = new EntityAPI('cashflow');
+      const savedCf = await cfApi.save(saveObj);
+      this.log('info', 'CF saved', newCashFlow.provider);
+      await this.saveLiability(cfid, savedCf);
+      this.props.handleSave(savedCf);
+      this.cleanState();
     } catch (ex) {
       this.log('error', ex.message, ex.stackTrace);
+    }
+  }
+  async saveLiability(cfid, newCashFlow) {
+    if (this.state.liability) {
+      const lApi = new EntityAPI('liability');
+      const obj = {
+        ...this.state.liability,
+        date: newCashFlow.date,
+        cashflowId: cfid,
+      };
+
+      const found = 
+        this.state.isEditMode &&
+        (await lApi.get()).find(l => l.cashflowId === cfid);
+
+      if (found) {
+        //update
+        obj["elementId"] = found.elementId;
+        obj["_id"] = found._id;
+
+      } else {
+        const maxIdRes = await lApi.get({"type": "maxId"});
+        const nextElementId = maxIdRes[0].maxId + 1;
+        // insert
+        obj["elementId"] = nextElementId;
+      }
+
+      await lApi.save(obj);
+      this.log('info', 'New liability saved successfully.', `CF id: ${cfid.toString()}`);
     }
   }
   handleProviderChange(provider) {

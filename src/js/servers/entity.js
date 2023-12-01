@@ -45,13 +45,15 @@ class EntityAPI {
   async get(filter) {
     return await operate(this.route, null, filter);
   }
-	
-  async insert(data) {
-    return await operate(this.route, buildPayload(data, 'POST'));
-  }
-	
-  async update(data) {
-    return await operate(this.route, buildPayload(data, 'PUT'));
+
+  async save(data) {
+    if (cashflow._id) {
+      await operate(this.route, buildPayload(data, 'PUT'));
+    } else {
+      const response = await operate(this.route, buildPayload(data, 'POST'));
+      data._id = response.insertedId;
+    }
+    return data;
   }
 	
   async delete(data) {

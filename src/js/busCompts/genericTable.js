@@ -74,18 +74,15 @@ export default class GenericTable extends RComponent {
     const inc = this.state.increment;
     this.setState({start: this.state.start + inc, end: this.state.end + inc});
   }
-  handleInsertOne(one) {
-    const cfs = this.state.data;
-    cfs.unshift(one);
-    this.setState({data: cfs});
-  }
-  handleUpdateOne(one) {
-    const cfs = this.state.data;
-    const found = cfs.find(o => o._id === one._id);
+  handleSaveOne(one) {
+    const elements = this.state.data;
+    const found = elements.find(o => o._id === one._id);
     if (found) {
-      cfs[cfs.indexOf(found)] = Object.assign({}, one);
-      this.setState({data: cfs});
+      elements[elements.indexOf(found)] = one;
+    } else {
+      elements.unshift(one);
     }
+    this.setState({data: elements});
   }
   handleClose() {
     this.setState({showEdit: false, editing: null});
@@ -126,11 +123,10 @@ export default class GenericTable extends RComponent {
 
   render() {
     if (this.state.showEdit) {
-      const handleInsert = this.handleInsertOne.bind(this);
-      const handleUpdate = this.handleUpdateOne.bind(this);
+      const handleSave = this.handleSaveOne.bind(this);
       const content = this.fill('scrollDiv', {
         id: this.id + 'content', 
-        content: this.buildRComponent({id: this.props.idEditComponent, handleInsert, handleUpdate, handleClose: this.handleClose.bind(this), data: this.state.data, element: this.state.editing}, this.props.buildEditComponent)
+        content: this.buildRComponent({id: this.props.idEditComponent, handleSave, handleClose: this.handleClose.bind(this), data: this.state.data, element: this.state.editing}, this.props.buildEditComponent)
       });
 
       return this.fill('div', {id: this.id, className: 'table__wrapper', content: content });

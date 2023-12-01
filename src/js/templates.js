@@ -27,6 +27,79 @@ export const images64 = {
   tax: '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',
 };
 
+export const labelImages = [
+  {
+    label: 'Work',
+    alias: 'work',
+    img: images64['work'],
+  },
+  {
+    label: 'Health',
+    alias: 'health',
+    img: images64['health'],
+  },
+  {
+    label: 'Investments',
+    alias: 'investment',
+    img: images64['investment'],
+  },
+  {
+    label: 'Dinner',
+    alias: 'dinner',
+    img: images64['dinner'],
+  },
+  {
+    label: 'Groceries',
+    alias: 'market',
+    img: images64['market'],
+  },
+  {
+    label: 'Transport',
+    alias: 'transport',
+    img: images64['transport'],
+  },
+  {
+    label: 'Leisure',
+    alias: 'leisure',
+    img: images64['leisure'],
+  },
+  {
+    label: 'Service',
+    alias: 'service',
+    img: images64['service'],
+  },
+  {
+    label: 'House',
+    alias: 'house',
+    img: images64['house'],
+  },
+  {
+    label: 'Tourism',
+    alias: 'tourism',
+    img: images64['tourism'],
+  },
+  {
+    label: 'Sweets',
+    alias: 'sweet',
+    img: images64['sweet'],
+  },
+  {
+    label: 'Gift',
+    alias: 'gift',
+    img: images64['gift'],
+  },
+  {
+    label: 'Education',
+    alias: 'study',
+    img: images64['study'],
+  },
+  {
+    label: 'Tax',
+    alias: 'tax',
+    img: images64['tax'],
+  },
+];
+
 export const components = {
   LogInForm: `
     <form id="{field.id}" class="div--scrollable" action="window.application.callHandler(this,\'{field.id}Submit\');">
