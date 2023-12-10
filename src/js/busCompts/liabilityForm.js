@@ -1,8 +1,10 @@
 import { RComponent } from "../framework/RComponent";
 import TextField from "../components/textField";
-import SaveButton from "./saveButton";
 import EntityAPI from "../servers/entity";
 import Toast from "../components/toast";
+import Div from "../html/div";
+import Button from "../html/button";
+import Image from "../html/image";
 
 export default class LiabilityForm extends RComponent {
   constructor(props) {
@@ -69,7 +71,7 @@ export default class LiabilityForm extends RComponent {
 
         this.log('info', 'saving liability', `CF id: ${updatedLiability.cashflowId.toString()}`);
 
-        lApi.update(updatedLiability);
+        lApi.save(updatedLiability);
         this.log('info', 'Liability object updated', `CF id: ${updatedLiability.cashflowId.toString()}`);
       };
     } catch (ex) {
@@ -97,16 +99,15 @@ export default class LiabilityForm extends RComponent {
     };
     const amount = this.fill('amountLiability', amountProps);
     const debtor = buildTb(buildProps('Debtor'));
-    let save = this.buildRComponent({id: this.id + 'Save', handler: this.handleSave.bind(this)}, p => new SaveButton(p));
-    const actionButtonProps = {id: this.id + 'ActionButtons', className: 'buttons', content: [save].join('')};
+    let save = Button('form-button', Image('save'), this.id + 'Save', this.handleSave.bind(this));
     const content = `
-    <h2>Update Liability</h2><br />${this.fill('simplediv', actionButtonProps)}<br />
+    <h2>Update Liability</h2><br />${Div('buttons', [save].join(''), this.id + 'ActionButtons')}<br />
     ${debtor}<br />${amount}<br />
     `;
 
     //this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
     this.registerHandler(this.id + 'Amount', this.handleAmountChange.bind(this));
     this.registerHandler(this.id + 'AmountDir', this.handleDirectionChange.bind(this));
-    return this.fill('div', {id: this.id, className: 'liability', content});
+    return Div('liability', content, this.id);
   }
 }

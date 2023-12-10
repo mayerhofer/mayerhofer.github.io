@@ -1,6 +1,8 @@
 import { RComponent } from "../framework/RComponent";
 import { currencies } from "../templates";
 import TextField from "../components/textField";
+import Div from "../html/div";
+import Button from "../html/button";
 
 export default class LiabilityModal extends RComponent {
   constructor(props) {
@@ -104,19 +106,16 @@ export default class LiabilityModal extends RComponent {
     };
     const amount = this.fill('amountField', amountProps);
     const debtor = buildTb(buildProps('Debtor'));
-    const buttonId = 'AddNewLiability';
-    const button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
-    const header = this.fill('simplediv', {className: 'table__header', content: button});
+    const button = Button('table__header-add', '<span>+</span>', 'AddNewLiability', this.handleSave.bind(this));
+    const header = Div('table__header', button);
     const content = `
     <h1>Add Liability</h1><br />${header}<br />
     ${debtor}<br />${amount}<br />
     `;
     
-    this.registerHandler(buttonId, this.handleSave.bind(this));
-
     this.registerHandler(this.id + 'Currency', this.handleCurrencyUpdate.bind(this));
     this.registerHandler(this.id + 'Amount', this.handleAmountChange.bind(this));
     this.registerHandler(this.id + 'AmountDir', this.handleDirectionChange.bind(this));
-    return this.fill('div', {id: this.id, className: 'liability', content});
+    return Div('liability', content, this.id);
   }
 }

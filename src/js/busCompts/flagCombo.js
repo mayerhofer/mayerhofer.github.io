@@ -10,6 +10,10 @@ export default class FlagCombo extends RComponent {
       countries: this.props.countryImg ?? [],
     };
   }
+  getDerivedState(props) {
+    return Object.assign({}, this.state, {country: props.country ?? 'Spain'});
+  }
+
   // Load flag images
   componentDidMount() {
     // Inside asynchronous methods, context of this is lost.
@@ -24,6 +28,10 @@ export default class FlagCombo extends RComponent {
         }, 1000);
       });
     }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.country !== nextState.country ||
+          this.state.countries !== nextState.countries;
   }
   handleChange(e) {
     this.setState({country: e.title});
