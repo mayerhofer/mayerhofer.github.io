@@ -1,6 +1,8 @@
 import { RComponent } from "../framework/RComponent";
-import { images64 } from "../templates";
 import EntityAPI from "../servers/entity";
+import Div from "../html/div";
+import Button from "../html/button";
+import Image from "../html/image";
 
 export default class GenericTable extends RComponent {
   // props: {
@@ -81,6 +83,9 @@ export default class GenericTable extends RComponent {
       elements[elements.indexOf(found)] = one;
     } else {
       elements.unshift(one);
+      elements.sort((a,b) => {
+        return ((new Date(b.date)).getTime() - (new Date(a.date)).getTime())
+      });
     }
     this.setState({data: elements});
   }
@@ -93,67 +98,47 @@ export default class GenericTable extends RComponent {
   }
 
   buildCell(key, row, formatter) {
-    const format = formatter[key](row);
-
-    return this.fill(format.tagName, format);
+    return formatter[key](row);
   }
 
   rowToHtml(row) {
     const formatter = this.state.formatter;
     const fields = Object.keys(formatter).map(key => this.buildCell(key, row, formatter));
 
-    let buttons = '';
+    let actionButtons = '';
     if (typeof this.props.buildEditComponent === 'function') {
-      const editImg = this.fill('image', {img: images64['edit']});
-      const editBtn = this.fill('button', {id: this.id + 'EditBtn' + row.elementId, className: 'act-btn', content: editImg});
-      const delBtn = this.fill('button', {id: this.id + 'DelBtn' + row.elementId, className: 'act-btn', content: this.fill('image', {img: images64['delete']})});
-      const selBtn = this.fill('button', {id: this.id + 'SelBtn' + row.elementId, className: 'act-btn', content: this.fill('image', {img: images64['select']})});
+      const editBtn = Button('act-btn', Image('edit'), this.id + 'EditBtn' + row.elementId, () => this.handleEdit.bind(this)(row));
+      const delBtn = Button('act-btn', Image('delete'), this.id + 'DelBtn' + row.elementId, () => this.handleDelete.bind(this)(row));
+      const selBtn = Button('act-btn', Image('select'), this.id + 'SelBtn' + row.elementId, () => this.handleSelect.bind(this)(row));
 
-      this.registerHandler(this.id + 'EditBtn' + row.elementId, () => this.handleEdit.bind(this)(row));
-      this.registerHandler(this.id + 'SelBtn' + row.elementId, () => this.handleSelect.bind(this)(row));
-
-      buttons = selBtn + editBtn + delBtn;
+      actionButtons = Div('actions-wrapper', selBtn + editBtn + delBtn);
     }
-    const actionButtons = this.fill('simplediv', {className: 'actions-wrapper', content: buttons});
 
-    this.registerHandler(this.id + 'DelBtn' + row.elementId, () => this.handleDelete.bind(this)(row));
-
-    return this.fill('simplediv', {className: 'table__row', content: fields.join('') + actionButtons});
+    return Div('table__row', fields.join('') + actionButtons);
   }
 
   render() {
     if (this.state.showEdit) {
       const handleSave = this.handleSaveOne.bind(this);
-      const content = this.fill('scrollDiv', {
-        id: this.id + 'content', 
-        content: this.buildRComponent({id: this.props.idEditComponent, handleSave, handleClose: this.handleClose.bind(this), data: this.state.data, element: this.state.editing}, this.props.buildEditComponent)
-      });
+      const scrollContent = this.buildRComponent({id: this.props.idEditComponent, handleSave, handleClose: this.handleClose.bind(this), data: this.state.data, element: this.state.editing}, this.props.buildEditComponent);
+      const content = Div('div--scrollable', scrollContent, this.id + 'content');
 
-      return this.fill('div', {id: this.id, className: 'table__wrapper', content: content });
+      return Div('table__wrapper', content, this.id);
     } else {
-      const content = this.fill('div', {
-        id: this.id + 'content',
-        className: 'table__wrapper',
-        content: this.state.data.slice(this.state.start, this.state.end).map(this.rowToHtml.bind(this)).join(''),
-      });
-      const label = this.fill('simplediv', {className: 'table__header-label', content: (new Date()).toISOString().substring(0, 10)});
-      const count = this.fill('simplediv', {className: 'table__header-label', content: this.state.data.length + ': ' + (this.state.start +1) + '-' + (this.state.end > this.state.data.length ? this.state.data.length : this.state.end)});
-      const backwards = this.fill('button', {id: this.id + 'Backwards', className: 'table__header-add' + (this.state.start === 0 ? ' disabled' : ''), content: '<span>&lt;</span>'});
-      const forwards = this.fill('button', {id: this.id + 'Forwards', className: 'table__header-add' + (this.state.start + 16 >= this.state.data.length ? ' disabled' : ''), content: '<span>&gt;</span>'});
+      const rows = this.state.data.slice(this.state.start, this.state.end).map(this.rowToHtml.bind(this));
+      const content = Div('table__wrapper', rows.join(''), this.id + 'content');
+      const label = Div('table__header-label', (new Date()).toISOString().substring(0, 10));
+      const count = Div('table__header-label', this.state.data.length + ': ' + (this.state.start +1) + '-' + (this.state.end > this.state.data.length ? this.state.data.length : this.state.end));
+      const backwards = Button('table__header-add', '<span>&lt;</span>', this.id + 'Backwards', this.handleBack.bind(this), this.state.start === 0);
+      const forwards = Button('table__header-add', '<span>&gt;</span>', this.id + 'Forwards', this.handleForw.bind(this), this.state.start + 16 >= this.state.data.length);
       const section = this.state.data && typeof this.props.header === 'function' ? this.buildRComponent({ id: this.id + "Header", data: this.state.data }, this.props.header) : '';
       let button = '';
       if (typeof this.props.buildEditComponent === 'function') {
-        const buttonId = this.id +'AddNew' + this.props.entity;
-        button = this.fill('button', {id: buttonId, className: 'table__header-add', content: '<span>+</span>'});
-
-        this.registerHandler(buttonId, () => this.handleEdit.bind(this)());
+        button = Button('table__header-add', '<span>+</span>', this.id +'AddNew' + this.props.entity, () => this.handleEdit.bind(this)());
       }
-      const header = this.fill('simplediv', {className: 'table__header', content: label + count + backwards + forwards + button});
+      const header = Div('table__header', label + count + backwards + forwards + button);
 
-      this.registerHandler(this.id + 'Backwards', () => this.handleBack.bind(this)());
-      this.registerHandler(this.id + 'Forwards', () => this.handleForw.bind(this)());
-
-      return this.fill('div', {id: this.id, className: 'div--scrollable', content: section + header + content });
+      return Div('div--scrollable', section + header + content, this.id);
     }
   }
 }

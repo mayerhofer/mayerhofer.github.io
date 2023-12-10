@@ -8,6 +8,11 @@ import GenericTable from "./busCompts/genericTable.js";
 import LiabilityForm from "./busCompts/liabilityForm";
 import LiabilityReport from "./busCompts/liabilityReport";
 import Toast from "./components/toast.js";
+import Div from "./html/div.js";
+import StackTrace from "./html/stackTrace.js";
+import DateField from "./html/dateField.js";
+import Button from "./html/button.js";
+import Image from "./html/image.js";
 
 window.application = application;
 
@@ -206,25 +211,18 @@ class WishListForm extends RComponent {
       id: this.id + 'Labels',
       content: labelImgArray.slice(0, 7).join('') + '</ul><ul class="direction">' + labelImgArray.slice(7).join(''),
     };
-    const date = this.fill('dateTextField', {id: this.id + 'Date', label: 'Date', value: this.state.date.toISOString().split('T')[0]});
+    const dateValue = this.state.date.toISOString().split('T')[0];
+    const date = DateField(this.id + 'Date', 'Date', dateValue, this.handleUpdateDate.bind(this));
     const labels = this.fill('labelsField', labelProps);
     
     const whatProps = buildProps('What');
 
-    const save = this.fill('imgButton', {id: this.id + 'Save', disabled: '', className: 'financeSave', img: "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADt0lEQVRoge2YvWsUQRjGn9m7fBg/iJLEJo2NAbFRtPQfSCEpFOwshPSpYhMUq4CojQr+C4JRCyWNgqAgsVUkhSAYNGcgGtDkEnPvY7E7u7Ozs7O3J5tEuBfm9m5m7+b3zPsxswd0rWtd69pumsobOPNydZxUD0iMEgBArC4343FuNfH+wgigFBQAAgAJkhDzKgIRQihgdBUhRAQtEUjciImFLdQOHflJUTc+TgzfaUdAkDdgw4eEaQthjGbAkwQluoIgEfUjHgeTn6Z+JQahePvE48b1dgTU8wWk4R38EAknVUqFq48IDkjgjXb6/uvU999cORuCh6pAPQkBUera2JPv/YsTI1d9AvI9YMO7PCAShopefQ0tAjJsYngiu0g0vJJMrN8qcnpsrjHbkYAieAARtBlCOr6ZhJMkYZUvIAkpJoORCkwfn1ueKi+gAB5AnHy6UYuwhNArQIcdM/B6fgU1k8eQnwMWvBNAomlVci9jz6UTVkSyC2B7wAEfdR0uLaAIHgg9EMInChjNbMLrkpqZglFZjUPICQ9fGOQLKIAHwhW0XaXvTycoQWY9YFaqsKKVgy8UYMK7dLjCwtzQ4rKakwM6V2jc74T3aPDsA354qADL6y2M9CebuZmEjPMgaa8unzIqk8QeEApWmoxxbHifDzxl1IInEAQJrKr34OaHJr6tb2eOBa24pEqmUqXKrYbfIO59DhD07XPDd+IBGx4A+g/UsPGrBQoBpfDu9wAuvf0DcLtoHbRsADVHt0JvXx1BX28peK8AG54g6vUABweDdEix1wgde9L08SCvziddbvjOQ8iq7Slh0YcdgfdUQu9OvNfh/QL+A3ivgL0E79NRHEJ7GN4vYC/Be0QUl1EL/txQD2ZODmCkT8UPNOaJ0/fZPPfYfY2m4NanGhbWggw8PQoKd2J75f8dPtsvIhjqIaaObZeCB4pOo46wqQJevx/qsUPRjC23eZLYHfNVwacfatqD9wrIS9gq4ZPn4jR8Z2XUAR9Wm+rgRaQUvF9ATqmsFJ7l4L0C8up8lfA6hGx4epQU7sSZTapCeA3aLrxfgAseqBQ+bO3DFwjIwusfrQre/JMgBd9JFXLBo2L4JITS8D4/FJbRr4/m0Xj4NDmYVQhv5sGP+RdYe/bcKiZlBETKg9YmatubumtH4GHOW6DA99/oEoDRoxfPx/Ag0GgSw73VwK9sqXjyQ+Pj8aQkvpT2gBCT+ovmIswutrDclErg7y7ttzbQEF4UJ3Nd0LWuda1ru2p/ASsCdZ0lM904AAAAAElFTkSuQmCC"});
-    const actionButtonProps = {id: this.id + 'ActionButtons', className: 'buttons', content: [save].join('')};
-    const actionButtons = this.fill('simplediv', actionButtonProps);
+    const save = Button('form-button', Image('save'), this.id + 'Save', this.handleSave.bind(this));
+    const actionButtons = Div('buttons', save, this.id + 'ActionButtons');
 
     this.registerHandler(this.id + 'Labels', this.handleLabelChange.bind(this));
-    this.registerHandler(this.id + 'Save', this.handleSave.bind(this));
-    this.registerHandler(this.id + 'Date', this.handleUpdateDate.bind(this));
 
-    const containerProps = {
-      id: this.id, 
-      className: 'page', 
-      content: [actionButtons, date, buildTb(whatProps), labels].join(''),
-    };
-    return this.fill('container', containerProps);
+    return Div('page', actionButtons + date + buildTb(whatProps) + labels, this.id);
   }
 }
 
@@ -246,7 +244,7 @@ const commonFormatters = {
     let strDay = day < 10 ? '0' + day.toString() : day.toString();
     let strMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][month];
 
-    return {tagName: 'simplediv', className: 'form-date', content: `${strDay}/${strMonth}`};
+    return Div('form-date', `${strDay}/${strMonth}`);
   },
   amount: (row) => {
     const isIncome = (row.provider && row.direction) || (row.cashflowId && !row.liability);
@@ -256,7 +254,7 @@ const commonFormatters = {
     } else {
       content = '--';
     }
-    return {tagName: 'simplediv', className: 'cashflowAmount' + (isIncome ? ' income' : ' expense'), content};
+    return Div('cashflowAmount' + (isIncome ? ' income' : ' expense'), content);
   },
 };
 
@@ -290,7 +288,7 @@ window.app.loadFinance = function() {
         } else {
           content = 'error: invalid provider';
         }
-        return {tagName: 'simplediv', className: 'cashflowProvider', content};
+        return Div('cashflowProvider', content);
       },
     },
   };
@@ -312,22 +310,13 @@ window.app.loadErrors = function() {
         const day = addZero(obj.getDate());
         const month = addZero(obj.getMonth() + 1);
 
-        return {
-          tagName: 'simplediv',
-          className: 'form-date' + (row.type === 'error' ? ' expense' : 'income'), 
-          content: `${day}/${month}<BR />${hour}:${minutes}`
-        };
+        return Div('form-date' + (row.type === 'error' ? ' expense' : 'income'), `${day}/${month}<BR />${hour}:${minutes}`);
       },
       message: (row) => {
-        return {tagName: 'simplediv', className: 'longtext', content: `<span>${row.message}</span>`};
+        return Div('longtext', `<span>${row.message}</span>`);
       },
       stackTrace: (row) => {
-        return {
-          id: row._id,
-          tagName: 'showStackTrace',
-          className: 'btn-trace',
-          content: row.stackTrace.replace(new RegExp('\n    ', 'g'), '<BR />')
-        };
+        return StackTrace(row._id, row.stackTrace.replace(new RegExp('\n    ', 'g'), '<BR />'));
       }
     },
   }, p=>new GenericTable(p));
@@ -374,7 +363,7 @@ window.app.loadLiability = function() {
           } else {
             content = 'error: invalid provider';
           }
-          return {tagName: 'simplediv', className: 'cashflowProvider', content};
+          return Div('cashflowProvider', content);
         },
       },
       header: p => new LiabilityReport(Object.assign({}, p, repProps))
@@ -387,10 +376,10 @@ window.app.loadFinanceReport = function() {
     id: 'finReport',
     entity: 'report',
     formatter: {
-      category: row => { return { tagName: 'simplediv', className: 'cashflowProvider', content: row.category }; },
-      sum1: row => { return { tagName: 'simplediv', className: 'cashflowAmount', content: row.sum1 }; },
-      sum2: row => { return { tagName: 'simplediv', className: 'cashflowAmount', content: row.sum2 }; },
-      sum3: row => { return { tagName: 'simplediv', className: 'cashflowAmount', content: row.sum3 }; },
+      category: row => { return Div('cashflowProvider', row.category); },
+      sum1: row => { return Div('cashflowAmount', row.sum1); },
+      sum2: row => { return Div('cashflowAmount', row.sum2); },
+      sum3: row => { return Div('cashflowAmount', row.sum3); },
 
     }
   }, p => new GenericTable(p));
@@ -418,7 +407,7 @@ window.app.loadWishlist = function() {
     formatter: {
       date: commonFormatters.date,
       what: (row) => {
-        return {tagName: 'simplediv', className: 'cashflowProvider', content: row.what};
+        return Div('cashflowProvider', row.what);
       },
     },
   }, p=>new GenericTable(p));

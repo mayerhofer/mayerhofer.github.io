@@ -809,7 +809,7 @@ nav {
   -webkit-filter: invert(1);
   filter: invert(1);
 }
-.financeSave {
+.form-button {
   position: relative;
   background-color: #3B3B58;
   margin-right: 20px;

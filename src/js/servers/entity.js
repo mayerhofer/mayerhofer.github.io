@@ -47,7 +47,7 @@ class EntityAPI {
   }
 
   async save(data) {
-    if (cashflow._id) {
+    if (data._id) {
       await operate(this.route, buildPayload(data, 'PUT'));
     } else {
       const response = await operate(this.route, buildPayload(data, 'POST'));
