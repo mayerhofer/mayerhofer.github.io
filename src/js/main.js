@@ -184,11 +184,7 @@ class WishListForm extends RComponent {
     //log('info', {message: 'Saving cashflow', stackTrace: element.provider });
 
     const api = new EntityAPI('wish');
-    if (this.isEditMode) {
-      api.update(saveObj);
-    } else {
-      api.insert(saveObj);
-    }
+    api.save(saveObj);
   }
 
   render() {
@@ -332,7 +328,7 @@ window.app.loadLiability = function() {
     element.payed = true;
     element.updated = (new Date()).getTime();
 
-    api.update(element).then(res => {
+    api.save(element).then(res => {
       removeHandler(element.elementId);
       (new Toast({id: 'Toast' + element.elementId, type: 'info', header: 'Payed liability', text: `CF id: ${element.cashflowId}, amount: ${element.amount}`})).render();
     });

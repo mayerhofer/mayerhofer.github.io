@@ -42,7 +42,7 @@ export default class LiabilityForm extends RComponent {
   handleDirectionChange(e) {
     this.setState({liability: e.value !== 'income'});
   }
-  handleSave() {
+  async handleSave() {
     const obj = Object.assign({}, this.props.element);
 
     obj.dueIn = this.state.dueDate;
@@ -51,7 +51,11 @@ export default class LiabilityForm extends RComponent {
     obj.payed = this.state.payed;
     obj.source = this.state.debtor;
     
-    this.saveLiability(obj);
+    try {
+      this.saveLiability(obj);
+    } catch (ex) {
+      this.log('error', ex.message, ex.stackTrace);
+    }
   }
 
   log(type, header, text) {
@@ -64,18 +68,14 @@ export default class LiabilityForm extends RComponent {
       }, p => new Toast(p));
   }
   
-  saveLiability(updatedLiability) {
-    try {
-      if (updatedLiability && updatedLiability.cashflowId && updatedLiability._id && updatedLiability.elementId) {
-        const lApi = new EntityAPI('liability');
+  async saveLiability(updatedLiability) {
+    if (updatedLiability && updatedLiability.cashflowId && updatedLiability._id && updatedLiability.elementId) {
+      const lApi = new EntityAPI('liability');
 
-        this.log('info', 'saving liability', `CF id: ${updatedLiability.cashflowId.toString()}`);
+      this.log('info', 'saving liability', `CF id: ${updatedLiability.cashflowId.toString()}`);
 
-        lApi.save(updatedLiability);
-        this.log('info', 'Liability object updated', `CF id: ${updatedLiability.cashflowId.toString()}`);
-      };
-    } catch (ex) {
-      this.log('error', ex.message, ex.stackTrace);
+      await lApi.save(updatedLiability);
+      this.log('info', 'Liability object updated', `CF id: ${updatedLiability.cashflowId.toString()}`);
     }
   }
 
