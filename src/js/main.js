@@ -13,6 +13,7 @@ import StackTrace from "./html/stackTrace.js";
 import DateField from "./html/dateField.js";
 import Button from "./html/button.js";
 import Image from "./html/image.js";
+import BudgetTableHeader from "./busCompts/budgetTableHeader.js";
 
 window.application = application;
 
@@ -324,14 +325,16 @@ window.app.loadLiability = function() {
       return;
     if (typeof removeHandler !== 'function')
       return;
-    const api = new EntityAPI('liability');
-    element.payed = true;
-    element.updated = (new Date()).getTime();
+    if (confirm("Are you sure it is payed?")) {
+      const api = new EntityAPI('liability');
+      element.payed = true;
+      element.updated = (new Date()).getTime();
 
-    api.save(element).then(res => {
-      removeHandler(element.elementId);
-      (new Toast({id: 'Toast' + element.elementId, type: 'info', header: 'Payed liability', text: `CF id: ${element.cashflowId}, amount: ${element.amount}`})).render();
-    });
+      api.save(element).then(res => {
+        removeHandler(element.elementId);
+        (new Toast({id: 'Toast' + element.elementId, type: 'info', header: 'Payed liability', text: `CF id: ${element.cashflowId}, amount: ${element.amount}`})).render();
+      });
+    }
   }
   const repProps = {
     id: 'liabilityReport'
@@ -370,15 +373,7 @@ window.app.loadLiability = function() {
 window.app.loadFinanceReport = function() {
   RComponent.buildRoot({
     id: 'finReport',
-    entity: 'report',
-    formatter: {
-      category: row => { return Div('cashflowProvider', row.category); },
-      sum1: row => { return Div('cashflowAmount', row.sum1); },
-      sum2: row => { return Div('cashflowAmount', row.sum2); },
-      sum3: row => { return Div('cashflowAmount', row.sum3); },
-
-    }
-  }, p => new GenericTable(p));
+  }, p => new BudgetTableHeader(p));
 }
 
 window.app.login = function() {

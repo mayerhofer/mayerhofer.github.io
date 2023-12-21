@@ -36,7 +36,7 @@ const parseHtmlToElement = function(id, str) {
   if (propsStartInx < endInx) {
     // TODO: Fix a bug -> some property values could have spaces inside them breaking the parsed result
     // For now I removed empty space from params in handler call from Button, but please fix the split below.
-    let props = start.substring(propsStartInx, endInx).split(' ').reduce((previous, kvp) => {
+    let props = start.substring(propsStartInx, endInx).split('" ').reduce((previous, kvp) => {
       let propName = kvp.substring(0, kvp.indexOf('='));
       let propValue = kvp.substring(kvp.indexOf('=') + 1);
       let result = {};
