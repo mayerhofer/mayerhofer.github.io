@@ -9,6 +9,7 @@ import Div from "../html/div";
 import Button from "../html/button";
 import Image from "../html/image";
 import DateField from "../html/dateField";
+import GroceriesListing from "./groceriesListing";
 
 const buildNewState = (props) => {
   const cf = props.element;
@@ -18,31 +19,33 @@ const buildNewState = (props) => {
     return {
       isEditMode: true,
       amount: cf.amount,
-      nextElementId: cf.elementId,
+      book: cf.book,
       country: cf.location,
       currency: cf.currency,
       date: new Date(cf.date),
-      direction: cf.direction,
       description: cf.description,
-      provider: cf.provider,
+      direction: cf.direction,
+      groceries: cf.groceries,
       labels: cf.labels,
-      book: cf.book,
-      liability: undefined
+      liability: undefined,
+      provider: cf.provider,
+      nextElementId: cf.elementId,
     };
   } else {
     return {
       isEditMode: false,
       amount: 10,
-      nextElementId: props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1,
+      book: 'M EUR',
       country: 'Spain',
       currency: 'EUR',
       date: new Date(),
-      direction: false,
       description: '',
-      provider: '',
+      direction: false,
+      groceries: [],
       labels: [''],
-      book: 'M EUR',
-      liability: undefined
+      liability: undefined,
+      provider: '',
+      nextElementId: props.data.map(d => d.elementId).filter(id => id > 0).sort((a,b)=>a-b).pop() + 1,
     };
   }
 }
@@ -81,6 +84,7 @@ export default class FinanceForm extends RComponent {
     this.state = {
       isEditMode: typeof (props.element) === 'object',
       isSaving: false,
+      showGrocery: false,
       labelOptions: [],
       bookOptions: [],
       validationState: {
@@ -148,6 +152,7 @@ export default class FinanceForm extends RComponent {
       this.state.book !== nextState.book ||
       this.state.description !== nextState.description ||
       this.state.provider !== nextState.provider ||
+      this.state.showGrocery !== nextState.showGrocery ||
       (Array.isArray(nextProps.labels) && (this.state.labels.length !== nextProps.labels.length ||
         (! this.state.labels.every(i => nextState.labels.includes(i)) )));
   }
@@ -259,6 +264,9 @@ export default class FinanceForm extends RComponent {
 
     cb.checked = false;
   }
+  showGroceryListing() {
+    this.setState({showGrocery: !this.state.showGrocery});
+  }
 
   log(type, header, text) {
     this.buildRComponent(
@@ -272,7 +280,17 @@ export default class FinanceForm extends RComponent {
   }
 
   render() {
-    // Util Functions
+
+    if (this.state.showGrocery) {
+      const listingProps = {
+        id: this.id + 'Listing',
+        arrayItems: this.state.groceries,
+        handleAdd: undefined,
+        handleClose: this.showGroceryListing.bind(this),
+      };
+      return Div('page', this.buildRComponent(listingProps, p => new GroceriesListing(p)), this.id);
+    }
+
     const buildTb = props => this.buildRComponent(props, p => new TextField(p));
     const buildProps = label => {
       return {
@@ -333,7 +351,8 @@ export default class FinanceForm extends RComponent {
     let copy = this.state.isEditMode ? 
       Button('form-button', Image('copy'), this.id + 'Copy', this.handleCopy.bind(this)) : 
       '';
-    let actionButtons = Div('buttons', [liability, back, copy, save].join(''), this.id + 'ActionButtons');
+    let addGroceryList = Button('form-button', Image('add'), this.id + 'AddGr', this.showGroceryListing.bind(this), this.state.labels.find(item => item === 'Grocery'));
+    let actionButtons = Div('buttons', [liability, back, copy, save, addGroceryList].join(''), this.id + 'ActionButtons');
 
     this.registerHandler(this.id + 'AmountDir', this.handleDirectionChange.bind(this));
     this.registerHandler(this.id + 'Labels', this.handleLabelChange.bind(this));

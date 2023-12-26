@@ -30,7 +30,7 @@ function validCall(props, validatePropsFunction, buildFunction) {
 
 const isBasePropsValid = props => {
   return typeof props !== 'object' || 
-    isNotStringOrEmpty(props.cssClass);
+    isNotStringOrEmpty(props.className);
 }
 
 function Div(className, content) {
@@ -42,10 +42,8 @@ const isElementPropsValid = (props) => {
     isNotStringOrEmpty(props.content);
 }
 
-function BuildElement({ cssClass, content }) {
-  const { cssClass, content } = props;
-
-  return Div(cssClass || COLUMN_CLASS, content || '');
+function BuildElement({ className, content }) {
+  return Div(className || COLUMN_CLASS, content || '');
 }
 
 function Element(props) {
@@ -53,25 +51,25 @@ function Element(props) {
 }
 
 const isArrayPropsValid = (props) => {
-  return isBasePropsValid(props.cssClass) ||
+  return isBasePropsValid(props.className) ||
     isNotArrayOrEmpty(props.elements);
 }
 
-function BuildRow({ cssClass, elements }) {
-  const className = cssClass || ROW_CLASS;
+function BuildRow({ className, elements }) {
+  const cssClass = className || ROW_CLASS;
   const columnArray = elements || [];
 
-  return Div(className, columnArray.map(r => Element(r)).join(''));
+  return Div(cssClass, columnArray.map(r => Element(r)).join(''));
 }
 function Row(props) {
   return validCall(props, isArrayPropsValid, BuildRow);
 }
 
-function BuildTable({ cssClass, elements }) {
-  const className = cssClass || TABLE_CLASS;
+function BuildTable({ className, elements }) {
+  const cssClass = className || TABLE_CLASS;
   const rowArray = elements || [];
 
-  return Div(className, rowArray.map(r => Row(r)).join(''));
+  return Div(cssClass, rowArray.map(r => Row(r)).join(''));
 }
 
 function Table(props) {
