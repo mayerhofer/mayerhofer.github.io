@@ -15,64 +15,18 @@
     <!-- <script type="text/javascript" charset="utf-8" src="public/app.js"></script> -->
     <link rel="stylesheet" href="css/main.css" />
 
-    <script type="module" src="js/main.js"></script>
+    <!-- React Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script type="module" src="js/app.js"></script>
 
     <!-- v4 -->
     <script src='https://unpkg.com/tesseract.js@4.0.1/dist/tesseract.min.js'></script>
   </head>
   <body class="index">
 
-    <!-- Header -->
-    <div class="header">
-      <div class="m-menu">
-        <div class="m-menu__burger">
-          <span></span>
-        </div>
-        <input class="m-menu__toggle" type="checkbox">
-        <div class="m-menu__backdrop"></div>
-        <div class="m-menu__content">
-          <!-- Navigation -->
-          <nav>
-              <h2 class="nav-menu__header">Menu</h2>
-              <ul class="ul-menu__listing">
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.loadFinance();">Finance</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.loadLiability();">Liability</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.loadFinanceReport();">Finance Report</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.loadBlog();">Blog</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.loadWishlist();">Wish List</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.loadErrors();">Error Log</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.loadTesseract();">Import Receipt</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);">Money</a></li>
-                  <li><a class="loggedIn" href="javascript:void(0);" onclick="window.app.login();">Log In</a></li>
-              </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
-
-    <!-- Page Wrapper -->
-    <div class="wrapper">
-
-      <!-- Page-Specific Content -->
-      <div class="content">
-
-        <div id="app"></div>
-
-        <div class="toast unshow">
-          <div class="toast-header">
-            <p>Header<p>
-            <p class="toast-button"><button class="toast-close">X</button></p>
-          </div>
-          <div class="toast-details">
-            <p>Details</p>
-          </div>
-        </div>
-      </div>
+    <div id="app"></div>
       
-      <!-- Footer -->
-      <div class="footer">
-        <div class="copyright">Copyright 2022 Mayerhofer IT | All Rights Reserved </div>
-      </div>
-    </div>
   </body>
 </html>

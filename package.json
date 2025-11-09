@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Personal assistance web application.",
   "browserslist": "> 0.5%, last 2 versions, not dead",
-  "main": "src/js/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel src/index.html",
-    "build": "parcel build src\\index.js --dist-dir public"
+    "build": "parcel build src\\index.html --dist-dir public",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,30 @@
   },
   "homepage": "https://github.com/mayerhofer/mayerhofer.github.io#readme",
   "devDependencies": {
-    "parcel": "^2.9.3"
+    "assert": "^2.1.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
+    "events": "^3.3.0",
+    "os-browserify": "^0.3.0",
+    "parcel": "^2.10.3",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "timers-browserify": "^2.0.12",
+    "url": "^0.11.4",
+    "util": "^0.12.5",
+    "vm-browserify": "^1.1.2",
+    "@storybook/react": "^7.5.3",
+    "@storybook/react-webpack5": "^7.5.3",
+    "@storybook/addon-essentials": "^7.5.3",
+    "@storybook/cli": "^7.5.3",
+    "@storybook/testing-library": "^0.2.2",
+    "storybook": "^7.5.3"
+  },
+  "storybookDevDependencies": {},
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

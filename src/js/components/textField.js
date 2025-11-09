@@ -1,70 +1,58 @@
-import { RComponent } from "../framework/RComponent";
+import React, { useState, useEffect } from "react";
 
-export default class TextField extends RComponent {
-  // props = {label: 'Provider', value: provider.value, validDef: {restricted: false, required: true, options: []}}
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      hideError: ' hide',
-      invalidDiv: '',
-      invalid: '',
-      validationMessage: '',
-      placeholder: props.label,
-      value: props.value,
-    };
-  }
-  getDerivedState(props) {
-    this.state = {
-      hideError: ' hide',
-      invalidDiv: '',
-      invalid: '',
-      validationMessage: '',
-      placeholder: props.label,
-      value: props.value,
-    };
-    return this.state;
-  }
-  handleValidation(val) {
-    const props = this.props.validDef;
+// props = {label: 'Provider', value: provider.value, validDef: {restricted: false, required: true, options: []}, autoOptions: []}
+export default function TextField({ label, value: initialValue, validDef = {}, update, autoOptions = [], id }) {
+  const [value, setValue] = useState(initialValue || "");
+  const [validationMessage, setValidationMessage] = useState("");
+  const [invalid, setInvalid] = useState("");
+  const [invalidDiv, setInvalidDiv] = useState("");
+  const [hideError, setHideError] = useState(" hide");
+
+  useEffect(() => {
+    setValue(initialValue || "");
+  }, [initialValue]);
+
+  const handleValidation = (val) => {
     const isFieldEmpty = typeof val !== 'string' || val.trim().length <= 0;
-    const hasValue = ! isFieldEmpty;
-    const isInOptions = props.options ? props.options.indexOf(val) >= 0 : false;
-    const bIsValid = props.restricted ? isInOptions : (props.required ? hasValue : true);
-    const newState = {...this.state};
-    
-    newState.hideError = bIsValid ? ' hide' : '';
-    newState.invalid = bIsValid ? '' : 'text-red';
-    newState.invalidDiv = bIsValid ? '' : 'border-red';
-    newState.validationMessage = bIsValid ? '' : (isFieldEmpty ? '* Required Field' : '* Not a valid option.');
-    newState.value = val;
+    const hasValue = !isFieldEmpty;
+    const isInOptions = validDef.options ? validDef.options.indexOf(val) >= 0 : false;
+    const bIsValid = validDef.restricted ? isInOptions : (validDef.required ? hasValue : true);
 
-    this.setState(newState);
-  }
-  handleUpdate(e) {
-    let newValue = e.value;
+    setHideError(bIsValid ? ' hide' : '');
+    setInvalid(bIsValid ? '' : 'text-red');
+    setInvalidDiv(bIsValid ? '' : 'border-red');
+    setValidationMessage(bIsValid ? '' : (isFieldEmpty ? '* Required Field' : '* Not a valid option.'));
+  };
 
-    this.props.update(newValue);
-    this.handleValidation(newValue);
-  }
-  render() {
-    const prefix = this.id;
-    const textValue = this.state.value;
-    const autoOptions = this.props.autoOptions ?
-      this.props.autoOptions.map(item => `<option${item == textValue ? " selected" : ""}>${item}</option$>`) :
-      null;
-    const dataList = autoOptions ? 
-      this.fill('dataList', {id: prefix + 'DataList', options: autoOptions.join('')}) : '';
-    const fieldProps = {
-      id: prefix,
-      label: this.props.label,
-      listId: prefix + 'DataList',
-      dataList,
-      ...this.state,
-    };
+  const handleUpdate = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    if (typeof update === 'function') {
+      update(newValue);
+    }
+    handleValidation(newValue);
+  };
 
-    this.registerHandler(prefix + 'Change', this.handleUpdate.bind(this));
-    
-    return this.fill('textField', fieldProps);
-  }
+  return (
+    <div className={`textfield ${invalidDiv}`} id={id}>
+      <label className="field-label" htmlFor={id}>{label}</label>
+      <input
+        type="text"
+        id={id}
+        value={value}
+        placeholder={label}
+        className={invalid}
+        list={autoOptions.length > 0 ? id + 'DataList' : undefined}
+        onChange={handleUpdate}
+      />
+      {autoOptions.length > 0 && (
+        <datalist id={id + 'DataList'}>
+          {autoOptions.map((item) => (
+            <option key={item} value={item} />
+          ))}
+        </datalist>
+      )}
+      <div className={`validation-message${hideError}`}>{validationMessage}</div>
+    </div>
+  );
 }

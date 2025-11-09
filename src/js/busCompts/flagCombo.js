@@ -1,61 +1,45 @@
-import { RComponent } from "../framework/RComponent";
-import CountryAPI from "../servers/country";
+import React, { useState, useEffect } from "react";
+import EntityAPI from "../servers/entity.js";
+import Dropdown from "../html/dropdown";
 
-export default class FlagCombo extends RComponent {
-  constructor(props) {
-    super(props);
+// props: {country: string, countryImg: array, handleChange: function}
+export default function FlagCombo({ country: initialCountry = 'Spain', countryImg = [], handleChange }) {
+  const [country, setCountry] = useState(initialCountry);
+  const [countries, setCountries] = useState(countryImg);
 
-    this.state = {
-      country: this.props.country ?? 'Spain',
-      countries: this.props.countryImg ?? [],
-    };
-  }
-  getDerivedState(props) {
-    return Object.assign({}, this.state, {country: props.country ?? 'Spain'});
-  }
-
-  // Load flag images
-  componentDidMount() {
-    // Inside asynchronous methods, context of this is lost.
-    let field = this;
-
-    // Load flags only if not already loaded to avoid infinite loop
-    if (!Array.isArray(field.state.countries) || field.state.countries.length <= 0) {
-      // Istead of getting all and then filtering, better to make multiple requests since we don't need many countries.
-      CountryAPI.get(['PL', 'IT', 'CH', 'BR', 'ES', 'DE', 'FR', 'AD', 'PT']).then(data => {
+  useEffect(() => {
+    if (!Array.isArray(countries) || countries.length === 0) {
+      const countryAPI = new EntityAPI('countries');
+      countryAPI.get({list: ['PL', 'IT', 'CH', 'BR', 'ES', 'DE', 'FR', 'AD', 'PT'].join(",")}).then(data => {
         setTimeout(() => {
-          field.setState({countries: data});
+          setCountries(data);
         }, 1000);
       });
     }
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.country !== nextState.country ||
-          this.state.countries !== nextState.countries;
-  }
-  handleChange(e) {
-    this.setState({country: e.title});
+  }, [countries]);
 
-    this.props.handleChange(e.title);
-  }
-  buildCountryProps(c) {
-    let id = this.id + c.name.replace(/\s/g, '');
-    this.registerHandler(id, this.handleChange.bind(this));
+  useEffect(() => {
+    setCountry(initialCountry);
+  }, [initialCountry]);
 
-    return {id, title: c.name, imgBase64: c.flag};
-  }
-  getFlagProps() {
-    const found = this.state.countries ? this.state.countries.find(c => c.name === this.state.country) : undefined;
-    const flag = found ? found.flag : '';
+  const onChange = (val) => {
+    setCountry(val);
+    if (typeof handleChange === 'function') handleChange(val);
+  };
 
-    return {id: this.state.country, imgBase64: flag, className: this.state.countries.length > 0 ? '': 'country-hide'};
-  }
-  render() {
-    const mapCountry = c => this.fill('flag', this.buildCountryProps(c));
-    return this.fill('countryField', {
-      id: this.id, 
-      selected: this.fill('flag', this.getFlagProps()),
-      list: this.state.countries ? this.state.countries.map(mapCountry).join('') : '',
-    });
-  }
+  return (
+    <Dropdown
+      options={countries.map(c => ({
+        value: c.name,
+        label: c.flag ? (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img src={`data:image/png;base64,${c.flag}`} alt={c.name + " flag"} style={{ width: 40, height: 28 }} />
+          </div>
+        ) : c.name
+      }))}
+      selected={country}
+      onChange={onChange}
+      includeEmpty={false}
+    />
+  );
 }

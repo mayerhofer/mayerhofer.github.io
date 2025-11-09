@@ -1,23 +1,24 @@
-import { RComponent } from "../framework/RComponent";
+import React from "react";
+import useToast from "../hooks/useToast";
 
-export default class Toast extends RComponent {
-  constructor(props) { //type, header, text
-    super(props);
-  }
+const Toast = () => {
+  const { toast, hideToast } = useToast();
 
-  render() {
-    const toast = window.document.querySelector(".toast");
-    const type = this.props.type;
-    toast.classList.add("toast-" + type);
-    toast.classList.remove("unshow");
-    toast.querySelector(".toast-header p").textContent = this.props.header;
-    toast.querySelector(".toast-details p").textContent = this.props.text;
+  if (!toast || !toast.visible) return null;
 
-    const closeButton = toast.querySelector(".toast-close");
-    closeButton.onclick = () => {
-      toast.classList.add("unshow");
-      toast.classList.remove("toast-" + type);
-    };
-    //return
-  }
-}
+  const { type = 'info', header = '', text = '' } = toast;
+
+  return (
+    <div className={`toast toast-${type}`}>
+      <div className="toast-header">
+        <p>{header}</p>
+        <p className="toast-button"><button className="toast-close" onClick={hideToast}>X</button></p>
+      </div>
+      <div className="toast-details">
+        <p>{text}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Toast;

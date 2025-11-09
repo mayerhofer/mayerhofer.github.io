@@ -1,6 +1,6 @@
 export const currencies = {
   'EUR': '&euro;', // €
-  'USD': '&dollar;', // $
+  'USD': '&dollar;', // $ 
   'GBP': '&pound;', // £
   'PLN': 'Z&#322;', // Zł
   'BRL': 'R&dollar;', // R$
@@ -106,63 +106,6 @@ export const labelImages = [
 ];
 
 export const components = {
-  LogInForm: `
-    <form id="{field.id}" class="div--scrollable" action="window.application.callHandler(this,\'{field.id}Submit\');">
-      <div class="field">
-        <label>Country</label>
-        <input type="text" onchange="window.application.callHandler(this,\'{field.id}CountryChange\');" />
-</div>
-<div class="field">
-        <label>Entity</label>
-        <input type="text" onchange="window.application.callHandler(this,\'{field.id}EntityChange\');" />
-</div>
-      <input type="submit" value="Submit">
-    </form>
-  `,
-  liabilityReport: `
-    <div id="{field.id}" class="{field.className}" id="{field.id}"><div class="liabRep-header">Summary</div>{field.content}</div>
-  `,
-  liabRepRow: `<div class="row liabRep-row">
-  <div class="liabRep-cel liabRep-source">{field.debtor}</div>
-  <div class="liabRep-cel liabRep-cred">{field.credit}</div>
-  <div class="liabRep-cel liabRep-debt">{field.debit}</div>
-  <div class="liabRep-cel liabRep-source">{field.currency}</div>
-</div>`,
-  blogContainer: `
-    <div class="page-body div--scrollable">
-      <article class="introduction">
-  <p>Welcome to my blog, where I give daily updates about my projects, studies and leisure activities.</p>
-</article>
-      <div class="post-container" id="postContainer">
-  {field.children}
-</div>
-  `,
-  blogPost: `
-    <article class="post">
-      <div class="post-details">
-        <p class="post-title">{field.title}</p>
-  <p class="post-date">{field.date}</p>
-</div>
-      <p class="post-author">{field.author}</p>
-<p class="post-text">{field.text}</p>
-      <img src="{field.src}" alt="{field.alt}" />
-    </article>
-  `,
-  labelField: `
-    <li class="direction-option">
-      <input type="radio" id="{field.alias}" name="label" value="{field.label}" alt="{field.label}" {field.checked} onchange="window.application.callHandler(this, '{field.id}')">
-      <label for="{field.alias}">
-        <img class="img-swap icon-big" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAA{field.img}"/>
-      </label>
-    </li>`,
-  radioField: `
-  <label class="rad-label">
-    <input type="radio" class="rad-input" name="{radio.id}" value="{radio.value}"{radio.checked} onchange="window.application.callHandler(this,\'{radio.id}\')">
-    <div class="rad-design"></div>
-    <div class="rad-text">{radio.label}</div>
-  </label>
-  `,
-  labelsField: `<div id="{field.id}" class="container"><ul class="direction">{field.content}</ul></div>`,
   image: `<img src="data:image/png;base64,{field.img}"/>`,
   button: '<button id="{button.id}" type="button" class="{button.className}" onClick="window.application.callHandler(this,\'{button.id}\')">{button.content}</button>',
   dataList: '<datalist id="{dl.id}" class="comboBox">{dl.options}</datalist>',
@@ -275,12 +218,6 @@ export const components = {
     <img
     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADt0lEQVRoge2YvWsUQRjGn9m7fBg/iJLEJo2NAbFRtPQfSCEpFOwshPSpYhMUq4CojQr+C4JRCyWNgqAgsVUkhSAYNGcgGtDkEnPvY7E7u7Ozs7O3J5tEuBfm9m5m7+b3zPsxswd0rWtd69pumsobOPNydZxUD0iMEgBArC4343FuNfH+wgigFBQAAgAJkhDzKgIRQihgdBUhRAQtEUjciImFLdQOHflJUTc+TgzfaUdAkDdgw4eEaQthjGbAkwQluoIgEfUjHgeTn6Z+JQahePvE48b1dgTU8wWk4R38EAknVUqFq48IDkjgjXb6/uvU999cORuCh6pAPQkBUera2JPv/YsTI1d9AvI9YMO7PCAShopefQ0tAjJsYngiu0g0vJJMrN8qcnpsrjHbkYAieAARtBlCOr6ZhJMkYZUvIAkpJoORCkwfn1ueKi+gAB5AnHy6UYuwhNArQIcdM/B6fgU1k8eQnwMWvBNAomlVci9jz6UTVkSyC2B7wAEfdR0uLaAIHgg9EMInChjNbMLrkpqZglFZjUPICQ9fGOQLKIAHwhW0XaXvTycoQWY9YFaqsKKVgy8UYMK7dLjCwtzQ4rKakwM6V2jc74T3aPDsA354qADL6y2M9CebuZmEjPMgaa8unzIqk8QeEApWmoxxbHifDzxl1IInEAQJrKr34OaHJr6tb2eOBa24pEqmUqXKrYbfIO59DhD07XPDd+IBGx4A+g/UsPGrBQoBpfDu9wAuvf0DcLtoHbRsADVHt0JvXx1BX28peK8AG54g6vUABweDdEix1wgde9L08SCvziddbvjOQ8iq7Slh0YcdgfdUQu9OvNfh/QL+A3ivgL0E79NRHEJ7GN4vYC/Be0QUl1EL/txQD2ZODmCkT8UPNOaJ0/fZPPfYfY2m4NanGhbWggw8PQoKd2J75f8dPtsvIhjqIaaObZeCB4pOo46wqQJevx/qsUPRjC23eZLYHfNVwacfatqD9wrIS9gq4ZPn4jR8Z2XUAR9Wm+rgRaQUvF9ATqmsFJ7l4L0C8up8lfA6hGx4epQU7sSZTapCeA3aLrxfgAseqBQ+bO3DFwjIwusfrQre/JMgBd9JFXLBo2L4JITS8D4/FJbRr4/m0Xj4NDmYVQhv5sGP+RdYe/bcKiZlBETKg9YmatubumtH4GHOW6DA99/oEoDRoxfPx/Ag0GgSw73VwK9sqXjyQ+Pj8aQkvpT2gBCT+ovmIswutrDclErg7y7ttzbQEF4UJ3Nd0LWuda1ru2p/ASsCdZ0lM904AAAAAElFTkSuQmCC"/>
     </button>
-  `,
-  tesseractForm: `
-  <form name="tesseractForm" action="JavaScript:handleTesseractSubmitFile()">
-    <input type="file" id="{tesseract.id}" name="filename" accept="image/*" onChange="window.application.callHandler(this, '{tesseract.id}')">
-    <input type="submit">
-  </form>
   `,
   /*{TEMPLATES}*/
 };

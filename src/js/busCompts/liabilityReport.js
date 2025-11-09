@@ -1,62 +1,60 @@
-import { RComponent } from "../framework/RComponent";
+import React, { useState, useEffect } from "react";
 import EntityAPI from "../servers/entity";
 
-export default class LiabilityReport extends RComponent {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      cashflows: [],
-    };
-  }
+const LiabilityReport = ({ data, id }) => {
+  const [cashflows, setCashflows] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     const cfApi = new EntityAPI("cashflow");
-    const self = this;
     const filter = {
       year: (new Date()).getFullYear(),
       month: (new Date()).getMonth(),
     };
-    cfApi.get(filter).then(data => {
-      const result = data.filter(cf => self.props.data.find(l => l.cashflowId === cf.elementId));
-      self.setState({cashflows: result});
+    cfApi.get(filter).then(cfData => {
+      const result = cfData.filter(cf => data.find(l => l.cashflowId === cf.elementId));
+      setCashflows(result);
     });
-  }
+  }, [data]);
 
-  getCf(liability) {
-    return this.state.cashflows.find(cf => cf.elementId === liability.cashflowId);
-  }
+  const getCf = (liability) => cashflows.find(cf => cf.elementId === liability.cashflowId);
 
-  render() {
-    // a = array of debtors. b = liability object.
-    const self = this;
-    const report = this.props.data.reduce((a, b) => {
-      let row = a.find(obj => obj.debtor === b.source && obj.currency === self.getCf(b)?.currency);
-      if (! row) {
-        a.push({
-          debtor: b.source,
-          credit: b.liability ? 0 : b.amount,
-          debit: b.liability ? b.amount : 0,
-          currency: self.getCf(b)?.currency,
-        });
+  // Calculate report rows
+  const report = data.reduce((a, b) => {
+    let row = a.find(obj => obj.debtor === b.source && obj.currency === getCf(b)?.currency);
+    if (!row) {
+      a.push({
+        debtor: b.source,
+        credit: b.liability ? 0 : b.amount,
+        debit: b.liability ? b.amount : 0,
+        currency: getCf(b)?.currency,
+      });
+    } else {
+      if (b.liability) {
+        row.debit += b.amount;
       } else {
-        if (b.liability) {
-          row.debit += b.amount;
-        } else {
-          row.credit += b.amount;
-        }
+        row.credit += b.amount;
       }
-      return a;
-    }, []);
-    report.forEach(row => {
-      row.debit = Math.round(100 * row.debit) / 100;
-      row.credit = Math.round(100 * row.credit) / 100;
-    });
-    const fields = {
-      id: this.id,
-      className: 'liabilityReport',
-      content: report.map(k => this.fill('liabRepRow', k))
-    };
-    return this.fill('liabilityReport', fields);
-  }
-}
+    }
+    return a;
+  }, []);
+  report.forEach(row => {
+    row.debit = Math.round(100 * row.debit) / 100;
+    row.credit = Math.round(100 * row.credit) / 100;
+  });
+
+  // Render report rows
+  return (
+    <div id={id} className="liabilityReport">
+      {report.map((row, idx) => (
+        <div key={idx} className="liabRepRow">
+          <span className="debtor">{row.debtor}</span>
+          <span className="credit">Credit: {row.credit}</span>
+          <span className="debit">Debit: {row.debit}</span>
+          <span className="currency">{row.currency}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default LiabilityReport;

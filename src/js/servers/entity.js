@@ -1,8 +1,11 @@
 function assembleUrl(entity, filter) {
   const base = localStorage.getItem("entityUrl");
-  let query = '?entity=' + entity;
-  if (filter) {
-    query += '&' + Object.keys(filter).map(k => k + '=' + filter[k]).join('&');
+  let query = '/' + entity;
+  if (typeof filter === 'object') {
+    let keys = Object.keys(filter);
+    if (keys.length > 0) {
+      query += '?' + keys.map(k => k + '=' + filter[k]).join('&');
+    }
   }
 
   return base + query;

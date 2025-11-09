@@ -1,10 +1,14 @@
-import { application } from "../framework/RComponent";
+import React from "react";
 
-export default function Button(className, content, id, clickHandler, isDisabled) {
-  const onClick = `window.application.callHandler(this,\'${id}\')`;
-  const disabled = isDisabled ? ' disabled' : '';
-
-  application.handlers[id] = clickHandler;
-
-  return `<button id="${id}" type="button" class="${className}" onClick="${onClick}"${disabled}>${content}</button>`;
+export default function Button({ className, children, onClick, disabled }) {
+  return (
+    <button
+      type="button"
+      className={className}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  );
 }
