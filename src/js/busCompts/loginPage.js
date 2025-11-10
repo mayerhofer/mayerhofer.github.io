@@ -44,14 +44,12 @@ const LogInForm = (props) => {
 
     return (
         <form className="div--scrollable" action={handleLogIn}>
-            <div className="field">
-                <label>Country</label>
-                <input type="text" onchange={handleCountryUrlUpdate} />
-            </div>
+            <br />
             <div className="field">
                 <label>Entity</label>
-                <input type="text" onchange={handleEntityUrlUpdate} />
+                <input type="text" onChange={handleEntityUrlUpdate} />
             </div>
+            <br />
             <input type="submit" value="Submit" />
         </form>
     );
