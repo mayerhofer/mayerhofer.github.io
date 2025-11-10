@@ -1217,7 +1217,7 @@ $RefreshReg$(_c2, "App");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","./hooks/usePage":"eA6rs","./busCompts/menu":"7cQrq","./busCompts/financeForm":"dGnSF","./busCompts/genericTable":"ksfsq","./busCompts/liabilityForm":"eWzSl","./busCompts/liabilityReport":"bmShh","./busCompts/blogPage":"7ZyVj","./busCompts/wishListForm":"fORqk","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","./busCompts/loginPage":"lzXc7","./hooks/useToast":"iPRGE","./components/toast":"akfvo","./html/stackTrace":"2BUXm","./busCompts/tesseractForm":"axg0E"}],"dVPUn":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","./hooks/usePage":"eA6rs","./hooks/useToast":"iPRGE","./components/toast":"akfvo","./busCompts/menu":"7cQrq","./busCompts/financeForm":"dGnSF","./busCompts/genericTable":"ksfsq","./busCompts/liabilityForm":"eWzSl","./busCompts/liabilityReport":"bmShh","./busCompts/blogPage":"7ZyVj","./busCompts/wishListForm":"fORqk","./busCompts/loginPage":"lzXc7","./html/stackTrace":"2BUXm","./busCompts/tesseractForm":"axg0E","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"dVPUn":[function(require,module,exports,__globalThis) {
 'use strict';
 module.exports = require("ee51401569654d91");
 
@@ -27825,7 +27825,184 @@ function $da9882e673ac146b$var$ErrorOverlay() {
     return null;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"7cQrq":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"iPRGE":[function(require,module,exports,__globalThis) {
+var $parcel$ReactRefreshHelpers$de23 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+$parcel$ReactRefreshHelpers$de23.init();
+var prevRefreshReg = globalThis.$RefreshReg$;
+var prevRefreshSig = globalThis.$RefreshSig$;
+$parcel$ReactRefreshHelpers$de23.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "ToastProvider", ()=>ToastProvider);
+parcelHelpers.export(exports, "default", ()=>useToast);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$(), _s1 = $RefreshSig$();
+const ToastContext = /*#__PURE__*/ (0, _react.createContext)(null);
+function ToastProvider({ children }) {
+    _s();
+    const [toast, setToast] = (0, _react.useState)({
+        visible: false,
+        type: 'info',
+        header: '',
+        text: ''
+    });
+    const showToast = (0, _react.useCallback)(({ type = 'info', header = '', text = '', timeout = 5000 } = {})=>{
+        setToast({
+            visible: true,
+            type,
+            header,
+            text
+        });
+        if (typeof timeout === 'number' && timeout > 0) setTimeout(()=>setToast((prev)=>({
+                    ...prev,
+                    visible: false
+                })), timeout);
+    }, []);
+    const hideToast = (0, _react.useCallback)(()=>{
+        setToast((prev)=>({
+                ...prev,
+                visible: false
+            }));
+    }, []);
+    // Provide a minimal global shim for legacy code that used `new Toast(...)` or similar.
+    // Expose a global showToast function so non-React code can trigger toasts.
+    if (typeof window !== 'undefined') {
+        window.showToast = (opts)=>showToast(opts);
+        // Legacy code sometimes does `new Toast({...}).render()` - provide a small shim
+        window.Toast = function(opts = {}) {
+            return {
+                render: ()=>showToast(opts),
+                hide: ()=>hideToast()
+            };
+        };
+    }
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(ToastContext.Provider, {
+        value: {
+            toast,
+            showToast,
+            hideToast
+        },
+        children: children
+    }, void 0, false, {
+        fileName: "src/js/hooks/useToast.js",
+        lineNumber: 33,
+        columnNumber: 5
+    }, this);
+}
+_s(ToastProvider, "XYHM+I1iqR+/1tf9GbXfKQ+T8wQ=");
+_c = ToastProvider;
+function useToast() {
+    _s1();
+    const ctx = (0, _react.useContext)(ToastContext);
+    if (!ctx) throw new Error('useToast must be used within a ToastProvider');
+    return ctx;
+}
+_s1(useToast, "/dMy7t63NXD4eYACoT93CePwGrg=");
+var _c;
+$RefreshReg$(_c, "ToastProvider");
+
+  $parcel$ReactRefreshHelpers$de23.postlude(module);
+} finally {
+  globalThis.$RefreshReg$ = prevRefreshReg;
+  globalThis.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"akfvo":[function(require,module,exports,__globalThis) {
+var $parcel$ReactRefreshHelpers$098a = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+$parcel$ReactRefreshHelpers$098a.init();
+var prevRefreshReg = globalThis.$RefreshReg$;
+var prevRefreshSig = globalThis.$RefreshSig$;
+$parcel$ReactRefreshHelpers$098a.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _useToast = require("../hooks/useToast");
+var _useToastDefault = parcelHelpers.interopDefault(_useToast);
+var _s = $RefreshSig$();
+const Toast = ()=>{
+    _s();
+    const { toast, hideToast } = (0, _useToastDefault.default)();
+    if (!toast || !toast.visible) return null;
+    const { type = 'info', header = '', text = '' } = toast;
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        className: `toast toast-${type}`,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: "toast-header",
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                        children: header
+                    }, void 0, false, {
+                        fileName: "src/js/components/toast.js",
+                        lineNumber: 14,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                        className: "toast-button",
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                            className: "toast-close",
+                            onClick: hideToast,
+                            children: "X"
+                        }, void 0, false, {
+                            fileName: "src/js/components/toast.js",
+                            lineNumber: 15,
+                            columnNumber: 37
+                        }, undefined)
+                    }, void 0, false, {
+                        fileName: "src/js/components/toast.js",
+                        lineNumber: 15,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/js/components/toast.js",
+                lineNumber: 13,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: "toast-details",
+                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                    children: text
+                }, void 0, false, {
+                    fileName: "src/js/components/toast.js",
+                    lineNumber: 18,
+                    columnNumber: 9
+                }, undefined)
+            }, void 0, false, {
+                fileName: "src/js/components/toast.js",
+                lineNumber: 17,
+                columnNumber: 7
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/js/components/toast.js",
+        lineNumber: 12,
+        columnNumber: 5
+    }, undefined);
+};
+_s(Toast, "CJXlkb/yKFC51t5iAl3WAoyrASM=", false, function() {
+    return [
+        (0, _useToastDefault.default)
+    ];
+});
+_c = Toast;
+exports.default = Toast;
+var _c;
+$RefreshReg$(_c, "Toast");
+
+  $parcel$ReactRefreshHelpers$098a.postlude(module);
+} finally {
+  globalThis.$RefreshReg$ = prevRefreshReg;
+  globalThis.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","../hooks/useToast":"iPRGE","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"7cQrq":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$561d = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$561d.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
@@ -29085,7 +29262,7 @@ $RefreshReg$(_c, "FlagCombo");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","../servers/entity.js":"kSDGG","../html/dropdown":"2gq48"}],"kSDGG":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","../servers/entity.js":"kSDGG","../html/dropdown":"2gq48","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"kSDGG":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 function assembleUrl(entity, filter) {
@@ -30574,183 +30751,6 @@ $RefreshReg$(_c, "Button");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"akfvo":[function(require,module,exports,__globalThis) {
-var $parcel$ReactRefreshHelpers$098a = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-$parcel$ReactRefreshHelpers$098a.init();
-var prevRefreshReg = globalThis.$RefreshReg$;
-var prevRefreshSig = globalThis.$RefreshSig$;
-$parcel$ReactRefreshHelpers$098a.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _useToast = require("../hooks/useToast");
-var _useToastDefault = parcelHelpers.interopDefault(_useToast);
-var _s = $RefreshSig$();
-const Toast = ()=>{
-    _s();
-    const { toast, hideToast } = (0, _useToastDefault.default)();
-    if (!toast || !toast.visible) return null;
-    const { type = 'info', header = '', text = '' } = toast;
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: `toast toast-${type}`,
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: "toast-header",
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                        children: header
-                    }, void 0, false, {
-                        fileName: "src/js/components/toast.js",
-                        lineNumber: 14,
-                        columnNumber: 9
-                    }, undefined),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                        className: "toast-button",
-                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                            className: "toast-close",
-                            onClick: hideToast,
-                            children: "X"
-                        }, void 0, false, {
-                            fileName: "src/js/components/toast.js",
-                            lineNumber: 15,
-                            columnNumber: 37
-                        }, undefined)
-                    }, void 0, false, {
-                        fileName: "src/js/components/toast.js",
-                        lineNumber: 15,
-                        columnNumber: 9
-                    }, undefined)
-                ]
-            }, void 0, true, {
-                fileName: "src/js/components/toast.js",
-                lineNumber: 13,
-                columnNumber: 7
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: "toast-details",
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                    children: text
-                }, void 0, false, {
-                    fileName: "src/js/components/toast.js",
-                    lineNumber: 18,
-                    columnNumber: 9
-                }, undefined)
-            }, void 0, false, {
-                fileName: "src/js/components/toast.js",
-                lineNumber: 17,
-                columnNumber: 7
-            }, undefined)
-        ]
-    }, void 0, true, {
-        fileName: "src/js/components/toast.js",
-        lineNumber: 12,
-        columnNumber: 5
-    }, undefined);
-};
-_s(Toast, "CJXlkb/yKFC51t5iAl3WAoyrASM=", false, function() {
-    return [
-        (0, _useToastDefault.default)
-    ];
-});
-_c = Toast;
-exports.default = Toast;
-var _c;
-$RefreshReg$(_c, "Toast");
-
-  $parcel$ReactRefreshHelpers$098a.postlude(module);
-} finally {
-  globalThis.$RefreshReg$ = prevRefreshReg;
-  globalThis.$RefreshSig$ = prevRefreshSig;
-}
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","react/jsx-dev-runtime":"dVPUn","react":"jMk1U","../hooks/useToast":"iPRGE","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"iPRGE":[function(require,module,exports,__globalThis) {
-var $parcel$ReactRefreshHelpers$de23 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-$parcel$ReactRefreshHelpers$de23.init();
-var prevRefreshReg = globalThis.$RefreshReg$;
-var prevRefreshSig = globalThis.$RefreshSig$;
-$parcel$ReactRefreshHelpers$de23.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "ToastProvider", ()=>ToastProvider);
-parcelHelpers.export(exports, "default", ()=>useToast);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _s = $RefreshSig$(), _s1 = $RefreshSig$();
-const ToastContext = /*#__PURE__*/ (0, _react.createContext)(null);
-function ToastProvider({ children }) {
-    _s();
-    const [toast, setToast] = (0, _react.useState)({
-        visible: false,
-        type: 'info',
-        header: '',
-        text: ''
-    });
-    const showToast = (0, _react.useCallback)(({ type = 'info', header = '', text = '', timeout = 5000 } = {})=>{
-        setToast({
-            visible: true,
-            type,
-            header,
-            text
-        });
-        if (typeof timeout === 'number' && timeout > 0) setTimeout(()=>setToast((prev)=>({
-                    ...prev,
-                    visible: false
-                })), timeout);
-    }, []);
-    const hideToast = (0, _react.useCallback)(()=>{
-        setToast((prev)=>({
-                ...prev,
-                visible: false
-            }));
-    }, []);
-    // Provide a minimal global shim for legacy code that used `new Toast(...)` or similar.
-    // Expose a global showToast function so non-React code can trigger toasts.
-    if (typeof window !== 'undefined') {
-        window.showToast = (opts)=>showToast(opts);
-        // Legacy code sometimes does `new Toast({...}).render()` - provide a small shim
-        window.Toast = function(opts = {}) {
-            return {
-                render: ()=>showToast(opts),
-                hide: ()=>hideToast()
-            };
-        };
-    }
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(ToastContext.Provider, {
-        value: {
-            toast,
-            showToast,
-            hideToast
-        },
-        children: children
-    }, void 0, false, {
-        fileName: "src/js/hooks/useToast.js",
-        lineNumber: 33,
-        columnNumber: 5
-    }, this);
-}
-_s(ToastProvider, "XYHM+I1iqR+/1tf9GbXfKQ+T8wQ=");
-_c = ToastProvider;
-function useToast() {
-    _s1();
-    const ctx = (0, _react.useContext)(ToastContext);
-    if (!ctx) throw new Error('useToast must be used within a ToastProvider');
-    return ctx;
-}
-_s1(useToast, "/dMy7t63NXD4eYACoT93CePwGrg=");
-var _c;
-$RefreshReg$(_c, "ToastProvider");
-
-  $parcel$ReactRefreshHelpers$de23.postlude(module);
-} finally {
-  globalThis.$RefreshReg$ = prevRefreshReg;
-  globalThis.$RefreshSig$ = prevRefreshSig;
-}
 },{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"1561U":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$68e3 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$68e3.init();
@@ -31672,7 +31672,7 @@ $RefreshReg$(_c, "BlogPage");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","../servers/entity":"kSDGG"}],"fORqk":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","../servers/entity":"kSDGG","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"fORqk":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$1dd7 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$1dd7.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
@@ -31911,103 +31911,115 @@ var _reactDefault = parcelHelpers.interopDefault(_react);
 var _s = $RefreshSig$();
 const LogInForm = (props)=>{
     _s();
-    const [countryUrl, setCountryUrl] = (0, _react.useState)("");
     const [entityUrl, setEntityUrl] = (0, _react.useState)("");
-    const handleCountryUrlUpdate = (e)=>{
-        try {
-            if (localStorage) {
-                localStorage.setItem("countryUrl", e.value);
-                undefined.setState({
-                    countryUrl: e.value
-                });
-            } else {
-                alert(" no local storage ");
-                window.myStorage = Object.assign({}, {
-                    countryUrl: e.value
-                }, window.myStorage);
-            }
-            alert("country updated: " + e.value);
-        } catch (ex) {
-            alert(ex.message);
-        }
-    };
     const handleEntityUrlUpdate = (e)=>{
         try {
-            if (localStorage) {
-                localStorage.setItem("entityUrl", e.value);
-                undefined.setState({
-                    entityUrl: e.value
-                });
-            } else {
-                alert(" no local storage ");
-                window.myStorage = Object.assign({}, {
-                    entityUrl: e.value
-                }, window.myStorage);
-            }
-            alert("entity update: " + e.value);
+            const value = e.target.value; // Fix: access value from event target
+            setEntityUrl(value);
+            if (localStorage) localStorage.setItem("entityUrl", value);
+            else window.myStorage = Object.assign({}, {
+                entityUrl: value
+            }, window.myStorage);
         } catch (ex) {
-            alert(ex.message);
+            console.error("Failed to update entity URL:", ex);
         }
     };
     const handleLogIn = (e)=>{
         e.preventDefault();
-        localStorage.setItem("countryUrl", undefined.state.countryUrl);
-        localStorage.setItem("entityUrl", undefined.state.entityUrl);
+        try {
+            if (localStorage) localStorage.setItem("entityUrl", entityUrl);
+            else window.myStorage = Object.assign({}, {
+                entityUrl: entityUrl
+            }, window.myStorage);
+        } catch (ex) {
+            console.error("Failed to save entity URL:", ex);
+        }
+    };
+    const styles = {
+        form: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            padding: '20px',
+            maxWidth: '400px'
+        },
+        field: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px'
+        },
+        label: {
+            fontSize: '14px',
+            fontWeight: 600,
+            color: '#2c3e50'
+        },
+        input: {
+            padding: '8px 12px',
+            fontSize: '14px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            width: '100%'
+        },
+        submit: {
+            padding: '10px 16px',
+            fontSize: '14px',
+            backgroundColor: '#1976d2',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            alignSelf: 'flex-start'
+        }
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
-        className: "div--scrollable",
-        action: handleLogIn,
+        style: styles.form,
+        onSubmit: handleLogIn,
         children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                fileName: "src/js/busCompts/loginPage.js",
-                lineNumber: 47,
-                columnNumber: 13
-            }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: "field",
+                style: styles.field,
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
-                        children: "Entity"
+                        style: styles.label,
+                        children: "Entity URL"
                     }, void 0, false, {
                         fileName: "src/js/busCompts/loginPage.js",
-                        lineNumber: 49,
+                        lineNumber: 73,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                         type: "text",
-                        onChange: handleEntityUrlUpdate
+                        value: entityUrl,
+                        onChange: handleEntityUrlUpdate,
+                        style: styles.input,
+                        placeholder: "Enter entity URL"
                     }, void 0, false, {
                         fileName: "src/js/busCompts/loginPage.js",
-                        lineNumber: 50,
+                        lineNumber: 74,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/js/busCompts/loginPage.js",
-                lineNumber: 48,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                fileName: "src/js/busCompts/loginPage.js",
-                lineNumber: 52,
+                lineNumber: 72,
                 columnNumber: 13
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                 type: "submit",
-                value: "Submit"
+                value: "Login",
+                style: styles.submit
             }, void 0, false, {
                 fileName: "src/js/busCompts/loginPage.js",
-                lineNumber: 53,
+                lineNumber: 82,
                 columnNumber: 13
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/js/busCompts/loginPage.js",
-        lineNumber: 46,
+        lineNumber: 71,
         columnNumber: 9
     }, undefined);
 };
-_s(LogInForm, "3IaRgdwimdndqJAqOTGaJpGvt2I=");
+_s(LogInForm, "w2J+8cY+5fD09Rof5z+KHmjXgsw=");
 _c = LogInForm;
 exports.default = LogInForm;
 var _c;
@@ -32131,122 +32143,216 @@ const TesseractFileReaderForm = ()=>{
             setIsFileProcessed(true);
         });
     };
+    const styles = {
+        form: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            maxWidth: '720px',
+            padding: '12px',
+            fontFamily: "'Segoe UI', Roboto, Arial, sans-serif",
+            color: '#333',
+            background: 'transparent'
+        },
+        row: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            flexWrap: 'wrap'
+        },
+        label: {
+            minWidth: '140px',
+            fontSize: '14px',
+            color: '#2c3e50',
+            fontWeight: 600
+        },
+        fileInput: {
+            padding: '6px 8px',
+            fontSize: '14px',
+            color: '#222'
+        },
+        submit: {
+            padding: '8px 14px',
+            fontSize: '14px',
+            background: '#1976d2',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 4,
+            cursor: 'pointer'
+        },
+        reset: {
+            padding: '8px 14px',
+            fontSize: '14px',
+            background: '#e0e0e0',
+            color: '#111',
+            border: 'none',
+            borderRadius: 4,
+            cursor: 'pointer'
+        },
+        status: {
+            fontSize: '13px',
+            color: '#555'
+        },
+        resultBox: {
+            marginTop: '6px',
+            padding: '10px',
+            background: '#fafafa',
+            border: '1px solid #e6e6e6',
+            borderRadius: 4,
+            color: '#111'
+        }
+    };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
         name: "tesseractForm",
         onSubmit: handleTesseractSubmitFile,
+        style: styles.form,
         children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
-                children: "Choose language:"
-            }, void 0, false, {
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                style: styles.row,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        style: styles.label,
+                        children: "Choose language:"
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 106,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        style: {
+                            minWidth: 160
+                        },
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _comboBoxDefault.default), {
+                            data: [
+                                'cat',
+                                'eng',
+                                'deu',
+                                'spa'
+                            ],
+                            selected: language,
+                            defaultValue: "cat",
+                            handleChange: (val)=>setLanguage(val)
+                        }, void 0, false, {
+                            fileName: "src/js/busCompts/tesseractForm.js",
+                            lineNumber: 108,
+                            columnNumber: 21
+                        }, undefined)
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 107,
+                        columnNumber: 17
+                    }, undefined)
+                ]
+            }, void 0, true, {
                 fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 45,
+                lineNumber: 105,
                 columnNumber: 13
             }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _comboBoxDefault.default), {
-                data: [
-                    'cat',
-                    'eng',
-                    'deu',
-                    'spa'
-                ],
-                selected: language,
-                defaultValue: "cat",
-                handleChange: (val)=>setLanguage(val)
-            }, void 0, false, {
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                style: styles.row,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        style: styles.label,
+                        children: "Upload image file:"
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 113,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        style: styles.fileInput,
+                        type: "file",
+                        name: "filename",
+                        accept: "image/*",
+                        onChange: handleInputFileChange
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 114,
+                        columnNumber: 17
+                    }, undefined)
+                ]
+            }, void 0, true, {
                 fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 46,
+                lineNumber: 112,
                 columnNumber: 13
             }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                style: styles.row,
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "submit",
+                        value: "Process",
+                        style: styles.submit
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 118,
+                        columnNumber: 17
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        type: "button",
+                        onClick: ()=>{
+                            setFile(null);
+                            setResult(null);
+                            setIsFileProcessed(false);
+                        },
+                        style: styles.reset,
+                        children: "Reset"
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 119,
+                        columnNumber: 17
+                    }, undefined)
+                ]
+            }, void 0, true, {
                 fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 47,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 48,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
-                children: "Upload image file:"
-            }, void 0, false, {
-                fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 49,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                type: "file",
-                name: "filename",
-                accept: "image/*",
-                onChange: handleInputFileChange
-            }, void 0, false, {
-                fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 50,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                type: "submit"
-            }, void 0, false, {
-                fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 51,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 52,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 53,
-                columnNumber: 13
-            }, undefined),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                type: "button",
-                onClick: ()=>{
-                    setFile(null);
-                    setResult(null);
-                    setIsFileProcessed(false);
-                },
-                children: "Reset"
-            }, void 0, false, {
-                fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 54,
+                lineNumber: 117,
                 columnNumber: 13
             }, undefined),
             loading && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                style: styles.status,
                 children: "Processing file, please wait..."
             }, void 0, false, {
                 fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 59,
+                lineNumber: 126,
                 columnNumber: 25
             }, undefined),
             isFileProcessed && result && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                style: styles.resultBox,
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                        style: {
+                            margin: '0 0 8px 0',
+                            fontSize: '16px',
+                            color: '#1f2937'
+                        },
                         children: "OCR Result:"
                     }, void 0, false, {
                         fileName: "src/js/busCompts/tesseractForm.js",
-                        lineNumber: 62,
+                        lineNumber: 130,
                         columnNumber: 21
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("pre", {
+                        style: {
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word',
+                            margin: 0
+                        },
                         children: result
                     }, void 0, false, {
                         fileName: "src/js/busCompts/tesseractForm.js",
-                        lineNumber: 63,
+                        lineNumber: 131,
                         columnNumber: 21
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 61,
+                lineNumber: 129,
                 columnNumber: 17
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/js/busCompts/tesseractForm.js",
-        lineNumber: 44,
+        lineNumber: 104,
         columnNumber: 9
     }, undefined);
 };
@@ -32261,7 +32367,7 @@ $RefreshReg$(_c, "TesseractFileReaderForm");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","../components/comboBox":"a4gkU"}],"a4gkU":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","../components/comboBox":"a4gkU","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"a4gkU":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$afaa = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$afaa.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
