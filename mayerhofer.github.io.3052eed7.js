@@ -31958,26 +31958,7 @@ const LogInForm = (props)=>{
         className: "div--scrollable",
         action: handleLogIn,
         children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: "field",
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
-                        children: "Country"
-                    }, void 0, false, {
-                        fileName: "src/js/busCompts/loginPage.js",
-                        lineNumber: 48,
-                        columnNumber: 17
-                    }, undefined),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                        type: "text",
-                        onchange: handleCountryUrlUpdate
-                    }, void 0, false, {
-                        fileName: "src/js/busCompts/loginPage.js",
-                        lineNumber: 49,
-                        columnNumber: 17
-                    }, undefined)
-                ]
-            }, void 0, true, {
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
                 fileName: "src/js/busCompts/loginPage.js",
                 lineNumber: 47,
                 columnNumber: 13
@@ -31989,21 +31970,26 @@ const LogInForm = (props)=>{
                         children: "Entity"
                     }, void 0, false, {
                         fileName: "src/js/busCompts/loginPage.js",
-                        lineNumber: 52,
+                        lineNumber: 49,
                         columnNumber: 17
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                         type: "text",
-                        onchange: handleEntityUrlUpdate
+                        onChange: handleEntityUrlUpdate
                     }, void 0, false, {
                         fileName: "src/js/busCompts/loginPage.js",
-                        lineNumber: 53,
+                        lineNumber: 50,
                         columnNumber: 17
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/js/busCompts/loginPage.js",
-                lineNumber: 51,
+                lineNumber: 48,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                fileName: "src/js/busCompts/loginPage.js",
+                lineNumber: 52,
                 columnNumber: 13
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -32011,7 +31997,7 @@ const LogInForm = (props)=>{
                 value: "Submit"
             }, void 0, false, {
                 fileName: "src/js/busCompts/loginPage.js",
-                lineNumber: 55,
+                lineNumber: 53,
                 columnNumber: 13
             }, undefined)
         ]
