@@ -32098,10 +32098,28 @@ parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
+var _comboBox = require("../components/comboBox");
+var _comboBoxDefault = parcelHelpers.interopDefault(_comboBox);
+var _s = $RefreshSig$();
 const TesseractFileReaderForm = ()=>{
+    _s();
+    const [file, setFile] = (0, _reactDefault.default).useState(null);
+    const [result, setResult] = (0, _reactDefault.default).useState(null);
+    const [loading, setLoading] = (0, _reactDefault.default).useState(false);
+    const [isFileProcessed, setIsFileProcessed] = (0, _reactDefault.default).useState(false);
+    const [language, setLanguage] = (0, _reactDefault.default).useState('cat');
     const handleInputFileChange = (e)=>{
         console.log(e);
-        var file = e.files[0];
+        let uploadedFile = e.target.files[0];
+        setFile(uploadedFile);
+    };
+    const handleTesseractSubmitFile = (e)=>{
+        e.preventDefault();
+        console.log('submit tesseract form');
+        if (!file) {
+            alert('No file uploaded');
+            return;
+        }
         Tesseract.recognize(file, 'cat', {
             logger: (m)=>console.log(m)
         }).then(({ data: { text } })=>{
@@ -32109,12 +32127,53 @@ const TesseractFileReaderForm = ()=>{
             const datesFound = text.match(re);
             if (datesFound) console.log('Date: ' + datesFound[0]);
             console.log(text);
+            setResult(text);
+            setIsFileProcessed(true);
         });
     };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
         name: "tesseractForm",
-        action: "JavaScript:handleTesseractSubmitFile()",
+        onSubmit: handleTesseractSubmitFile,
         children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: "Choose language:"
+            }, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 45,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _comboBoxDefault.default), {
+                data: [
+                    'cat',
+                    'eng',
+                    'deu',
+                    'spa'
+                ],
+                selected: language,
+                defaultValue: "cat",
+                handleChange: (val)=>setLanguage(val)
+            }, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 46,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 47,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 48,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: "Upload image file:"
+            }, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 49,
+                columnNumber: 13
+            }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                 type: "file",
                 name: "filename",
@@ -32122,29 +32181,133 @@ const TesseractFileReaderForm = ()=>{
                 onChange: handleInputFileChange
             }, void 0, false, {
                 fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 24,
+                lineNumber: 50,
                 columnNumber: 13
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                 type: "submit"
             }, void 0, false, {
                 fileName: "src/js/busCompts/tesseractForm.js",
-                lineNumber: 25,
+                lineNumber: 51,
                 columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 52,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 53,
+                columnNumber: 13
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                type: "button",
+                onClick: ()=>{
+                    setFile(null);
+                    setResult(null);
+                    setIsFileProcessed(false);
+                },
+                children: "Reset"
+            }, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 54,
+                columnNumber: 13
+            }, undefined),
+            loading && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: "Processing file, please wait..."
+            }, void 0, false, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 59,
+                columnNumber: 25
+            }, undefined),
+            isFileProcessed && result && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                        children: "OCR Result:"
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 62,
+                        columnNumber: 21
+                    }, undefined),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("pre", {
+                        children: result
+                    }, void 0, false, {
+                        fileName: "src/js/busCompts/tesseractForm.js",
+                        lineNumber: 63,
+                        columnNumber: 21
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/js/busCompts/tesseractForm.js",
+                lineNumber: 61,
+                columnNumber: 17
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/js/busCompts/tesseractForm.js",
-        lineNumber: 23,
+        lineNumber: 44,
         columnNumber: 9
     }, undefined);
 };
+_s(TesseractFileReaderForm, "i/IJ1yPC+3QOhGQEi0lgc9Vv+xU=");
 _c = TesseractFileReaderForm;
 exports.default = TesseractFileReaderForm;
 var _c;
 $RefreshReg$(_c, "TesseractFileReaderForm");
 
   $parcel$ReactRefreshHelpers$2557.postlude(module);
+} finally {
+  globalThis.$RefreshReg$ = prevRefreshReg;
+  globalThis.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","../components/comboBox":"a4gkU"}],"a4gkU":[function(require,module,exports,__globalThis) {
+var $parcel$ReactRefreshHelpers$afaa = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+$parcel$ReactRefreshHelpers$afaa.init();
+var prevRefreshReg = globalThis.$RefreshReg$;
+var prevRefreshSig = globalThis.$RefreshSig$;
+$parcel$ReactRefreshHelpers$afaa.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>ComboBox);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$();
+function ComboBox({ id, className, data = [], selected, handleChange }) {
+    _s();
+    const [value, setValue] = (0, _react.useState)(selected || "");
+    const onChange = (e)=>{
+        setValue(e.target.value);
+        if (typeof handleChange === "function") handleChange(e.target.value);
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
+        id: id,
+        className: className,
+        value: value,
+        onChange: onChange,
+        children: data.map((item)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                value: item,
+                children: item
+            }, item, false, {
+                fileName: "src/js/components/comboBox.js",
+                lineNumber: 22,
+                columnNumber: 9
+            }, this))
+    }, void 0, false, {
+        fileName: "src/js/components/comboBox.js",
+        lineNumber: 15,
+        columnNumber: 5
+    }, this);
+}
+_s(ComboBox, "e5BFdFT40kJoa5fVEOxiNFt4/mc=");
+_c = ComboBox;
+var _c;
+$RefreshReg$(_c, "ComboBox");
+
+  $parcel$ReactRefreshHelpers$afaa.postlude(module);
 } finally {
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
